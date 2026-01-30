@@ -28,7 +28,7 @@ export default function SimulationSection() {
   const isFormValid = simName.trim() !== "" && simDesc.trim() !== "";
 
   return (
-    <div className=" p-6 mt-10 relative">
+    <div className="  mt-10 relative">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold text-gray-900">Individual Investment Simulations</h2>
         <button 
