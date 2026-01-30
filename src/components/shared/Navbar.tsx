@@ -68,8 +68,8 @@ const Navbar = () => {
             exit={{ opacity: 0, y: -20 }}
             className="absolute top-full left-0 w-full bg-white border-b border-gray-100 p-6 flex flex-col gap-4 md:hidden"
           >
-            <Link href="/login" className="text-gray-600 font-medium">Log in</Link>
-            <Link href="/signup" className="bg-[#0A2A99] text-white px-6 py-3 rounded-full text-center font-semibold">
+            <Link href="/auth/login" className="text-gray-600 font-medium">Log in</Link>
+            <Link href="/auth/signup" className="bg-[#0A2A99] text-white px-6 py-3 rounded-full text-center font-semibold">
               Sign up
             </Link>
           </motion.div>
