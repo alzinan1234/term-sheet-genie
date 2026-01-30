@@ -7,7 +7,8 @@ type UserRole = 'investor' | 'entrepreneur' | 'student' | '';
 
 interface Role {
   id: UserRole;
-  icon: JSX.Element;
+  // Changed from JSX.Element to React.ReactNode to fix the "Cannot find namespace 'JSX'" error
+  icon: React.ReactNode; 
   title: string;
   description: string;
 }
@@ -55,7 +56,7 @@ const RoleSelectionPage: React.FC = () => {
         </svg>
       ),
       title: 'As a Student',
-      description: 'Get full access to the platform to learn how  term sheets affect the overall value of a deal for both investors and founders.'
+      description: 'Get full access to the platform to learn how term sheets affect the overall value of a deal for both investors and founders.'
     }
   ];
 
@@ -68,20 +69,11 @@ const RoleSelectionPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Store selected role
       sessionStorage.setItem('userRole', selectedRole);
-
-      // TODO: You might want to send this to your backend
-      // await fetch('/api/auth/update-role', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ role: selectedRole })
-      // });
-
+      
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Navigate to additional information page
       router.push('/additional-info');
       
     } catch (error) {
