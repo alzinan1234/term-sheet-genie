@@ -112,7 +112,7 @@ const AdditionalInfoPage: React.FC = () => {
 
       // Navigate to dashboard or home page
       alert('Registration completed successfully!');
-      router.push('/dashboard');
+      router.push('/investor-admin');
       
     } catch (error) {
       console.error('Registration completion error:', error);

@@ -22,7 +22,7 @@ const RoleSelectionPage: React.FC = () => {
     const emailVerified = sessionStorage.getItem('emailVerified');
     if (!emailVerified) {
       // If email not verified, redirect to verification page
-      router.push('/auth/verify-email');
+      router.push('/email-verification');
     }
   }, [router]);
 

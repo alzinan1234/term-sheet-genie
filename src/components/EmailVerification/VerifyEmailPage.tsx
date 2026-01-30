@@ -47,7 +47,7 @@ const VerifyEmailPage: React.FC = () => {
       sessionStorage.setItem('emailVerified', 'true');
 
       // Navigate to role selection page
-      router.push('/auth/role-selection');
+      router.push('/role-selection');
       
     } catch (error) {
       console.error('Verification error:', error);
