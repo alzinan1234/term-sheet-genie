@@ -7,7 +7,7 @@ const TermSheetGenieHero = () => {
     <section className="
       relative w-full 
        lg:min-h-[80vh]
-      flex flex-col items-center justify-center mt-37
+      flex flex-col items-center justify-center pt-37
       px-4 sm:px-6 md:px-8
       bg-[#F8F9FB]
     ">

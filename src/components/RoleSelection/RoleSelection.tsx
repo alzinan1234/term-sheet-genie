@@ -82,7 +82,7 @@ const RoleSelectionPage: React.FC = () => {
       await new Promise(resolve => setTimeout(resolve, 500));
 
       // Navigate to additional information page
-      router.push('/auth/additional-info');
+      router.push('/additional-info');
       
     } catch (error) {
       console.error('Role selection error:', error);

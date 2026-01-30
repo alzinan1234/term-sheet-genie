@@ -16,7 +16,7 @@ const VerifyEmailPage: React.FC = () => {
     const email = sessionStorage.getItem('userEmail');
     if (!email) {
       // If no email in session, redirect to signup
-      router.push('/auth/signup');
+      router.push('/signup');
     } else {
       setUserEmail(email);
     }

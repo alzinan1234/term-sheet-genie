@@ -61,7 +61,7 @@ const SignupPage: React.FC = () => {
       sessionStorage.setItem('userName', formData.name);
 
       // Navigate to email verification page
-      router.push('/auth/email-verification');
+      router.push('/email-verification');
       
     } catch (error) {
       console.error('Signup error:', error);

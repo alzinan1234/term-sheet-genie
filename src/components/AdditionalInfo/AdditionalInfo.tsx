@@ -32,9 +32,9 @@ const AdditionalInfoPage: React.FC = () => {
     if (!emailVerified || !userRole) {
       // If prerequisites not met, redirect appropriately
       if (!emailVerified) {
-        router.push('/auth/verify-email');
+        router.push('/verify-email');
       } else {
-        router.push('/auth/role-selection');
+        router.push('/role-selection');
       }
     }
   }, [router]);
