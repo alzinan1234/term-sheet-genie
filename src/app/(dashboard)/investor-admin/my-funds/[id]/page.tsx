@@ -22,12 +22,10 @@ export default function FundDetailsPage({ params }: PageProps) {
           <span className="text-gray-300 mx-2">/</span>
           <span className="text-gray-900 font-bold">{fundTitle}</span>
         </nav>
-        <div className="w-9 h-9 rounded-full bg-[#E0E7FF] border-2 border-white shadow-sm flex items-center justify-center text-[12px] font-bold text-[#4338CA]">
-          VV
-        </div>
+      
       </div>
 
-      <div className="max-w-[1600px] mx-auto space-y-8">
+      <div className=" mx-auto space-y-8">
         {/* Metric Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <MetricCard label="Committed Capital" value="$100,000,000" badge="Label" color="blue" />
