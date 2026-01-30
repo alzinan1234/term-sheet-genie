@@ -88,7 +88,7 @@ const VerifyEmailPage: React.FC = () => {
       <div className="w-full h-full flex flex-col md:flex-row gap-6">
         
         {/* LEFT SIDE: FORM CONTAINER */}
-        <div className="w-full md:w-[45%] lg:w-[40%] flex flex-col justify-center px-6 md:px-12 lg:px-20 py-12">
+        <div className="w-full md:w-[45%] lg:w-[32%] flex flex-col justify-center px-6 md:px-12 lg:px-20 py-12">
           
           <div className="mb-12">
             <Link href="/" className="flex items-center gap-2">
@@ -113,7 +113,7 @@ const VerifyEmailPage: React.FC = () => {
                   value={data}
                   onChange={(e) => handleChange(e.target, index)}
                   onKeyDown={(e) => handleKeyDown(e, index)}
-                  className="w-full h-14 sm:h-16 text-center text-2xl font-bold border-2 border-gray-100 rounded-2xl bg-gray-50/30 focus:border-[#0A2A99] focus:bg-white outline-none transition-all"
+                  className="w-12 h-14 sm:h-14 text-center text-2xl font-bold border-2 border-gray-300 rounded-2xl bg-gray-50/30 focus:border-[#0A2A99] focus:bg-white outline-none transition-all"
                 />
               ))}
             </div>

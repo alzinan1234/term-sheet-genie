@@ -87,7 +87,7 @@ const SignupPage: React.FC = () => {
       <div className="w-full h-full flex flex-col md:flex-row gap-6">
         
         {/* LEFT SIDE: FORM CONTAINER */}
-        <div className="w-full md:w-[45%] lg:w-[40%] flex flex-col justify-center px-6 md:px-12 lg:px-20 py-12 rounded-[32px]">
+        <div className="w-full md:w-[45%] lg:w-[33%] flex flex-col justify-center px-6 md:px-12 lg:px-20 py-12 rounded-[32px]">
           
           {/* Brand Logo */}
           <div className="mb-12">
@@ -127,7 +127,7 @@ const SignupPage: React.FC = () => {
                 value={formData.email}
                 onChange={handleInputChange}
                 placeholder="Enter your email" 
-                className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-[#0A2A99] focus:ring-1 focus:ring-[#0A2A99] outline-none transition-all placeholder:text-gray-300 bg-gray-50/50"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] focus:ring-1 focus:ring-[#0A2A99] outline-none transition-all placeholder:text-gray-300 bg-gray-50/50"
                 disabled={isLoading}
               />
             </div>
@@ -140,7 +140,7 @@ const SignupPage: React.FC = () => {
                 value={formData.password}
                 onChange={handleInputChange}
                 placeholder="Password" 
-                className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-[#0A2A99] focus:ring-1 focus:ring-[#0A2A99] outline-none transition-all placeholder:text-gray-300 bg-gray-50/50"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] focus:ring-1 focus:ring-[#0A2A99] outline-none transition-all placeholder:text-gray-300 bg-gray-50/50"
                 disabled={isLoading}
               />
             </div>

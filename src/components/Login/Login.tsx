@@ -11,7 +11,7 @@ const LoginPage = () => {
       <div className="w-full  h-full flex flex-col md:flex-row gap-6">
         
         {/* LEFT SIDE: FORM CONTAINER */}
-        <div className="w-full md:w-[45%] lg:w-[40%] flex flex-col justify-center px-6 md:px-12 lg:px-20 py-12  rounded-[32px] ">
+        <div className="w-full md:w-[45%] lg:w-[33%] flex flex-col justify-center px-6 md:px-12 lg:px-20 py-12  rounded-[32px] ">
           
           {/* Brand Logo */}
           <div className="mb-12">
@@ -37,7 +37,7 @@ const LoginPage = () => {
               <input 
                 type="email" 
                 placeholder="Enter your email" 
-                className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-[#0A2A99] focus:ring-1 focus:ring-[#0A2A99] outline-none transition-all placeholder:text-gray-300 bg-gray-50/50"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] focus:ring-1 focus:ring-[#0A2A99] outline-none transition-all placeholder:text-gray-300 bg-gray-50/50"
               />
             </div>
 
@@ -49,7 +49,7 @@ const LoginPage = () => {
               <input 
                 type="password" 
                 placeholder="••••••••" 
-                className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-[#0A2A99] focus:ring-1 focus:ring-[#0A2A99] outline-none transition-all placeholder:text-gray-300 bg-gray-50/50"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] focus:ring-1 focus:ring-[#0A2A99] outline-none transition-all placeholder:text-gray-300 bg-gray-50/50"
               />
             </div>
 
@@ -84,7 +84,7 @@ const LoginPage = () => {
           </div>
 
           <p className="text-center text-sm font-medium text-gray-500">
-            Don't have an account? <Link href="/auth/signup" className="text-[#0A2A99] font-bold hover:underline ml-1">Sign Up</Link>
+            Don't have an account? <Link href="/signup" className="text-[#0A2A99] font-bold hover:underline ml-1">Sign Up</Link>
           </p>
         </div>
 
