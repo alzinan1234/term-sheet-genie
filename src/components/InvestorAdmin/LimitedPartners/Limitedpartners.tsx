@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Search, Plus, Calendar, X, UserPlus } from 'lucide-react';
+import { Search, Calendar, X, UserPlus } from 'lucide-react';
+import { useRouter } from 'next/navigation'; // 1. Import the router
 
 // --- Types ---
 interface Partner {
@@ -15,9 +16,10 @@ interface Partner {
 }
 
 export default function Limitedpartners() {
+  const router = useRouter(); // 2. Initialize the router
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Initial Mock Data from your screenshot
+  // Initial Mock Data
   const [partners] = useState<Partner[]>([
     { id: '1', name: 'Yale Endowment Fund', image: 'https://i.pravatar.cc/150?u=yale', funds: ['TSG Growth', 'TSG Opportunities'], committed: '$125,000,000', fees: '$2,500,000', since: 'Jan 15, 2024' },
     { id: '2', name: 'Singapore GIC', image: 'https://i.pravatar.cc/150?u=gic', funds: ['TSG Growth'], committed: '$75,000,000', fees: '$1,500,000', since: 'Jan 15, 2024' },
@@ -79,7 +81,12 @@ export default function Limitedpartners() {
           </thead>
           <tbody className="divide-y divide-[#EAECF0]">
             {partners.map((partner) => (
-              <tr key={partner.id} className="hover:bg-gray-50/50 transition-colors">
+              <tr 
+                key={partner.id} 
+                // 3. Added the onClick and cursor-pointer for navigation
+                onClick={() => router.push(`/investor-admin/limited-partners/${partner.id}`)}
+                className="hover:bg-gray-50/50 transition-colors cursor-pointer" 
+              >
                 <td className="px-6 py-4 flex items-center gap-3">
                   <img src={partner.image} alt="" className="w-10 h-10 rounded-full bg-gray-100 object-cover" />
                   <span className="text-sm font-medium text-[#101828]">{partner.name}</span>
@@ -102,29 +109,15 @@ export default function Limitedpartners() {
         </table>
       </div>
 
-      {/* Modal Backdrop */}
+      {/* Modal logic remains exactly as you provided... */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Blur Background */}
-          <div 
-            className="absolute inset-0 bg-[#0c111d]/30 backdrop-blur-[4px]" 
-            onClick={() => setIsModalOpen(false)}
-          />
-          
-          {/* Modal Content */}
+          <div className="absolute inset-0 bg-[#0c111d]/30 backdrop-blur-[4px]" onClick={() => setIsModalOpen(false)} />
           <div className="relative bg-white w-full max-w-[560px] rounded-[20px] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-            {/* Modal Header */}
             <div className="flex justify-between items-center px-8 py-6 border-b border-[#F2F4F7]">
               <h2 className="text-[20px] font-bold text-[#101828]">Add a Limited Partner</h2>
-              <button 
-                onClick={() => setIsModalOpen(false)}
-                className="text-[#98A2B3] hover:text-[#667085] transition-colors p-1"
-              >
-                <X size={22} />
-              </button>
+              <button onClick={() => setIsModalOpen(false)} className="text-[#98A2B3] hover:text-[#667085] transition-colors p-1"><X size={22} /></button>
             </div>
-
-            {/* Modal Form */}
             <form className="p-8 space-y-5" onSubmit={(e) => e.preventDefault()}>
               {[
                 { label: 'Company Name', placeholder: 'TSG Growth', required: true },
@@ -137,56 +130,23 @@ export default function Limitedpartners() {
                   <label className="text-[11px] font-bold text-[#344054] uppercase tracking-wider">
                     {field.label} {field.required && <span className="text-[#D92D20]">*</span>}
                   </label>
-                  <input 
-                    type={field.type || 'text'}
-                    placeholder={field.placeholder}
-                    className="w-full px-4 py-3 bg-[#F9FAFB] border border-[#EAECF0] rounded-xl outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-[#2D5BFF] transition-all text-[#101828] placeholder:text-[#98A2B3]"
-                  />
+                  <input type={field.type || 'text'} placeholder={field.placeholder} className="w-full px-4 py-3 bg-[#F9FAFB] border border-[#EAECF0] rounded-xl outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-[#2D5BFF] transition-all text-[#101828] placeholder:text-[#98A2B3]" />
                 </div>
               ))}
-
-              {/* Relationship Since Field */}
               <div className="space-y-1.5 relative">
-                <label className="text-[11px] font-bold text-[#344054] uppercase tracking-wider">
-                  Relationship since <span className="text-[#D92D20]">*</span>
-                </label>
+                <label className="text-[11px] font-bold text-[#344054] uppercase tracking-wider">Relationship since <span className="text-[#D92D20]">*</span></label>
                 <div className="relative">
-                  <input 
-                    type="text" 
-                    placeholder="29/11/2020"
-                    className="w-full px-4 py-3 bg-[#F9FAFB] border border-[#EAECF0] rounded-xl outline-none focus:border-[#2D5BFF] transition-all"
-                  />
+                  <input type="text" placeholder="29/11/2020" className="w-full px-4 py-3 bg-[#F9FAFB] border border-[#EAECF0] rounded-xl outline-none focus:border-[#2D5BFF] transition-all" />
                   <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 text-[#98A2B3]" size={18} />
                 </div>
               </div>
-
-              {/* Internal POC Field */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-[#344054] uppercase tracking-wider">
-                  Main internal POC <span className="text-[#D92D20]">*</span>
-                </label>
-                <input 
-                  type="text" 
-                  placeholder="Test 1"
-                  className="w-full px-4 py-3 bg-[#F9FAFB] border border-[#EAECF0] rounded-xl outline-none focus:border-[#2D5BFF] transition-all"
-                />
+                <label className="text-[11px] font-bold text-[#344054] uppercase tracking-wider">Main internal POC <span className="text-[#D92D20]">*</span></label>
+                <input type="text" placeholder="Test 1" className="w-full px-4 py-3 bg-[#F9FAFB] border border-[#EAECF0] rounded-xl outline-none focus:border-[#2D5BFF] transition-all" />
               </div>
-
-              {/* Action Buttons */}
               <div className="flex gap-3 pt-4">
-                <button 
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-3 border border-[#D0D5DD] rounded-xl font-bold text-[#344054] hover:bg-gray-50 transition-all"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  className="flex-1 py-3 bg-[#2D5BFF] hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-500/10 transition-all active:scale-[0.98]"
-                >
-                  Create Limited Partner
-                </button>
+                <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-3 border border-[#D0D5DD] rounded-xl font-bold text-[#344054] hover:bg-gray-50 transition-all">Cancel</button>
+                <button type="submit" className="flex-1 py-3 bg-[#2D5BFF] hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-500/10 transition-all active:scale-[0.98]">Create Limited Partner</button>
               </div>
             </form>
           </div>
