@@ -126,8 +126,15 @@ export default function InvestmentPipeline() {
                 </td>
                 <td className="px-6 py-5 text-center">
                   <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border text-xs font-medium ${getStatusStyles(item.decisionStatus).split(' dot')[0]}`}>
-                    {/* FIXED: Added .includes() to the second check and proper reference to getStatusStyles */}
-                    <span className={`w-1.5 h-1.5 rounded-full ${getStatusStyles(item.decisionStatus).includes('dot-[#2E90FA]') ? 'bg-[#2E90FA]' : getStatusStyles(item.decisionStatus).includes('dot-[#12B76A]') ? 'bg-[#12B76A]' : 'bg-[#F79009]'}`} />
+                    {/* FIXED: We check .includes() for the green dot specifically to avoid the "always truthy" error */}
+                    <span className={`w-1.5 h-1.5 rounded-full ${
+                        getStatusStyles(item.decisionStatus).includes('dot-[#2E90FA]') 
+                          ? 'bg-[#2E90FA]' 
+                          : getStatusStyles(item.decisionStatus).includes('dot-[#12B76A]') 
+                            ? 'bg-[#12B76A]' 
+                            : 'bg-[#F79009]'
+                      }`} 
+                    />
                     {item.decisionStatus}
                   </span>
                 </td>
