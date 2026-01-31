@@ -120,7 +120,8 @@ const VerifyEmailPage: React.FC = () => {
                     key={index}
                     type="text"
                     maxLength={1}
-                    ref={(el) => (inputRefs.current[index] = el)}
+                    // FIX: Wrapped assignment in braces to return void instead of the element
+                    ref={(el) => { inputRefs.current[index] = el; }}
                     value={data}
                     onChange={(e) => handleChange(e.target, index)}
                     onKeyDown={(e) => handleKeyDown(e, index)}
