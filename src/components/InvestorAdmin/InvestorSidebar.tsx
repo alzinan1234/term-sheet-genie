@@ -124,8 +124,8 @@ const InvestorSidebar: React.FC<SidebarProps> = ({
                  <img src="/logo/TermSheetGenie.png" alt="Logo" className="object-contain" />
               </div>
             ) : (
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-                T
+              <div className="w-10 h-10 text-black  rounded-lg flex items-center justify-center  font-bold text-sm">
+                
               </div>
             )}
 

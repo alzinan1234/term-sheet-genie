@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Plus, ChevronDown } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation"; // Import useRouter
 
 interface Fund {
   id: string;
@@ -22,6 +22,8 @@ const funds: Fund[] = [
 ];
 
 export default function MyFundsTable({ onAddNew }: { onAddNew: () => void }) {
+  const router = useRouter(); // Initialize router
+
   return (
     <div className="w-full">
       {/* Header Section */}
@@ -59,16 +61,14 @@ export default function MyFundsTable({ onAddNew }: { onAddNew: () => void }) {
             {funds.map((fund) => (
               <tr 
                 key={fund.id} 
+                // Navigation added here to the full row
+                onClick={() => router.push(`/investor-admin/my-funds/${fund.id}`)}
                 className="group hover:bg-blue-50/30 transition-all cursor-pointer"
               >
-                {/* Clickable Name with Link */}
                 <td className="px-6 py-5">
-                  <Link 
-                    href={`/investor-admin/my-funds/${fund.id}`}
-                    className="font-bold text-[#1A2B49] group-hover:text-[#2D60FF] transition-colors"
-                  >
+                  <span className="font-bold text-[#1A2B49]  transition-colors">
                     {fund.name}
-                  </Link>
+                  </span>
                 </td>
                 
                 <td className="px-6 py-5 text-[#475467] text-sm font-medium">{fund.initiationDate}</td>
@@ -76,7 +76,6 @@ export default function MyFundsTable({ onAddNew }: { onAddNew: () => void }) {
                 <td className="px-6 py-5 text-[#475467] text-sm font-medium">{fund.invested}</td>
                 <td className="px-6 py-5 text-[#475467] text-sm font-medium">{fund.count}</td>
                 
-                {/* Status Badge */}
                 <td className="px-6 py-5">
                   <span className={`px-3 py-1 rounded-full text-[11px] font-bold flex items-center gap-1.5 w-fit border ${
                     fund.status === 'Active' 
