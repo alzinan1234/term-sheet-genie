@@ -51,7 +51,6 @@ export default function InvestmentPipeline() {
       {/* Header Section */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-[28px] font-semibold text-[#101828]">Investment Pipeline</h1>
-      
       </div>
 
       {/* Filters Section */}
@@ -127,12 +126,13 @@ export default function InvestmentPipeline() {
                 </td>
                 <td className="px-6 py-5 text-center">
                   <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border text-xs font-medium ${getStatusStyles(item.decisionStatus).split(' dot')[0]}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${getStatusStyles(item.decisionStatus).includes('dot-[#2E90FA]') ? 'bg-[#2E90FA]' : 'dot-[#12B76A]' ? 'bg-[#12B76A]' : 'bg-[#F79009]'}`} />
+                    {/* FIXED: Added .includes() to the second check and proper reference to getStatusStyles */}
+                    <span className={`w-1.5 h-1.5 rounded-full ${getStatusStyles(item.decisionStatus).includes('dot-[#2E90FA]') ? 'bg-[#2E90FA]' : getStatusStyles(item.decisionStatus).includes('dot-[#12B76A]') ? 'bg-[#12B76A]' : 'bg-[#F79009]'}`} />
                     {item.decisionStatus}
                   </span>
                 </td>
                 <td className="px-6 py-5 text-sm text-[#475467]">
-                  Fund Name
+                  {item.sourceFund}
                 </td>
                 <td className="px-6 py-5 text-right">
                   <button className="text-[#98A2B3] hover:text-[#667085] transition-colors">
@@ -145,5 +145,5 @@ export default function InvestmentPipeline() {
         </table>
       </div>
     </div>
-  );
+  ); 
 }
