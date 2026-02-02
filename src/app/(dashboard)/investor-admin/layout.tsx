@@ -21,9 +21,8 @@ interface RootLayoutProps {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
-  // States
-  const [isOpen, setIsOpen] = useState<boolean>(false);       // Mobile
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false); // Desktop
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
 
   return (
@@ -31,7 +30,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <div className="flex bg-[#F5F7FA] text-black min-h-screen">
           
-          {/* Sidebar */}
           <InvestorSidebar 
             isOpen={isOpen} 
             setIsOpen={setIsOpen} 
@@ -39,18 +37,20 @@ export default function RootLayout({ children }: RootLayoutProps) {
             setIsCollapsed={setIsCollapsed}
           />
 
-          {/* Main Content Area */}
           <main
             className={`
               flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out
               ${isCollapsed ? "lg:ml-20" : "lg:ml-72"} 
             `}
           >
-            {/* Topbar: Mobile menu open handler passed via props inside Topbar usually */}
-            <InvestorTopbar onBellClick={() => setShowNotifications(true)} />
+            {/* Pass isCollapsed to topbar to calculate fixed width */}
+            <InvestorTopbar 
+              isCollapsed={isCollapsed} 
+              onBellClick={() => setShowNotifications(true)} 
+            />
 
-            {/* Dynamic Content */}
-            <div className="p-4 lg:p-8">
+            {/* Dynamic Content: Added pt-20 to account for the fixed header height */}
+            <div className="p-4 lg:p-8 pt-24 lg:pt-28"> 
               {showNotifications ? (
                 <div className="bg-white rounded-2xl p-6 shadow-sm">
                   <button 
@@ -59,7 +59,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
                   >
                     ← Back to Dashboard
                   </button>
-                  {/* <NotificationPage /> */}
                   <h2 className="text-xl font-bold">Notifications</h2>
                 </div>
               ) : (
