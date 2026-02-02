@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import Link from 'next/link';
 
 // --- Modal Component ---
 const DemoModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
@@ -93,7 +94,7 @@ const CTASection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <section className="px-6 py-20 bg-[#F8F9FB]">
+    <section className="px-9 py-20 bg-[#ffffff]">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -119,9 +120,11 @@ const CTASection = () => {
             Request a Demo
           </button>
 
-          <button className="bg-transparent text-white border-2 border-white px-10 py-4 rounded-full font-semibold text-lg hover:bg-white/10 transition-all active:scale-95 min-w-[210px]">
+          <Link href="/signup" className="bg-transparent text-white border-2 border-white px-10 py-4 rounded-full font-semibold text-lg hover:bg-white/10 transition-all active:scale-95 min-w-[210px]">
             Sign Up Free
-          </button>
+          </Link>
+
+          
         </div>
       </motion.div>
 
