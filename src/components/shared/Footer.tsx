@@ -18,7 +18,7 @@ const Footer = () => {
         </Link>
 
         {/* Navigation Links */}
-        <div className="flex flex-wrap justify-center items-center gap-8 text-gray-500 font-medium text-[19px]">
+        <div className="flex flex-wrap justify-center items-center gap-8 text-gray-500 font-medium text-[14px]">
           <Link href="/privacy" className="hover:text-[#0A2A99] transition-colors">
             Privacy Policy
           </Link>
