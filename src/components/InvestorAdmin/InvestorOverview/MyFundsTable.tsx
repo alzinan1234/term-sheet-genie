@@ -45,11 +45,18 @@ export default function MyFundsTable({ onAddNew }: { onAddNew: () => void }) {
     const items = [...initialFunds];
     if (sortConfig.key !== null) {
       items.sort((a, b) => {
-        // Clean currency strings for numeric sorting if needed
-        const valA = typeof a[sortConfig.key!] === 'string' ? a[sortConfig.key!].replace(/[^0-9.-]+/g, "") : a[sortConfig.key!];
-        const valB = typeof b[sortConfig.key!] === 'string' ? b[sortConfig.key!].replace(/[^0-9.-]+/g, "") : b[sortConfig.key!];
+        const rawA = a[sortConfig.key!];
+        const rawB = b[sortConfig.key!];
 
-        // Handle numeric vs string comparison
+        // Fix: Use type assertion to resolve the 'replace' error on string | number
+        const valA = typeof rawA === 'string' 
+          ? (rawA as string).replace(/[^0-9.-]+/g, "") 
+          : rawA;
+        const valB = typeof rawB === 'string' 
+          ? (rawB as string).replace(/[^0-9.-]+/g, "") 
+          : rawB;
+
+        // Handle numeric comparison for currency and counts
         const aNum = parseFloat(valA as string);
         const bNum = parseFloat(valB as string);
 
@@ -57,8 +64,9 @@ export default function MyFundsTable({ onAddNew }: { onAddNew: () => void }) {
           return sortConfig.direction === "asc" ? aNum - bNum : bNum - aNum;
         }
 
-        if (a[sortConfig.key!] < b[sortConfig.key!]) return sortConfig.direction === "asc" ? -1 : 1;
-        if (a[sortConfig.key!] > b[sortConfig.key!]) return sortConfig.direction === "asc" ? 1 : -1;
+        // Standard string/fallback comparison
+        if (rawA < rawB) return sortConfig.direction === "asc" ? -1 : 1;
+        if (rawA > rawB) return sortConfig.direction === "asc" ? 1 : -1;
         return 0;
       });
     }
