@@ -94,13 +94,13 @@ const CTASection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <section className="px-9 py-20 bg-[#ffffff]">
+    <section className="px-8 max-w-7xl mx-auto py-20 bg-[#ffffff]">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="max-w-7xl mx-auto bg-[#0A2A99] rounded-[40px] py-20 px-8 text-center text-white shadow-2xl shadow-blue-900/20"
+        className=" mx-auto bg-[#0A2A99] rounded-[40px] py-20 px-8 text-center text-white shadow-2xl shadow-blue-900/20"
       >
         <h2 className="text-[36px] md:text-[52px] font-bold mb-6 tracking-tight leading-tight">
           Ready to streamline your investment process?
