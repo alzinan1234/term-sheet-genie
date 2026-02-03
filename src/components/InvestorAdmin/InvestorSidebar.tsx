@@ -56,9 +56,9 @@ const navItems: NavItem[] = [
     icon: Settings,
     hasDropdown: true,
     subItems: [
-      { name: "Profile Settings", href: "/investor-admin/settings/profile" },
-      { name: "Account Settings", href: "/investor-admin/settings/account" },
-      { name: "Privacy", href: "/investor-admin/settings/privacy" },
+      { name: "My settings", href: "/investor-admin/settings/my-settings" },
+      { name: "Team settings", href: "/investor-admin/settings/team-settings" },
+    
     ],
   },
   { name: "Report an Issue", href: "/investor-admin/report-issue", icon: Flag },

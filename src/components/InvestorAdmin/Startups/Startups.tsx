@@ -151,7 +151,7 @@ export default function Startups() {
                   <td className="px-6 py-4 text-sm text-[#475467]">
                     {item.description}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4"> 
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-bold text-[#101828]">{item.investmentAmount}</span>
                       <span className="text-[11px] font-bold text-[#027A48] bg-[#ECFDF3] px-1.5 py-0.5 rounded flex items-center">

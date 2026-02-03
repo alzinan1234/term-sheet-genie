@@ -99,7 +99,7 @@ export default function MyFundsTable({ onAddNew }: { onAddNew: () => void }) {
                 <div className="flex items-center gap-1">Fund Name <SortIcon column="name" /></div>
               </th>
               <th onClick={() => handleSort("initiationDate")} className="px-6 py-4 font-semibold cursor-pointer group select-none">
-                <div className="flex items-center gap-1">Initiation Date <SortIcon column="initiationDate" /></div>
+                <div className="flex items-center gap-1"> Initiation Date <SortIcon column="initiationDate" /></div>
               </th>
               <th onClick={() => handleSort("committed")} className="px-6 py-4 font-semibold cursor-pointer group select-none">
                 <div className="flex items-center gap-1">Committed Capital <SortIcon column="committed" /></div>
