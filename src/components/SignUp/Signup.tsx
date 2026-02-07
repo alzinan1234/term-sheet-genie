@@ -140,7 +140,7 @@ const SignupPage: React.FC = () => {
                   disabled={isLoading}
                 />
                 <label htmlFor="terms" className="text-xs font-medium text-gray-600">
-                  I agree to the <span className="underline cursor-pointer">terms & policy</span>
+                  I agree to the <Link href="/terms" className="text-[#0A2A99] hover:underline">Terms of Service</Link> 
                 </label>
               </div>
 

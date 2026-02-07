@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState } from 'react';
 
@@ -16,6 +15,7 @@ const TeamSettings: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'Overview' | 'Plan Info' | 'Team'>('Overview');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [companyName, setCompanyName] = useState('TermSheetGenie');
+  const [companyType, setCompanyType] = useState('Startup'); // Added state for controlled select
 
   const tabs = ['Overview', 'Plan Info', 'Team'];
 
@@ -56,8 +56,7 @@ const TeamSettings: React.FC = () => {
           <div className="animate-fadeIn">
             <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-10">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center ">
-                 {/* Simplified Genie Lamp Icon SVG */}
-                <img src="/mm.png" alt="asdfsa" />
+                <img src="/mm.png" alt="Company Logo" />
               </div>
               <div className="flex-1 w-full max-w-md">
                 <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Company Name</label>
@@ -70,11 +69,15 @@ const TeamSettings: React.FC = () => {
               </div>
             </div>
             <div className="max-w-xs">
-              <label className="block text-sm font-semibold text-gray-500 mb-2">Type of Company</label>
-              <select className="w-full p-3 border border-gray-200 rounded-lg bg-white outline-none cursor-pointer hover:border-gray-300">
-                <option>Startup</option>
-                <option>Enterprise</option>
-                <option>Venture Capital</option>
+              <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Type of Company</label>
+              <select 
+                value={companyType}
+                onChange={(e) => setCompanyType(e.target.value)}
+                className="w-full p-3 border border-gray-200 rounded-lg bg-white outline-none cursor-pointer hover:border-gray-300 transition-all font-medium"
+              >
+                <option value="Startup">Startup</option>
+                <option value="Enterprise">Enterprise</option>
+                <option value="Venture Capital">Venture Capital</option>
               </select>
             </div>
           </div>

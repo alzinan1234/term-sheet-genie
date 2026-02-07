@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface AdditionalInfoFormData {
+  firstName: string; // Added
+  lastName: string;  // Added
   companyName: string;
   companySize: string;
   companyType: string;
@@ -16,8 +18,10 @@ const AdditionalInfoPage: React.FC = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<AdditionalInfoFormData>({
+    firstName: '', // Added
+    lastName: '',  // Added
     companyName: '',
-    companySize: '1 - 10 employees',
+    companySize: '', // Changed to empty for placeholder logic
     companyType: '',
     companySubtype: '',
     roleInCompany: '',
@@ -28,6 +32,16 @@ const AdditionalInfoPage: React.FC = () => {
     const userRole = sessionStorage.getItem('userRole');
     const emailVerified = sessionStorage.getItem('emailVerified');
     
+    // Autofill Name from Session Storage
+    const fullName = sessionStorage.getItem('userName') || '';
+    const nameParts = fullName.split(' ');
+    
+    setFormData(prev => ({
+      ...prev,
+      firstName: nameParts[0] || '',
+      lastName: nameParts.slice(1).join(' ') || ''
+    }));
+
     if (!emailVerified || !userRole) {
       if (!emailVerified) {
         router.push('/verify-email');
@@ -55,56 +69,43 @@ const AdditionalInfoPage: React.FC = () => {
     e.preventDefault();
     
     if (!formData.companyName || !formData.roleInCompany) {
-      alert('Please fill in all required fields (Company Name and Role)');
+      alert('Please fill in all required fields (Company Name and Position)');
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // 1. Retrieve the role selected in the previous step
       const userRole = sessionStorage.getItem('userRole');
       const userEmail = sessionStorage.getItem('userEmail');
-      const userName = sessionStorage.getItem('userName');
 
       const completeData = {
         email: userEmail,
-        name: userName,
+        name: `${formData.firstName} ${formData.lastName}`, // Updated to use current form state
         role: userRole,
         additionalInfo: formData
       };
 
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       console.log('Final Registration Data:', completeData);
 
-      // 2. Clear session storage (Optional: Keep it if your dashboard needs it immediately)
       sessionStorage.removeItem('userEmail');
       sessionStorage.removeItem('userName');
       sessionStorage.removeItem('emailVerified');
       sessionStorage.removeItem('userRole');
 
-      // 3. Conditional Redirection based on userRole
       alert('Registration completed successfully!');
 
       switch (userRole) {
-        case 'investor':
-          router.push('/investor-admin');
-          break;
-        case 'entrepreneur':
-          router.push('/entrepreneur-admin'); // Modified for your request
-          break;
-        case 'student':
-          router.push('/student-dashboard'); // Modified for your request
-          break;
-        default:
-          router.push('/'); // Fallback route
-          break;
+        case 'investor': router.push('/investor-admin'); break;
+        case 'entrepreneur': router.push('/entrepreneur-admin'); break;
+        case 'student': router.push('/student-dashboard'); break;
+        default: router.push('/'); break;
       }
       
     } catch (error) {
-      console.error('Registration completion error:', error);
-      alert('Failed to complete registration. Please try again.');
+      console.error('Registration error:', error);
+      alert('Failed to complete registration.');
     } finally {
       setIsLoading(false);
     }
@@ -112,24 +113,49 @@ const AdditionalInfoPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
-      {/* Design remains identical to your provided code */}
       <div className="w-full max-w-2xl bg-white rounded-3xl shadow-sm p-8 md:p-12">
         <div className="text-center mb-10">
           <h1 className="text-3xl font-bold text-[#1A1C1E] mb-2">Additional Information</h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Personal Information Moved and Updated */}
+          <div>
+            <h2 className="text-lg font-bold text-[#1A1C1E] mb-6">Personal Information</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-gray-600">First Name</label>
+                <input type="text" name="firstName" value={formData.firstName} onChange={handleInputChange} disabled={isLoading} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] outline-none bg-gray-50/50 text-sm" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-gray-600">Last Name</label>
+                <input type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} disabled={isLoading} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] outline-none bg-gray-50/50 text-sm" />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-gray-600">Position <span className="text-red-500">*</span></label>
+                <input type="text" name="roleInCompany" placeholder="Role/Position" value={formData.roleInCompany} onChange={handleInputChange} disabled={isLoading} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] outline-none bg-gray-50/50 text-sm" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-semibold text-gray-600">Phone Number</label>
+                <input type="tel" name="phoneNumber" placeholder="+1 (555) 000-0000" value={formData.phoneNumber} onChange={handleInputChange} disabled={isLoading} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] outline-none bg-gray-50/50 text-sm" />
+              </div>
+            </div>
+          </div>
+
           <div>
             <h2 className="text-lg font-bold text-[#1A1C1E] mb-6">Company Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="space-y-2">
                 <label className="text-xs font-semibold text-gray-600">Name <span className="text-red-500">*</span></label>
-                <input type="text" name="companyName" placeholder="Name of the Company" value={formData.companyName} onChange={handleInputChange} disabled={isLoading} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] outline-none transition-all bg-gray-50/50 text-sm" />
+                <input type="text" name="companyName" placeholder="Name of the Company" value={formData.companyName} onChange={handleInputChange} disabled={isLoading} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] outline-none bg-gray-50/50 text-sm" />
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-semibold text-gray-600">Size</label>
-                <select name="companySize" value={formData.companySize} onChange={handleInputChange} disabled={isLoading} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] outline-none bg-gray-50/50 text-sm">
-                  {companySizes.map((size) => <option key={size} value={size}>{size}</option>)}
+                <select name="companySize" value={formData.companySize} onChange={handleInputChange} disabled={isLoading} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] outline-none bg-gray-50/50 text-sm text-gray-500">
+                  <option value="" disabled hidden>Select Number of Employees</option>
+                  {companySizes.map((size) => <option key={size} value={size} className="text-black">{size}</option>)}
                 </select>
               </div>
               <div className="space-y-2">
@@ -137,25 +163,11 @@ const AdditionalInfoPage: React.FC = () => {
                 <input type="text" name="companyType" placeholder="Type of business" value={formData.companyType} onChange={handleInputChange} disabled={isLoading} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] outline-none bg-gray-50/50 text-sm" />
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-gray-600">Subtype</label>
-                <select name="companySubtype" value={formData.companySubtype} onChange={handleInputChange} disabled={isLoading} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] outline-none bg-gray-50/50 text-sm">
-                  <option value="">VC, PE, Angel...</option>
-                  {companySubtypes.map((subtype) => <option key={subtype} value={subtype}>{subtype}</option>)}
+                <label className="text-xs font-semibold text-gray-600">Entity Type</label>
+                <select name="companySubtype" value={formData.companySubtype} onChange={handleInputChange} disabled={isLoading} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] outline-none bg-gray-50/50 text-sm text-gray-500">
+                  <option value="" disabled hidden>Select Type of Entity</option>
+                  {companySubtypes.map((subtype) => <option key={subtype} value={subtype} className="text-black">{subtype}</option>)}
                 </select>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-lg font-bold text-[#1A1C1E] mb-6">Personal Information</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="space-y-2">
-                <label className="text-xs font-semibold text-gray-600">Role in Company <span className="text-red-500">*</span></label>
-                <input type="text" name="roleInCompany" placeholder="Role/Position" value={formData.roleInCompany} onChange={handleInputChange} disabled={isLoading} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] outline-none bg-gray-50/50 text-sm" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs font-semibold text-gray-600">Phone Number</label>
-                <input type="tel" name="phoneNumber" placeholder="--- ----" value={formData.phoneNumber} onChange={handleInputChange} disabled={isLoading} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#0A2A99] outline-none bg-gray-50/50 text-sm" />
               </div>
             </div>
           </div>

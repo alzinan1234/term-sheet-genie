@@ -23,14 +23,14 @@ const features = [
 
 const Features = () => {
   return (
-    <section className="bg-white w-full">
-      {/* Container: max-w-1200, py-16 (64px), px-8 (32px) per */}
-      <div className="max-w-7xl mx-auto px-8 py-16">
-        <h2 className="font-['Sen'] text-[32px] md:text-[40px] font-bold text-center text-[#1b1e28] mb-12">
+    <section className="bg-white w-full relative">
+      <div className="max-w-7xl mx-auto px-8 pb-16 pt-6 md:pb-24 md:pt-10">
+        
+        <h2 className="font-['Sen'] text-[32px] md:text-[40px] font-bold text-center text-[#1b1e28] mb-10 md:mb-16">
           Key Features
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:-mt-8 relative z-10">
           {features.map((feature, index) => (
             <motion.div
               key={index}
