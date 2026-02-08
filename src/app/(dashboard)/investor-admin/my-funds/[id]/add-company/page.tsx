@@ -575,7 +575,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newTable[index].stakeholder = e.target.value;
                         setCapTable(newTable);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., Founders"
                     />
                   </td>
@@ -588,7 +588,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newTable[index].roundName = e.target.value;
                         setCapTable(newTable);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., Seed Round"
                     />
                   </td>
@@ -601,7 +601,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newTable[index].investmentDate = e.target.value;
                         setCapTable(newTable);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -613,7 +613,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newTable[index].investmentAmount = e.target.value;
                         setCapTable(newTable);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., $1,000,000"
                     />
                   </td>
@@ -626,7 +626,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newTable[index].commonShares = e.target.value;
                         setCapTable(newTable);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., 100,000"
                     />
                   </td>
@@ -639,7 +639,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newTable[index].preferredShares = e.target.value;
                         setCapTable(newTable);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., 50,000"
                     />
                   </td>
@@ -652,7 +652,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newTable[index].liquidationPreferences = e.target.value;
                         setCapTable(newTable);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., 1x"
                     />
                   </td>
@@ -664,7 +664,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newTable[index].participation = e.target.value;
                         setCapTable(newTable);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     >
                       <option value="">Select</option>
                       <option value="Participating">Participating</option>
@@ -680,7 +680,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newTable[index].dividendType = e.target.value;
                         setCapTable(newTable);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     >
                       <option value="">Select</option>
                       <option value="Cumulative">Cumulative</option>
@@ -696,7 +696,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newTable[index].dividend = e.target.value;
                         setCapTable(newTable);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., 8%"
                     />
                   </td>
@@ -751,7 +751,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].roundName = e.target.value;
                         setSafes(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -762,7 +762,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].type = e.target.value;
                         setSafes(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     >
                       <option>Pre-Money Safe</option>
                       <option>Post-Money Safe</option>
@@ -778,7 +778,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].investmentDate = e.target.value;
                         setSafes(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -790,7 +790,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].amount = e.target.value;
                         setSafes(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -802,7 +802,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].pmvCap = e.target.value;
                         setSafes(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -814,7 +814,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].discount = e.target.value;
                         setSafes(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -826,7 +826,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].interestRate = e.target.value;
                         setSafes(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3 text-center">
@@ -838,7 +838,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].mfn = e.target.checked;
                         setSafes(newSafes);
                       }}
-                      className="w-4 h-4"
+                      className="w-4 h-4 border border-gray-300"
                     />
                   </td>
                   <td className="p-3 text-center">
@@ -850,7 +850,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].proRata = e.target.checked;
                         setSafes(newSafes);
                       }}
-                      className="w-4 h-4"
+                      className="w-4 h-4 border border-gray-300"
                     />
                   </td>
                 </tr>
@@ -898,7 +898,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].roundName = e.target.value;
                         setDebts(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -909,7 +909,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].type = e.target.value;
                         setDebts(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     >
                       <option>Convertible</option>
                       <option>PIK</option>
@@ -926,7 +926,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].investmentDate = e.target.value;
                         setDebts(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -938,7 +938,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].investmentAmount = e.target.value;
                         setDebts(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -950,7 +950,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].interestType = e.target.value;
                         setDebts(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -962,7 +962,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].interestFrequency = e.target.value;
                         setDebts(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -974,7 +974,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].interestRate = e.target.value;
                         setDebts(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3 text-center">
@@ -986,7 +986,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].purchaseOption = e.target.checked;
                         setDebts(newDebts);
                       }}
-                      className="w-4 h-4"
+                      className="w-4 h-4 border border-gray-300"
                     />
                   </td>
                   <td className="p-3">
@@ -998,7 +998,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].timing = e.target.value;
                         setDebts(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                 </tr>
@@ -1023,7 +1023,7 @@ export default function PortfolioCompanyInvestmentPage() {
               type="text"
               value={foundersRound.outstandingShares}
               onChange={(e) => setFoundersRound({...foundersRound, outstandingShares: e.target.value})}
-              className="w-full border rounded-lg px-4 py-3 text-sm"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm"
             />
           </div>
           <div>
@@ -1032,7 +1032,7 @@ export default function PortfolioCompanyInvestmentPage() {
               type="text"
               value={foundersRound.allocatedOptions}
               onChange={(e) => setFoundersRound({...foundersRound, allocatedOptions: e.target.value})}
-              className="w-full border rounded-lg px-4 py-3 text-sm"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm"
             />
           </div>
           <div>
@@ -1041,7 +1041,7 @@ export default function PortfolioCompanyInvestmentPage() {
               type="text"
               value={foundersRound.unallocatedOptions}
               onChange={(e) => setFoundersRound({...foundersRound, unallocatedOptions: e.target.value})}
-              className="w-full border rounded-lg px-4 py-3 text-sm"
+              className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm"
             />
           </div>
         </div>
@@ -1084,7 +1084,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].roundName = e.target.value;
                         setDebtRounds(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., Debt Round 1"
                     />
                   </td>
@@ -1096,7 +1096,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].type = e.target.value;
                         setDebtRounds(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     >
                       <option>Convertible</option>
                       <option>IPR</option>
@@ -1113,7 +1113,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].investmentDate = e.target.value;
                         setDebtRounds(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -1125,7 +1125,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].amount = e.target.value;
                         setDebtRounds(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., $150,000"
                     />
                   </td>
@@ -1138,7 +1138,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].interestTier = e.target.value;
                         setDebtRounds(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -1150,7 +1150,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].interestProgram = e.target.value;
                         setDebtRounds(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -1162,7 +1162,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].interestRate = e.target.value;
                         setDebtRounds(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., 6%"
                     />
                   </td>
@@ -1175,7 +1175,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newDebts[index].purchaseOption = e.target.value;
                         setDebtRounds(newDebts);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., 20%"
                     />
                   </td>
@@ -1224,7 +1224,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].roundName = e.target.value;
                         setRoundByRoundData(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., Safe A"
                     />
                   </td>
@@ -1236,7 +1236,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].type = e.target.value;
                         setRoundByRoundData(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     >
                       <option>Pre-Maturity Sale</option>
                       <option>Post-Money Safe</option>
@@ -1252,7 +1252,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].investmentDate = e.target.value;
                         setRoundByRoundData(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -1264,7 +1264,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].amount = e.target.value;
                         setRoundByRoundData(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., $150,000"
                     />
                   </td>
@@ -1277,7 +1277,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].pmvCap = e.target.value;
                         setRoundByRoundData(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., $10,000,000"
                     />
                   </td>
@@ -1290,7 +1290,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].discount = e.target.value;
                         setRoundByRoundData(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., 22%"
                     />
                   </td>
@@ -1303,7 +1303,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].interestRate = e.target.value;
                         setRoundByRoundData(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="e.g., 5%"
                     />
                   </td>
@@ -1316,7 +1316,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].isoNo = e.target.value;
                         setRoundByRoundData(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="p-3">
@@ -1328,7 +1328,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newSafes[index].priceTableHighlights = e.target.value;
                         setRoundByRoundData(newSafes);
                       }}
-                      className="w-full border rounded px-2 py-1 text-sm"
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                     />
                   </td>
                 </tr>
@@ -1351,7 +1351,7 @@ export default function PortfolioCompanyInvestmentPage() {
         </div>
         
         {pricedRoundsRound.map((round, index) => (
-          <div key={round.id} className="mb-8 border rounded-lg p-6">
+          <div key={round.id} className="mb-8 border border-gray-200 rounded-lg p-6">
             <h4 className="font-bold text-gray-900 mb-6">{round.name}</h4>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
@@ -1385,7 +1385,7 @@ export default function PortfolioCompanyInvestmentPage() {
                           newRounds[index].investmentDate = e.target.value;
                           setPricedRoundsRound(newRounds);
                         }}
-                        className="w-full border rounded px-2 py-1 text-sm"
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                         placeholder="e.g., 7/01/2025"
                       />
                     </td>
@@ -1398,7 +1398,7 @@ export default function PortfolioCompanyInvestmentPage() {
                           newRounds[index].investmentTier = e.target.value;
                           setPricedRoundsRound(newRounds);
                         }}
-                        className="w-full border rounded px-2 py-1 text-sm"
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                         placeholder="e.g., 3/18/2025"
                       />
                     </td>
@@ -1411,7 +1411,7 @@ export default function PortfolioCompanyInvestmentPage() {
                           newRounds[index].amount = e.target.value;
                           setPricedRoundsRound(newRounds);
                         }}
-                        className="w-full border rounded px-2 py-1 text-sm"
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                         placeholder="e.g., $1,800,000"
                       />
                     </td>
@@ -1424,7 +1424,7 @@ export default function PortfolioCompanyInvestmentPage() {
                           newRounds[index].lapsedPeriod = e.target.value;
                           setPricedRoundsRound(newRounds);
                         }}
-                        className="w-full border rounded px-2 py-1 text-sm"
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                         placeholder="e.g., 1 Year"
                       />
                     </td>
@@ -1437,7 +1437,7 @@ export default function PortfolioCompanyInvestmentPage() {
                           newRounds[index].conversion = e.target.value;
                           setPricedRoundsRound(newRounds);
                         }}
-                        className="w-full border rounded px-2 py-1 text-sm"
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                         placeholder="e.g., 500,000"
                       />
                     </td>
@@ -1450,7 +1450,7 @@ export default function PortfolioCompanyInvestmentPage() {
                           newRounds[index].contractTerm = e.target.value;
                           setPricedRoundsRound(newRounds);
                         }}
-                        className="w-full border rounded px-2 py-1 text-sm"
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                         placeholder="e.g., 100%"
                       />
                     </td>
@@ -1463,7 +1463,7 @@ export default function PortfolioCompanyInvestmentPage() {
                           newRounds[index].qboOverdraft1 = e.target.value;
                           setPricedRoundsRound(newRounds);
                         }}
-                        className="w-full border rounded px-2 py-1 text-sm"
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       />
                     </td>
                     <td className="p-3">
@@ -1475,7 +1475,7 @@ export default function PortfolioCompanyInvestmentPage() {
                           newRounds[index].qboOverdraft2 = e.target.value;
                           setPricedRoundsRound(newRounds);
                         }}
-                        className="w-full border rounded px-2 py-1 text-sm"
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       />
                     </td>
                     <td className="p-3">
@@ -1487,7 +1487,7 @@ export default function PortfolioCompanyInvestmentPage() {
                           newRounds[index].equity = e.target.value;
                           setPricedRoundsRound(newRounds);
                         }}
-                        className="w-full border rounded px-2 py-1 text-sm"
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       />
                     </td>
                     <td className="p-3">
@@ -1499,7 +1499,7 @@ export default function PortfolioCompanyInvestmentPage() {
                           newRounds[index].convertible = e.target.value;
                           setPricedRoundsRound(newRounds);
                         }}
-                        className="w-full border rounded px-2 py-1 text-sm"
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       />
                     </td>
                     <td className="p-3">
@@ -1511,7 +1511,7 @@ export default function PortfolioCompanyInvestmentPage() {
                           newRounds[index].stock = e.target.value;
                           setPricedRoundsRound(newRounds);
                         }}
-                        className="w-full border rounded px-2 py-1 text-sm"
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       />
                     </td>
                     <td className="p-3">
@@ -1523,7 +1523,7 @@ export default function PortfolioCompanyInvestmentPage() {
                           newRounds[index].anticipation = e.target.value;
                           setPricedRoundsRound(newRounds);
                         }}
-                        className="w-full border rounded px-2 py-1 text-sm"
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       />
                     </td>
                     <td className="p-3">
@@ -1535,7 +1535,7 @@ export default function PortfolioCompanyInvestmentPage() {
                           newRounds[index].reserveBased = e.target.value;
                           setPricedRoundsRound(newRounds);
                         }}
-                        className="w-full border rounded px-2 py-1 text-sm"
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       />
                     </td>
                     <td className="p-3">
@@ -1547,7 +1547,7 @@ export default function PortfolioCompanyInvestmentPage() {
                           newRounds[index].concession = e.target.value;
                           setPricedRoundsRound(newRounds);
                         }}
-                        className="w-full border rounded px-2 py-1 text-sm"
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       />
                     </td>
                     <td className="p-3">
@@ -1559,7 +1559,7 @@ export default function PortfolioCompanyInvestmentPage() {
                           newRounds[index].leadInvestor = e.target.value;
                           setPricedRoundsRound(newRounds);
                         }}
-                        className="w-full border rounded px-2 py-1 text-sm"
+                        className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                         placeholder="e.g., A 10% Lead Investor"
                       />
                     </td>
@@ -1583,7 +1583,7 @@ export default function PortfolioCompanyInvestmentPage() {
           </div>
           
           {optionPoolsRound.map((pool, index) => (
-            <div key={pool.id} className="mb-8 border rounded-lg p-6">
+            <div key={pool.id} className="mb-8 border border-gray-200 rounded-lg p-6">
               <h4 className="font-bold text-gray-900 mb-6">{pool.series}</h4>
               <div className="space-y-4">
                 <div>
@@ -1596,7 +1596,7 @@ export default function PortfolioCompanyInvestmentPage() {
                       newPools[index].description = e.target.value;
                       setOptionPoolsRound(newPools);
                     }}
-                    className="w-full border rounded px-3 py-2 text-sm"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                     placeholder="e.g., Anticipated option terminology up to total $2000"
                   />
                 </div>
@@ -1610,7 +1610,7 @@ export default function PortfolioCompanyInvestmentPage() {
                       newPools[index].unallocated = e.target.value;
                       setOptionPoolsRound(newPools);
                     }}
-                    className="w-full border rounded px-3 py-2 text-sm"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                     placeholder="e.g., Unallocated Optise invested under an earn out plan"
                   />
                 </div>
@@ -1624,7 +1624,7 @@ export default function PortfolioCompanyInvestmentPage() {
                       newPools[index].expanded = e.target.value;
                       setOptionPoolsRound(newPools);
                     }}
-                    className="w-full border rounded px-3 py-2 text-sm"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                     placeholder="e.g., Expanded available Common/Preferred Shares: 10%"
                   />
                 </div>
@@ -1701,7 +1701,7 @@ export default function PortfolioCompanyInvestmentPage() {
     </div>
   );
 
-  // Render Step 2 (same as before)
+  // Render Step 2
   const renderStep2 = () => (
     <div className="space-y-8">
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
@@ -1721,7 +1721,7 @@ export default function PortfolioCompanyInvestmentPage() {
                 type="text"
                 value={foundersData.foundersShares}
                 onChange={(e) => setFoundersData({...foundersData, foundersShares: e.target.value})}
-                className="w-full border rounded-lg px-4 py-3 text-sm"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm"
               />
             </div>
             <div>
@@ -1730,7 +1730,7 @@ export default function PortfolioCompanyInvestmentPage() {
                 type="text"
                 value={foundersData.allocatedOptions}
                 onChange={(e) => setFoundersData({...foundersData, allocatedOptions: e.target.value})}
-                className="w-full border rounded-lg px-4 py-3 text-sm"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm"
               />
             </div>
             <div>
@@ -1739,7 +1739,7 @@ export default function PortfolioCompanyInvestmentPage() {
                 type="text"
                 value={foundersData.unallocatedOptions}
                 onChange={(e) => setFoundersData({...foundersData, unallocatedOptions: e.target.value})}
-                className="w-full border rounded-lg px-4 py-3 text-sm"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm"
               />
             </div>
           </div>
@@ -1829,7 +1829,7 @@ export default function PortfolioCompanyInvestmentPage() {
                       newRounds[index].investmentDate = e.target.value;
                       setPricedRounds(newRounds);
                     }}
-                    className="w-full border rounded px-3 py-2 text-sm"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
@@ -1842,7 +1842,7 @@ export default function PortfolioCompanyInvestmentPage() {
                       newRounds[index].investmentAmount = e.target.value;
                       setPricedRounds(newRounds);
                     }}
-                    className="w-full border rounded px-3 py-2 text-sm"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
@@ -1855,7 +1855,7 @@ export default function PortfolioCompanyInvestmentPage() {
                       newRounds[index].liquidationPreference = e.target.value;
                       setPricedRounds(newRounds);
                     }}
-                    className="w-full border rounded px-3 py-2 text-sm"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
@@ -1868,7 +1868,7 @@ export default function PortfolioCompanyInvestmentPage() {
                       newRounds[index].ownership = e.target.value;
                       setPricedRounds(newRounds);
                     }}
-                    className="w-full border rounded px-3 py-2 text-sm"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                   />
                 </div>
                 <div className="md:col-span-2">
@@ -1880,7 +1880,7 @@ export default function PortfolioCompanyInvestmentPage() {
                       newRounds[index].commonStockParticipation = e.target.value;
                       setPricedRounds(newRounds);
                     }}
-                    className="w-full border rounded px-3 py-2 text-sm"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                   >
                     <option>Participating / Converting</option>
                     <option>Non-participating</option>
@@ -1897,7 +1897,7 @@ export default function PortfolioCompanyInvestmentPage() {
                       newRounds[index].dividends = e.target.value;
                       setPricedRounds(newRounds);
                     }}
-                    className="w-full border rounded px-3 py-2 text-sm"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
@@ -1909,7 +1909,7 @@ export default function PortfolioCompanyInvestmentPage() {
                       newRounds[index].antidilutionProvision = e.target.value;
                       setPricedRounds(newRounds);
                     }}
-                    className="w-full border rounded px-3 py-2 text-sm"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                   >
                     <option>N/A</option>
                     <option>Full Ratchet</option>
@@ -1926,7 +1926,7 @@ export default function PortfolioCompanyInvestmentPage() {
                       newRounds[index].comments = e.target.value;
                       setPricedRounds(newRounds);
                     }}
-                    className="w-full border rounded px-3 py-2 text-sm"
+                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                   />
                 </div>
               </div>
@@ -1950,7 +1950,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newPools[index].allocatedOptions = e.target.value;
                         setOptionPools(newPools);
                       }}
-                      className="w-full border rounded px-3 py-2 text-sm"
+                      className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                     />
                   </div>
                   <div>
@@ -1963,7 +1963,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newPools[index].unallocatedOptions = e.target.value;
                         setOptionPools(newPools);
                       }}
-                      className="w-full border rounded px-3 py-2 text-sm"
+                      className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                     />
                   </div>
                   <div>
@@ -1976,7 +1976,7 @@ export default function PortfolioCompanyInvestmentPage() {
                         newPools[index].requestedPool = e.target.value;
                         setOptionPools(newPools);
                       }}
-                      className="w-full border rounded px-3 py-2 text-sm"
+                      className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
                     />
                   </div>
                 </div>
@@ -2036,7 +2036,7 @@ export default function PortfolioCompanyInvestmentPage() {
     </div>
   );
 
-  // Render Step 3 (same as before)
+  // Render Step 3
   const renderStep3 = () => (
     <div className="space-y-8">
       <div className="bg-white rounded-2xl border border-gray-200 p-6">
