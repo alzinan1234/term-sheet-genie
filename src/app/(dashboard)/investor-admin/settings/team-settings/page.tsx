@@ -1,10 +1,10 @@
-import TeamSettings from '@/components/InvestorAdmin/TeamSettings/TeamSettings'
+import TeamSettings from '@/components/InvestorAdmin/MySettings/MySettings'
 import React from 'react'
 
 const page = () => {
   return (
     <div> 
-       <TeamSettings />
+      <h1 className=' text-4xl'>Team Settings page is coming soon...</h1>
     </div>
   )
 }

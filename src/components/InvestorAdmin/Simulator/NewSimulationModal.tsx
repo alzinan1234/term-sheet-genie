@@ -1,112 +1,116 @@
-// components/NewSimulationModal.tsx
+// app/simulator/NewSimulationModal.tsx
 "use client";
 
-import React, { useState, useRef } from 'react';
-import { X, Upload } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSubmit: (data: { name: string; description: string }) => void;
 }
 
-const NewSimulationModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
+const NewSimulationModal: React.FC<ModalProps> = ({ isOpen, onSubmit, onClose }) => {
   const [formData, setFormData] = useState({
-    name: "Bug type #1",
-    fund: "Bug type #1",
-    description: "Playing around",
+    name: "",
+    description: "",
   });
-  const [file, setFile] = useState<File | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const [isVisible, setIsVisible] = useState(false);
 
-  if (!isOpen) return null;
+  // Sync internal visibility with the isOpen prop
+  useEffect(() => {
+    if (isOpen) {
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+      // Reset form when modal closes
+      setFormData({ name: "", description: "" });
+    }
+  }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitting Simulation:", { ...formData, file });
-    // Add your API logic here
-    onClose();
+    if (formData.name.trim()) {
+      onSubmit(formData);
+      // Let the parent handle the closing state
+    }
+  };
+
+  const handleClose = () => {
+    setIsVisible(false);
+    // Wait for the CSS transition (300ms) before telling the parent to unmount/hide
+    setTimeout(() => {
+      onClose();
+    }, 300);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="relative w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
-        {/* Close Button */}
+    <div 
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
+        isOpen && isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
+      onClick={handleClose} // Clicking the backdrop also closes the modal
+    >
+      <div 
+        className={`relative w-full max-w-2xl rounded-3xl bg-white p-10 shadow-2xl transition-all duration-300 ease-out ${
+          isOpen && isVisible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-4 scale-95 opacity-0'
+        }`}
+        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+      >
         <button 
-          onClick={onClose}
-          className="absolute right-6 top-6 rounded-full border border-gray-200 p-1 text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors"
+          type="button"
+          onClick={handleClose}
+          className="absolute right-8 top-8 rounded-full border border-gray-200 p-2 text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors"
         >
           <X size={20} />
         </button>
 
-        <h2 className="mb-8 text-3xl font-semibold text-gray-900">New Simulation</h2>
+        <h1 className="mb-2 text-3xl font-bold text-gray-900">Create New Simulation</h1>
+        <p className="mb-8 text-gray-600">Enter a name and description for your simulation</p>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Simulation Name */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-600">Name your new simulation</label>
-            <select 
-              className="w-full appearance-none rounded-xl bg-gray-100 px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-gray-700">
+              Simulation Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              placeholder="e.g., Series A Scenario"
+              className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-gray-800 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
-            >
-              <option>Bug type #1</option>
-              <option>Bug type #2</option>
-            </select>
+              required
+            />
           </div>
 
-          {/* Fund Selection */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-600">Would you like to add the simulation to a specific fund?</label>
-            <select 
-              className="w-full appearance-none rounded-xl bg-gray-100 px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={formData.fund}
-              onChange={(e) => setFormData({...formData, fund: e.target.value})}
-            >
-              <option>Bug type #1</option>
-              <option>Alternative Fund A</option>
-            </select>
-          </div>
-
-          {/* Description */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-600">Add a description</label>
+          <div className="space-y-3">
+            <label className="text-sm font-medium text-gray-700">Description</label>
             <textarea 
               rows={4}
-              className="w-full resize-none rounded-xl bg-[#f0f4f8] px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Add a description for this simulation..."
+              className="w-full resize-none rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-gray-800 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
               value={formData.description}
               onChange={(e) => setFormData({...formData, description: e.target.value})}
             />
           </div>
 
-          {/* File Upload */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-600">Document or Image</label>
-            <div 
-              onClick={() => fileInputRef.current?.click()}
-              className="flex cursor-pointer items-center gap-4 rounded-xl p-2 transition-colors hover:bg-gray-50"
+          <div className="flex justify-end gap-4 pt-6">
+            <button 
+              type="button"
+              onClick={handleClose}
+              className="rounded-full border border-gray-300 bg-white px-8 py-3 font-medium text-gray-700 transition-all hover:bg-gray-50 active:scale-[0.98]"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#f0f4f8] text-gray-500">
-                <Upload size={24} />
-              </div>
-              <span className="text-sm text-gray-400">
-                {file ? file.name : "Upload an image or document that describe the bug"}
-              </span>
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                className="hidden" 
-                onChange={(e) => setFile(e.target.files?.[0] || null)}
-              />
-            </div>
+              Cancel
+            </button>
+            <button 
+              type="submit"
+              disabled={!formData.name.trim()}
+              className="rounded-full bg-[#2d63ff] px-8 py-3 font-medium text-white transition-all hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Continue
+            </button>
           </div>
-
-          {/* Submit Button */}
-          <button 
-            type="submit"
-            className="w-full rounded-full bg-[#2d63ff] py-4 text-lg font-semibold text-white transition-all hover:bg-blue-700 active:scale-[0.98]"
-          >
-            Create Simulation
-          </button>
         </form>
       </div>
     </div>
