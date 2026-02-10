@@ -988,7 +988,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
                 >
                   <Plus size={16} />
-                  <span>+ Add Priced Round</span>
+                  <span> Add Priced Round</span>
                 </button>
               </div>
             </div>
@@ -1069,7 +1069,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
                           className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
                         >
                           <Plus size={16} />
-                          <span>+ Add Debt</span>
+                          <span> Add Debt</span>
                         </button>
                       </td>
                     </tr>
@@ -1116,7 +1116,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
                           className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
                         >
                           <Plus size={16} />
-                          <span>+ Add SAFE/Convertible Note</span>
+                          <span> Add SAFE/Convertible Note</span>
                         </button>
                       </td>
                     </tr>
