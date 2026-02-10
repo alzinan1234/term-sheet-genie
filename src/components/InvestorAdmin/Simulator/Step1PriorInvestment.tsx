@@ -238,20 +238,28 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex  border-gray-200 mb-8">
-        <button
-          className={`px-6 py-3 font-medium text-sm ${activeTab === 'latest' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
-          onClick={() => setActiveTab('latest')}
-        >
-          Latest Cap Table
-        </button>
-        <button
-          className={`px-6 py-3 font-medium text-sm ${activeTab === 'roundbyround' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
-          onClick={() => setActiveTab('roundbyround')}
-        >
-          Round by Round
-        </button>
-      </div>
+    <div className="inline-flex p-1 bg-[#ebf0f7] rounded-full mb-8 w-full">
+  <button
+    className={`px-12 py-2.5 w-full font-bold text-sm transition-all duration-200 rounded-full ${
+      activeTab === 'latest' 
+        ? 'bg-white text-blue-600 shadow-sm' 
+        : 'text-slate-500 hover:text-slate-700'
+    }`}
+    onClick={() => setActiveTab('latest')}
+  >
+    Latest Cap Table
+  </button>
+  <button
+    className={`px-12 py-2.5 font-bold w-full text-sm transition-all duration-200 rounded-full ${
+      activeTab === 'roundbyround' 
+        ? 'bg-white text-blue-600 shadow-sm' 
+        : 'text-slate-500 hover:text-slate-700'
+    }`}
+    onClick={() => setActiveTab('roundbyround')}
+  >
+    Round by Round
+  </button>
+</div>
 
       {/* About This Section */}
       <div className="border bg-white border-gray-200 rounded-lg p-4 mb-8 shadow-sm">

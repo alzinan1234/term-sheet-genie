@@ -100,7 +100,7 @@ const Simulator = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className=" px-8 py-4">
+      <div className="px-8 py-4">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-semibold text-gray-900">Simulator</h1>
           <div className="flex items-center gap-2">
@@ -117,28 +117,29 @@ const Simulator = () => {
         </div>
       </div>
 
-      {/* Progress Bar */}
+      {/* Progress Bar - Updated to match the requested design */}
       {!['idle', 'modal', 'results'].includes(currentStep) && (
-        <div className=" px-8 py-3 border-b border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              {['step1', 'step2', 'step3a', 'step3b'].map((step, index) => (
-                <React.Fragment key={step}>
-                  <div className={`flex items-center justify-center w-50 h-6 rounded-full ${currentStep === step ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
-                    {index + 1}
-                  </div>
-                  {index < 3 && (
-                    <div className={`w-12 h-1 ${['step1', 'step2', 'step3a', 'step3b'].indexOf(currentStep) >= index + 1 ? 'bg-blue-600' : 'bg-gray-200'}`} />
-                  )}
-                </React.Fragment>
-              ))}
-            </div>
-            <div className="text-sm text-gray-600">
-              {currentStep === 'step1' && 'Step 1: Prior Investment Information'}
-              {currentStep === 'step2' && 'Step 2: Cap Table Summary'}
-              {currentStep === 'step3a' && 'Step 3: Seniority Selection'}
-              {currentStep === 'step3b' && 'Step 3: Contract Valuation'}
-            </div>
+        <div className="px-8 py-4  border-gray-200">
+          <div className="flex items-center gap-2">
+            {['step1', 'step2', 'step3a', 'step3b'].map((step, index) => {
+              const stepsOrder = ['step1', 'step2', 'step3a', 'step3b'];
+              const isActive = stepsOrder.indexOf(currentStep) >= index;
+              
+              return (
+                <div 
+                  key={step} 
+                  className={`flex-1 h-[4px] rounded-full transition-colors duration-300 ${
+                    isActive ? 'bg-blue-600' : 'bg-gray-200'
+                  }`} 
+                />
+              );
+            })}
+          </div>
+          <div className="mt-3 text-sm text-gray-600">
+            {currentStep === 'step1' && 'Step 1: Prior Investment Information'}
+            {currentStep === 'step2' && 'Step 2: Cap Table Summary'}
+            {currentStep === 'step3a' && 'Step 3: Seniority Selection'}
+            {currentStep === 'step3b' && 'Step 3: Contract Valuation'}
           </div>
         </div>
       )}

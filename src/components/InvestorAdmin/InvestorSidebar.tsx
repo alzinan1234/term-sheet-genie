@@ -14,8 +14,6 @@ import {
   Settings,
   Flag,
   ChevronDown,
-  ChevronRight,
-  Menu,
   X,
   ChevronsLeft,
   ChevronsRight,
@@ -36,7 +34,7 @@ interface SubNavItem {
 }
 
 interface SidebarProps {
-  isOpen: boolean;        // Mobile sliding state
+  isOpen: boolean;      // Mobile sliding state
   setIsOpen: (isOpen: boolean) => void;
   isCollapsed: boolean;   // Desktop width state
   setIsCollapsed: (isCollapsed: boolean) => void;
@@ -54,12 +52,6 @@ const navItems: NavItem[] = [
     name: "Settings",
     href: "/investor-admin/settings",
     icon: Settings,
-    hasDropdown: true,
-    subItems: [
-      { name: "My settings", href: "/investor-admin/settings/my-settings" },
-      { name: "Team settings", href: "/investor-admin/settings/team-settings" },
-    
-    ],
   },
   { name: "Report an Issue", href: "/investor-admin/report-issue", icon: Flag },
 ];
@@ -124,8 +116,7 @@ const InvestorSidebar: React.FC<SidebarProps> = ({
                  <img src="/logo/TermSheetGenie.png" alt="Logo" className="object-contain" />
               </div>
             ) : (
-              <div className="w-10 h-10 text-black  rounded-lg flex items-center justify-center  font-bold text-sm">
-                
+              <div className="w-10 h-10 text-black rounded-lg flex items-center justify-center font-bold text-sm">
               </div>
             )}
 
@@ -141,8 +132,8 @@ const InvestorSidebar: React.FC<SidebarProps> = ({
             </button>
           </div>
 
-          {/* Nav Items */}
-          <nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 space-y-1 custom-scrollbar">
+          {/* Nav Items - Scrollbar hidden here */}
+          <nav className="flex-1 overflow-y-auto overflow-x-hidden py-4 space-y-1 scrollbar-hide [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = isActiveRoute(item.href);
