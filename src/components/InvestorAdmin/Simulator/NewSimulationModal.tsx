@@ -1,8 +1,6 @@
-// app/simulator/NewSimulationModal.tsx
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
 
 interface ModalProps {
   isOpen: boolean;
@@ -18,13 +16,11 @@ const NewSimulationModal: React.FC<ModalProps> = ({ isOpen, onSubmit, onClose })
   
   const [isVisible, setIsVisible] = useState(false);
 
-  // Sync internal visibility with the isOpen prop
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
     } else {
       setIsVisible(false);
-      // Reset form when modal closes
       setFormData({ name: "", description: "" });
     }
   }, [isOpen]);
@@ -33,13 +29,11 @@ const NewSimulationModal: React.FC<ModalProps> = ({ isOpen, onSubmit, onClose })
     e.preventDefault();
     if (formData.name.trim()) {
       onSubmit(formData);
-      // Let the parent handle the closing state
     }
   };
 
   const handleClose = () => {
     setIsVisible(false);
-    // Wait for the CSS transition (300ms) before telling the parent to unmount/hide
     setTimeout(() => {
       onClose();
     }, 300);
@@ -47,66 +41,64 @@ const NewSimulationModal: React.FC<ModalProps> = ({ isOpen, onSubmit, onClose })
 
   return (
     <div 
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300 ${
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/20 transition-opacity duration-300 ${
         isOpen && isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
-      onClick={handleClose} // Clicking the backdrop also closes the modal
+      onClick={handleClose}
     >
       <div 
-        className={`relative w-full max-w-xl rounded-3xl bg-white p-10 shadow-2xl transition-all duration-300 ease-out ${
+        className={`relative w-[480px] rounded-xl bg-white p-8 shadow-xl transition-all duration-300 ease-out ${
           isOpen && isVisible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-4 scale-95 opacity-0'
         }`}
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+        onClick={(e) => e.stopPropagation()}
       >
-        <button 
-          type="button"
-          onClick={handleClose}
-          className="absolute right-8 top-8 rounded-full border border-gray-200 p-2 text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors"
-        >
-          <X size={20} />
-        </button>
+        {/* Header */}
+        <div className="mb-6">
+          <h1 className="text-[22px] font-bold text-[#1e293b] mb-1">Create New Simulation</h1>
+          <p className="text-[15px] text-[#64748b]">Enter a name and description for your simulation</p>
+        </div>
 
-        <h1 className="mb-2 text-2xl font-bold text-gray-900">Create New Simulation</h1>
-        <p className="mb-8 text-gray-600">Enter a name and description for your simulation</p>
-
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">
-              Simulation Name <span className="text-red-500">*</span>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Simulation Name */}
+          <div className="space-y-2">
+            <label className="text-[14px] font-semibold text-[#1e293b]">
+              Simulation Name *
             </label>
             <input
               type="text"
               placeholder="e.g., Series A Scenario"
-              className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-gray-800 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-[#e2e8f0] bg-white px-4 py-[10px] text-[15px] text-gray-800 placeholder:text-[#cbd5e1] focus:border-[#94a3b8] focus:outline-none transition-colors"
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
               required
             />
           </div>
 
-          <div className="space-y-3">
-            <label className="text-sm font-medium text-gray-700">Description</label>
+          {/* Description */}
+          <div className="space-y-2">
+            <label className="text-[14px] font-semibold text-[#1e293b]">Description</label>
             <textarea 
               rows={4}
               placeholder="Add a description for this simulation..."
-              className="w-full resize-none rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-gray-800 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100"
+              className="w-full resize-none rounded-lg border border-[#e2e8f0] bg-white px-4 py-[10px] text-[15px] text-gray-800 placeholder:text-[#cbd5e1] focus:border-[#94a3b8] focus:outline-none transition-colors"
               value={formData.description}
               onChange={(e) => setFormData({...formData, description: e.target.value})}
             />
           </div>
 
-          <div className="flex justify-end gap-4 pt-6">
+          {/* Actions */}
+          <div className="flex justify-end items-center gap-6 pt-4">
             <button 
               type="button"
               onClick={handleClose}
-              className="rounded-full border border-gray-300 bg-white px-8 py-3 font-medium text-gray-700 transition-all hover:bg-gray-50 active:scale-[0.98]"
+              className="text-[15px] font-medium text-[#64748b] hover:text-[#1e293b] transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit"
               disabled={!formData.name.trim()}
-              className="rounded-full bg-[#2d63ff] px-8 py-3 font-medium text-white transition-all hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-lg bg-[#94a3ff] px-8 py-[10px] text-[15px] font-bold text-white transition-all hover:bg-[#7e8fff] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Continue
             </button>

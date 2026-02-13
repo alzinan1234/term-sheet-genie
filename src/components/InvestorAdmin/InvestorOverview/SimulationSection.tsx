@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Plus, MoreHorizontal, X } from "lucide-react";
+import Link from "next/link";
 
 interface Simulation {
   id: string;
@@ -31,12 +32,11 @@ export default function SimulationSection() {
     <div className="  mt-10 relative">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold text-gray-900">Individual Investment Simulations</h2>
-        <button 
-          onClick={() => setIsPopupOpen(true)}
-          className="bg-[#2D60FF] hover:bg-[#1a4bd6] text-white px-5 py-2.5 rounded-2xl flex items-center gap-2 font-bold text-sm shadow-lg shadow-blue-100 transition-all active:scale-95"
-        >
-          <Plus size={18} /> Create New Simulation
-        </button>
+     <Link href="/investor-admin/simulator">
+      <button className="bg-[#2D60FF] hover:bg-[#1a4bd6] text-white px-5 py-2.5 rounded-2xl flex items-center gap-2 font-bold text-sm shadow-lg shadow-blue-100 transition-all active:scale-95">
+        <Plus size={18} /> Create New Simulation
+      </button>
+     </Link>
       </div>
 
       {/* Grid Layout */}
