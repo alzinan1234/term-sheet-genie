@@ -2,6 +2,7 @@
 import React, { use, useState } from "react";
 import { Plus, Edit2, ChevronDown, ChevronUp, FileText, ArrowLeft, Save, X, UploadCloud } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // --- Types ---
 interface PageProps {
@@ -316,9 +317,11 @@ const SectionTable = ({ title, description, buttonText, columns, initialData, on
           </div>
           <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wider">{description}</p>
         </div>
-        <button onClick={onAdd} className="bg-[#2D60FF] hover:bg-blue-700 text-white px-5 py-2.5 rounded-[12px] text-xs font-bold flex items-center gap-2 transition-all active:scale-95">
+       <Link href="/investor-admin/simulator">
+        <button  className="bg-[#2D60FF] hover:bg-blue-700 text-white px-5 py-2.5 rounded-[12px] text-xs font-bold flex items-center gap-2 transition-all active:scale-95">
           <Plus size={14} /> {buttonText}
         </button>
+       </Link>
       </div>
       {isOpen && (
         <div className="overflow-x-auto">
