@@ -1,7 +1,6 @@
-// app/simulator/components/Step3SenioritySelection.tsx
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface Step3Props {
   data: any;
@@ -10,10 +9,21 @@ interface Step3Props {
 }
 
 const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onStepBack }) => {
-  const [debtSeniority, setDebtSeniority] = useState(data.debt);
-  const [equitySeniority, setEquitySeniority] = useState(data.equity);
+  const [debtSeniority, setDebtSeniority] = useState<string[]>([]);
+  const [equitySeniority, setEquitySeniority] = useState<string[][]>([]);
 
-  const handleDragStart = (e: React.DragEvent, type: string, index: number) => {
+  useEffect(() => {
+    const initialDebt = Array.isArray(data?.debt) ? data.debt : ['Senior Debt', 'Junior Debt', 'Junior Subordinated Debt'];
+    const initialEquity = Array.isArray(data?.equity) && Array.isArray(data?.equity[0]) 
+      ? data.equity 
+      : [['Series D'], ['Series B', 'Series C'], ['Series A']];
+    
+    setDebtSeniority(initialDebt);
+    setEquitySeniority(initialEquity);
+  }, [data]);
+
+  // --- Drag and Drop Logic ---
+  const handleDragStart = (e: React.DragEvent, type: 'debt' | 'equity', index: number) => {
     e.dataTransfer.setData('type', type);
     e.dataTransfer.setData('index', index.toString());
   };
@@ -22,150 +32,167 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
     e.preventDefault();
   };
 
-  const handleDrop = (e: React.DragEvent, type: string, targetIndex: number) => {
+  const handleDrop = (e: React.DragEvent, targetType: 'debt' | 'equity', targetIndex: number) => {
     e.preventDefault();
     const sourceType = e.dataTransfer.getData('type');
     const sourceIndex = parseInt(e.dataTransfer.getData('index'));
-    
-    if (sourceType === 'debt' && type === 'debt') {
-      const newDebtSeniority = [...debtSeniority];
-      const [removed] = newDebtSeniority.splice(sourceIndex, 1);
-      newDebtSeniority.splice(targetIndex, 0, removed);
-      setDebtSeniority(newDebtSeniority);
-    } else if (sourceType === 'equity' && type === 'equity') {
-      const newEquitySeniority = [...equitySeniority];
-      const [removed] = newEquitySeniority.splice(sourceIndex, 1);
-      newEquitySeniority.splice(targetIndex, 0, removed);
-      setEquitySeniority(newEquitySeniority);
+
+    if (sourceType !== targetType) return;
+
+    if (targetType === 'debt') {
+      const newList = [...debtSeniority];
+      const [movedItem] = newList.splice(sourceIndex, 1);
+      newList.splice(targetIndex, 0, movedItem);
+      setDebtSeniority(newList);
+    } else {
+      const newList = [...equitySeniority];
+      const [movedItem] = newList.splice(sourceIndex, 1);
+      newList.splice(targetIndex, 0, movedItem);
+      setEquitySeniority(newList);
     }
   };
 
-  const handleAddNewLevel = (type: string) => {
+  // --- Add New Level Logic ---
+  const addNewLevel = (type: 'debt' | 'equity') => {
+    const name = prompt(`Enter name for new ${type} level:`);
+    if (!name) return;
+
     if (type === 'debt') {
-      const newLevel = prompt('Enter new debt seniority level:');
-      if (newLevel) {
-        setDebtSeniority([...debtSeniority, newLevel]);
-      }
+      setDebtSeniority([...debtSeniority, name]);
     } else {
-      const newLevel = prompt('Enter new equity seniority level:');
-      if (newLevel) {
-        setEquitySeniority([...equitySeniority, newLevel]);
-      }
+      setEquitySeniority([...equitySeniority, [name]]);
     }
   };
 
   return (
-    <div className=" mx-auto">
+    <div className="w-full min-h-screen bg-[#f8fafc] p-8 font-sans text-[#1e293b]">
+      {/* Header */}
       <div className="mb-8">
-        <div className="text-sm text-gray-500 mb-2">Step 3 of 3</div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Seniority Selection</h1>
-        <p className="text-gray-600">
-          Seniority represents the order in which debt is paid off or preferential returns are distributed. 
-          Share classes at the same level are considered part passu.
+        <h1 className="text-xl font-semibold mb-1 text-slate-800">Seniority Selection</h1>
+        <p className="text-[11px] text-slate-400">
+          Seniority represents the order in which debt is paid off or preferential returns are distributed. Share classes at the same level are considered pari passu.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-8">
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Debt Seniority</h2>
-          <div className="mb-2 text-sm text-gray-600">Receives First</div>
+      <div className="space-y-6">
+        {/* --- Debt Seniority Section --- */}
+        <div className="bg-white rounded-xl border border-slate-100 shadow-sm">
+          <div className="px-6 py-3 border-b border-slate-50">
+            <h2 className="text-[#1e293b] font-semibold text-sm">Debt Seniority</h2>
+          </div>
           
-          <div className="space-y-2 mb-4">
-            {debtSeniority.map((level: string, index: number) => (
-              <div
-                key={level}
-                draggable
-                onDragStart={(e) => handleDragStart(e, 'debt', index)}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, 'debt', index)}
-                className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg p-3 cursor-move hover:bg-gray-100"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded">
+          <div className="p-6">
+            <div className="text-[10px] uppercase tracking-wider text-slate-400 mb-4 font-bold">Receives First</div>
+            
+            <div className="space-y-3">
+              {debtSeniority.map((level, index) => (
+                <div 
+                  key={index} 
+                  className="flex items-center gap-4"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, 'debt', index)}
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, 'debt', index)}
+                >
+                  <div className="w-7 h-7 rounded-full bg-slate-50 flex items-center justify-center text-[10px] font-bold text-slate-500 border border-slate-100 shrink-0">
                     {index + 1}
                   </div>
-                  <span className="font-medium">{level}</span>
+                  <div className="flex-1 bg-[#fcfdfe] border border-slate-100 rounded-lg p-2.5 flex items-center gap-3 cursor-grab active:cursor-grabbing hover:border-blue-200 transition-colors">
+                    <div className="flex flex-col gap-0.5 opacity-20">
+                      <div className="flex gap-0.5"><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div></div>
+                      <div className="flex gap-0.5"><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div></div>
+                      <div className="flex gap-0.5"><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div></div>
+                    </div>
+                    <span className="bg-white border border-slate-200 px-3 py-1.5 rounded-md text-[12px] font-medium shadow-sm text-slate-600">
+                      {level}
+                    </span>
+                  </div>
                 </div>
-                <button className="text-gray-400 hover:text-gray-600">⋮</button>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          <div
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, 'debt', debtSeniority.length)}
-            className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mb-2 cursor-pointer hover:border-blue-400 hover:bg-blue-50"
-            onClick={() => handleAddNewLevel('debt')}
-          >
-            <div className="text-gray-500">Drop here to create new level</div>
+            <div 
+              onClick={() => addNewLevel('debt')}
+              className="mt-3 ml-11 border-2 border-dashed border-slate-100 rounded-lg py-3 text-center bg-slate-50/30 cursor-pointer hover:bg-slate-100 transition-all"
+            >
+              <span className="text-[10px] text-slate-400 font-medium">Click or Drop here to create new level</span>
+            </div>
+            <div className="text-[10px] uppercase tracking-wider text-slate-400 mt-4 font-bold">Receives Last</div>
           </div>
-
-          <div className="text-sm text-gray-600 mt-4">Receives Last</div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Equity Seniority</h2>
-          <div className="mb-2 text-sm text-gray-600">Receives First</div>
+        {/* --- Equity Seniority Section --- */}
+        <div className="bg-white rounded-xl border border-slate-100 shadow-sm">
+          <div className="px-6 py-3 border-b border-slate-50">
+            <h2 className="text-[#1e293b] font-semibold text-sm">Equity Seniority</h2>
+          </div>
           
-          <div className="space-y-2 mb-4">
-            {equitySeniority.map((level: string, index: number) => (
-              <div
-                key={level}
-                draggable
-                onDragStart={(e) => handleDragStart(e, 'equity', index)}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, 'equity', index)}
-                className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg p-3 cursor-move hover:bg-gray-100"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded">
+          <div className="p-6">
+            <div className="text-[10px] uppercase tracking-wider text-slate-400 mb-4 font-bold">Receives First</div>
+            
+            <div className="space-y-3">
+              {equitySeniority.map((row, index) => (
+                <div 
+                  key={index} 
+                  className="flex items-center gap-4"
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, 'equity', index)}
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, 'equity', index)}
+                >
+                  <div className="w-7 h-7 rounded-full bg-slate-50 flex items-center justify-center text-[10px] font-bold text-slate-500 border border-slate-100 shrink-0">
                     {index + 1}
                   </div>
-                  <span className="font-medium">{level}</span>
+                  <div className="flex-1 bg-[#fcfdfe] border border-slate-100 rounded-lg p-2.5 flex items-center gap-3 cursor-grab active:cursor-grabbing hover:border-blue-200 transition-colors">
+                    <div className="flex flex-col gap-0.5 opacity-20">
+                      <div className="flex gap-0.5"><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div></div>
+                      <div className="flex gap-0.5"><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div></div>
+                      <div className="flex gap-0.5"><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div></div>
+                    </div>
+                    <div className="flex gap-3 flex-wrap">
+                      {row.map((item, idx) => (
+                        <span key={idx} className="bg-white border border-slate-200 px-3 py-1.5 rounded-md text-[12px] font-medium shadow-sm text-slate-600">
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <button className="text-gray-400 hover:text-gray-600">⋮</button>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          <div
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, 'equity', equitySeniority.length)}
-            className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mb-2 cursor-pointer hover:border-blue-400 hover:bg-blue-50"
-            onClick={() => handleAddNewLevel('equity')}
-          >
-            <div className="text-gray-500">Drop here to create new level</div>
+            <div 
+              onClick={() => addNewLevel('equity')}
+              className="mt-3 ml-11 border-2 border-dashed border-slate-100 rounded-lg py-3 text-center bg-slate-50/30 cursor-pointer hover:bg-slate-100 transition-all"
+            >
+              <span className="text-[10px] text-slate-400 font-medium">Click or Drop here to create new level</span>
+            </div>
+            <div className="text-[10px] uppercase tracking-wider text-slate-400 mt-4 font-bold">Receives Last</div>
           </div>
-
-          <div className="text-sm text-gray-600 mt-4">Receives Last</div>
         </div>
       </div>
 
-      <div className="flex justify-between items-center mt-8 pt-6 ">
-        <button 
-          onClick={onStepBack}
-          className="rounded-full border border-gray-300 bg-white px-8 py-3 font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Cancel
-        </button>
-        <div className="flex gap-4">
-          <button 
-            onClick={onStepBack}
-            className="rounded-full border border-gray-300 bg-white px-8 py-3 font-medium text-gray-700 hover:bg-gray-50"
-          >
+      {/* Footer Buttons */}
+      <div className="flex justify-between items-center mt-10 pb-8">
+        <div className="flex gap-3">
+          <button onClick={onStepBack} className="px-6 py-2.5 border border-slate-200 text-slate-500 rounded-full hover:bg-slate-50 transition-all text-[12px] font-semibold bg-white shadow-sm">
+            Cancel
+          </button>
+          <button onClick={onStepBack} className="px-6 py-2.5 border border-slate-200 text-slate-500 rounded-full hover:bg-slate-50 transition-all text-[12px] font-semibold bg-white shadow-sm">
             Step back
           </button>
-          <div className="flex gap-4">
-            <button className="rounded-full border border-blue-600 bg-white px-8 py-3 font-medium text-blue-600 hover:bg-blue-50">
-              Add Future Round(s)
-            </button>
-            <button 
-              onClick={() => onContinue({ debt: debtSeniority, equity: equitySeniority })}
-              className="rounded-full bg-[#2d63ff] px-8 py-3 font-medium text-white hover:bg-blue-700"
-            >
-              Simulate and Save As-is
-            </button>
-          </div>
+        </div>
+        
+        <div className="flex gap-3">
+          <button className="px-6 py-2.5 bg-[#eff6ff] text-[#3b66ff] rounded-full hover:bg-blue-100 transition-all text-[12px] font-bold">
+            Add Future Round(s)
+          </button>
+          <button 
+            onClick={() => onContinue({ debt: debtSeniority, equity: equitySeniority })}
+            className="px-6 py-2.5 bg-[#3b66ff] text-white rounded-full hover:bg-blue-700 transition-all text-[12px] font-bold flex items-center gap-2 shadow-md shadow-blue-200"
+          >
+            Simulate and Save As-is <span className="w-4 h-4 bg-white text-[#3b66ff] rounded flex items-center justify-center text-[10px]">✓</span>
+          </button>
         </div>
       </div>
     </div>

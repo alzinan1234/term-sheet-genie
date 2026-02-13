@@ -27,8 +27,8 @@ const Step2CapTable: React.FC<Step2Props> = ({ data, onContinue, onStepBack }) =
       id: 2,
       name: 'Unallocated Options',
       investors: 'Activest III, Sequoia\nSpecify Investors',
-      commonStock: 10000,
-      stockOptions: 0,
+      commonStock: 0,
+      stockOptions: 10000,
       seriesA: 0,
       seriesB: 0,
       fullyDiluted: 10000,
@@ -39,7 +39,7 @@ const Step2CapTable: React.FC<Step2Props> = ({ data, onContinue, onStepBack }) =
       id: 3,
       name: 'Series A',
       investors: 'Activest III, Sequoia\nSpecify Investors',
-      commonStock: 500000,
+      commonStock: 0,
       stockOptions: 0,
       seriesA: 500000,
       seriesB: 0,
@@ -51,7 +51,7 @@ const Step2CapTable: React.FC<Step2Props> = ({ data, onContinue, onStepBack }) =
       id: 4,
       name: 'Series B',
       investors: 'Activest III, Sequoia\nSpecify Investors',
-      commonStock: 400000,
+      commonStock: 0,
       stockOptions: 0,
       seriesA: 0,
       seriesB: 400000,
@@ -159,224 +159,112 @@ const Step2CapTable: React.FC<Step2Props> = ({ data, onContinue, onStepBack }) =
   };
 
   return (
-    <div className=" mx-auto px-4 py-8">
+    <div className="mx-auto px-4 py-8">
       {/* Header */}
-      <div className="mb-8">
-        <div className="text-sm text-gray-500 mb-1">Step 2 of 3</div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Cap Table Summary</h1>
+      <div className="mb-6">
+        <h1 className="text-xl font-semibold text-gray-900">Cap Table Summary</h1>
       </div>
 
       {/* Cap Table Section */}
-      <div className="bg-white rounded-xl border border-gray-300 shadow-sm mb-8">
-        <div className="p-6">
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-gray-50">
-                  <th className="text-left p-4 text-sm font-medium text-gray-700 border border-gray-300">Name</th>
-                  <th className="text-left p-4 text-sm font-medium text-gray-700 border border-gray-300">Investors</th>
-                  <th className="text-left p-4 text-sm font-medium text-gray-700 border border-gray-300">Common Stock</th>
-                  <th className="text-left p-4 text-sm font-medium text-gray-700 border border-gray-300">Stock Options</th>
-                  <th className="text-left p-4 text-sm font-medium text-gray-700 border border-gray-300">Series A Preferred</th>
-                  <th className="text-left p-4 text-sm font-medium text-gray-700 border border-gray-300">Series B Preferred</th>
-                  <th className="text-left p-4 text-sm font-medium text-gray-700 border border-gray-300">Fully Diluted Share</th>
-                  <th className="text-left p-4 text-sm font-medium text-gray-700 border border-gray-300">Nominal Ownership</th>
-                  <th className="text-left p-4 text-sm font-medium text-gray-700 border border-gray-300">Price/Share</th>
-                </tr>
-              </thead>
-              <tbody>
-                {capTable.map((row: any) => (
-                  <tr key={row.id} className={`hover:bg-gray-50 ${row.name === 'Total' ? 'bg-gray-50 font-semibold' : ''}`}>
-                    <td className="p-4 border border-gray-300">
-                      {row.name === 'Total' ? (
-                        row.name
-                      ) : (
-                        <input
-                          type="text"
-                          value={row.name}
-                          onChange={(e) => updateCapTable(row.id, 'name', e.target.value)}
-                          className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                        />
-                      )}
-                    </td>
-                    <td className="p-4 border border-gray-300">
-                      {row.name === 'Total' ? (
-                        row.investors
-                      ) : (
-                        <textarea
-                          value={row.investors}
-                          onChange={(e) => updateCapTable(row.id, 'investors', e.target.value)}
-                          className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                          rows={2}
-                        />
-                      )}
-                    </td>
-                    <td className="p-4 border border-gray-300">
-                      <input
-                        type="text"
-                        value={formatNumber(row.commonStock)}
-                        onChange={(e) => {
-                          const num = parseInt(e.target.value.replace(/,/g, '')) || 0;
-                          updateCapTable(row.id, 'commonStock', num);
-                        }}
-                        className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-right"
-                        disabled={row.name === 'Total'}
-                      />
-                    </td>
-                    <td className="p-4 border border-gray-300">
-                      <input
-                        type="text"
-                        value={formatNumber(row.stockOptions)}
-                        onChange={(e) => {
-                          const num = parseInt(e.target.value.replace(/,/g, '')) || 0;
-                          updateCapTable(row.id, 'stockOptions', num);
-                        }}
-                        className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-right"
-                        disabled={row.name === 'Total'}
-                      />
-                    </td>
-                    <td className="p-4 border border-gray-300">
-                      <input
-                        type="text"
-                        value={formatNumber(row.seriesA)}
-                        onChange={(e) => {
-                          const num = parseInt(e.target.value.replace(/,/g, '')) || 0;
-                          updateCapTable(row.id, 'seriesA', num);
-                        }}
-                        className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-right"
-                        disabled={row.name === 'Total'}
-                      />
-                    </td>
-                    <td className="p-4 border border-gray-300">
-                      <input
-                        type="text"
-                        value={formatNumber(row.seriesB)}
-                        onChange={(e) => {
-                          const num = parseInt(e.target.value.replace(/,/g, '')) || 0;
-                          updateCapTable(row.id, 'seriesB', num);
-                        }}
-                        className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-right"
-                        disabled={row.name === 'Total'}
-                      />
-                    </td>
-                    <td className="p-4 border border-gray-300">
-                      <input
-                        type="text"
-                        value={formatNumber(row.fullyDiluted)}
-                        onChange={(e) => {
-                          const num = parseInt(e.target.value.replace(/,/g, '')) || 0;
-                          updateCapTable(row.id, 'fullyDiluted', num);
-                        }}
-                        className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-right"
-                        disabled={row.name === 'Total'}
-                      />
-                    </td>
-                    <td className="p-4 border border-gray-300">
-                      <div className="relative">
-                        <input
-                          type="text"
-                          value={row.nominalOwnership}
-                          onChange={(e) => {
-                            const num = parseFloat(e.target.value) || 0;
-                            updateCapTable(row.id, 'nominalOwnership', num);
-                          }}
-                          className="w-full rounded border border-gray-300 px-3 py-2 pr-7 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-right"
-                          disabled={row.name === 'Total'}
-                        />
-                        <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mb-8">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-gray-50 border-b border-gray-200">
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-600">Name</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-600">Investors</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-600">Common Stock</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-600">Stock Options</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-600">Series A Preferred</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-600">Series B Preferred</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-600">Fully Diluted Share</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-600">Nominal Ownership</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-600">Price/Share</th>
+              </tr>
+            </thead>
+            <tbody>
+              {capTable.map((row: any, index: number) => (
+                <tr 
+                  key={row.id} 
+                  className={`border-b border-gray-100 ${row.name === 'Total' ? 'bg-gray-50' : 'bg-white'}`}
+                >
+                  <td className="px-4 py-4">
+                    <div className="text-sm font-medium text-gray-900">{row.name}</div>
+                  </td>
+                  <td className="px-4 py-4">
+                    {row.name === 'Total' ? (
+                      <div className="text-sm text-gray-900">{row.investors}</div>
+                    ) : (
+                      <div className="text-sm text-gray-900">
+                        Activest III, Sequoia
+                        <br />
+                        <span className="text-blue-600 cursor-pointer hover:underline">Specify Investors</span>
                       </div>
-                    </td>
-                    <td className="p-4 border border-gray-300">
-                      <input
-                        type="text"
-                        value={row.pricePerShare}
-                        onChange={(e) => {
-                          const num = parseFloat(e.target.value) || 0;
-                          updateCapTable(row.id, 'pricePerShare', num);
-                        }}
-                        className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-right"
-                        disabled={row.name === 'Total'}
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Add Row Button */}
-          <div className="mt-4">
-            <button className="flex items-center gap-2 text-blue-600 hover:text-blue-800">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              <span> Add Row</span>
-            </button>
-          </div>
+                    )}
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="text-sm text-gray-900">{row.commonStock ? formatNumber(row.commonStock) : ''}</div>
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="text-sm text-gray-900">{row.stockOptions ? formatNumber(row.stockOptions) : ''}</div>
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="text-sm text-gray-900">{row.seriesA ? formatNumber(row.seriesA) : ''}</div>
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="text-sm text-gray-900">{row.seriesB ? formatNumber(row.seriesB) : ''}</div>
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="text-sm text-gray-900">{formatNumber(row.fullyDiluted)}</div>
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="text-sm text-gray-900">{row.nominalOwnership}%</div>
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="text-sm text-gray-900">{row.pricePerShare}</div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-between items-center pt-8 border-t border-gray-300">
-        <button 
-          onClick={onStepBack}
-          className="rounded-full border border-gray-300 bg-white px-8 py-3 font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Cancel
-        </button>
-        
-        <div className="flex items-center gap-4">
+      <div className="flex justify-between items-center pt-6">
+        <div className="flex gap-3">
           <button 
             onClick={onStepBack}
-            className="rounded-full border border-gray-300 bg-white px-8 py-3 font-medium text-gray-700 hover:bg-gray-50"
+            className="px-6 py-3 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            Cancel
+          </button>
+          <button 
+            onClick={onStepBack}
+            className="px-6 py-3 text-sm font-semibold text-[#2d60ff] bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
           >
             Step back
           </button>
-          
-          <div className="relative inline-block">
-            <button className="rounded-full border border-blue-600 bg-white px-8 py-3 font-medium text-blue-600 hover:bg-blue-50">
-              Simulate Future Round(s)
-            </button>
-          </div>
-          
-          {/* <div className="relative inline-block">
-            <select 
-              value={selectedAction}
-              onChange={(e) => handleActionChange(e.target.value)}
-              className="rounded-full border border-gray-300 bg-white px-8 py-3 font-medium text-gray-700 appearance-none cursor-pointer hover:bg-gray-50 pr-10"
-            >
-              <option value="">Select Action...</option>
-              <option value="simulate-future">Simulate Future Round(s)</option>
-              <option value="save-as-is">Simulate and Save As-is</option>
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3">
-              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </div> */}
+        </div>
+        
+        <div className="flex items-center gap-3">
+          <button 
+            className="px-6 py-3 text-sm font-semibold text-[#2d60ff] bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            Simulate Future Round(s)
+          </button>
           
           <button 
             onClick={() => handleActionChange('save-as-is')}
-            className="rounded-full bg-[#2d63ff] px-8 py-3 font-medium text-white hover:bg-blue-700"
+            className="px-6 py-3 text-sm font-semibold text-white bg-[#2d60ff] rounded-lg hover:bg-[#254edd] transition-colors flex items-center gap-2"
           >
             Simulate and Save As-is
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </button>
         </div>
       </div>
-
-      {/* Alternative Layout with Both Buttons Side by Side */}
-      {/* <div className="mt-8 flex justify-end gap-4">
-        <button className="rounded-full border border-blue-600 bg-white px-8 py-3 font-medium text-blue-600 hover:bg-blue-50">
-          Simulate Future Round(s)
-        </button>
-        <button 
-          onClick={() => onContinue({ capTable })}
-          className="rounded-full bg-[#2d63ff] px-8 py-3 font-medium text-white hover:bg-blue-700"
-        >
-          Simulate and Save As-is
-        </button>
-      </div> */}
     </div>
   );
 };

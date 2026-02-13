@@ -1,4 +1,3 @@
-// app/simulator/components/Step3ContractValuation.tsx
 "use client";
 
 import React, { useState } from 'react';
@@ -12,225 +11,142 @@ interface Step3Props {
 const Step3ContractValuation: React.FC<Step3Props> = ({ data, onContinue, onStepBack }) => {
   const [formData, setFormData] = useState({
     expectedTimeToExit: data?.expectedTimeToExit || 0,
-    volatility: data?.volatility || 0,
-    subjectivePostMoneyValuation: data?.subjectivePostMoneyValuation || '',
-    riskFreeRate: data?.riskFreeRate || '',
-    marketRiskPremium: data?.marketRiskPremium || '',
-    betaCoefficient: data?.betaCoefficient || ''
+    volatilityHoldingPeriod: data?.volatilityHoldingPeriod || 0,
+    subjectivePostMoneyValuation: data?.subjectivePostMoneyValuation || 0,
+    volatility: data?.volatility || "90%",
+    riskFreeRate: data?.riskFreeRate || 4.3,
   });
-  
-  const [showAdvanced, setShowAdvanced] = useState(false);
+
+  const [showAdvanced, setShowAdvanced] = useState(true); // ছবির মতো ডিফল্ট ওপেন রাখা হয়েছে
 
   const handleChange = (field: string, value: any) => {
-    if (field === 'expectedTimeToExit' || field === 'volatility') {
-      setFormData({ ...formData, [field]: Math.max(0, Number(value) || 0) });
-    } else {
-      setFormData({ ...formData, [field]: value });
-    }
-  };
-
-  const handleContinue = () => {
-    onContinue(formData);
+    setFormData({ ...formData, [field]: value });
   };
 
   return (
-    <div className=" mx-auto p-6">
-      {/* Step Indicator */}
-      <div className="mb-8">
-        <div className="text-sm text-gray-500 mb-2">Step 3 of 3</div>
-        <h1 className="text-2xl font-bold text-gray-900">Use default inputs for contract valuation</h1>
+    <div className="w-full min-h-screen bg-[#f8fafc] p-8 font-sans">
+      {/* Top Checkbox */}
+      <div className="flex items-center gap-2 mb-6">
+        <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600" id="default-inputs" />
+        <label htmlFor="default-inputs" className="text-xs text-gray-600">
+          Use default inputs for contract valuation
+        </label>
       </div>
 
-      {/* Main Card */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-8">
-        {/* Section Title */}
-        <h2 className="text-lg font-semibold text-gray-900 mb-6">Contract Valuation Inputs</h2>
-        
-        {/* Description */}
-        <p className="text-gray-600 mb-8">
-          Understanding your valuation of the company as it currently stands and view of market conditions 
-          for this kind of investment will permit Term Sheet Genie to calculate the value of your investment contracts.
-        </p>
+      <h1 className="text-2xl text-[#1e293b] font-medium mb-2">Contract Valuation Inputs</h1>
+      <p className="text-sm text-gray-500 mb-8 max-w-5xl leading-relaxed">
+        Understanding your valuation of the company as it currently stands and view of market conditions for this kind of investment will permit Term Sheet Genie to calculate the value of your investment contracts.
+      </p>
 
-        {/* Input Fields */}
-        <div className="space-y-8">
-          {/* Expected Time to Exit */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Expected Time to Exit (Yrs)
+      {/* Main Container */}
+      <div className="space-y-6">
+        {/* Top Row: Exit Time and Volatility */}
+        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 flex items-center justify-between relative">
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-[#334155] mb-2 flex items-center gap-1">
+              Expected Time to Exit (Yrs): <span className="text-gray-400 cursor-help">ⓘ</span>
             </label>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center">
-                <button 
-                  type="button"
-                  onClick={() => handleChange('expectedTimeToExit', formData.expectedTimeToExit - 1)}
-                  className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-l-lg hover:bg-gray-50 active:bg-gray-100 transition-colors"
-                  disabled={formData.expectedTimeToExit <= 0}
-                >
-                  <span className="text-lg">-</span>
-                </button>
-                <input
-                  type="number"
-                  min="0"
-                  value={formData.expectedTimeToExit}
-                  onChange={(e) => handleChange('expectedTimeToExit', e.target.value)}
-                  className="w-20 h-10 border-t border-b border-gray-300 text-center text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <button 
-                  type="button"
-                  onClick={() => handleChange('expectedTimeToExit', formData.expectedTimeToExit + 1)}
-                  className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-r-lg hover:bg-gray-50 active:bg-gray-100 transition-colors"
-                >
-                  <span className="text-lg">+</span>
-                </button>
-              </div>
-              <div className="text-gray-500 text-sm">Year</div>
-            </div>
+            <input
+              type="number"
+              value={formData.expectedTimeToExit}
+              onChange={(e) => handleChange('expectedTimeToExit', e.target.value)}
+              className="w-full bg-[#f1f5f9] border-none rounded-lg py-3 px-4 text-gray-700 focus:ring-2 focus:ring-blue-500"
+            />
+            <span className="text-[10px] text-gray-400 mt-1 block">Helper</span>
           </div>
 
-          {/* Volatility Around Holding Period */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Volatility Around Holding Period (Yrs)
-            </label>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center">
-                <button 
-                  type="button"
-                  onClick={() => handleChange('volatility', formData.volatility - 1)}
-                  className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-l-lg hover:bg-gray-50 active:bg-gray-100 transition-colors"
-                  disabled={formData.volatility <= 0}
-                >
-                  <span className="text-lg">-</span>
-                </button>
-                <input
-                  type="number"
-                  min="0"
-                  value={formData.volatility}
-                  onChange={(e) => handleChange('volatility', e.target.value)}
-                  className="w-20 h-10 border-t border-b border-gray-300 text-center text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <button 
-                  type="button"
-                  onClick={() => handleChange('volatility', formData.volatility + 1)}
-                  className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-r-lg hover:bg-gray-50 active:bg-gray-100 transition-colors"
-                >
-                  <span className="text-lg">+</span>
-                </button>
-              </div>
-              <div className="text-gray-500 text-sm">Year</div>
-            </div>
-          </div>
+          <div className="px-6 text-2xl font-light text-gray-400 mt-4">+/-</div>
 
-          {/* Advanced Options Toggle */}
-          <div>
-            <button
-              type="button"
-              onClick={() => setShowAdvanced(!showAdvanced)}
-              className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center gap-1 transition-colors"
-            >
-              Advanced Options {showAdvanced ? '▲' : '▼'}
-            </button>
-            
-            {/* Advanced Options Panel */}
-            {showAdvanced && (
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg space-y-4 border border-gray-200">
-                {/* Subjective Post Money Valuation */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Subjective Post Money Valuation ($M) After All Funding
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.subjectivePostMoneyValuation}
-                    onChange={(e) => handleChange('subjectivePostMoneyValuation', e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Enter valuation amount"
-                  />
-                </div>
-                
-                {/* Advanced Financial Inputs */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Risk-Free Rate (%)
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.riskFreeRate}
-                      onChange={(e) => handleChange('riskFreeRate', e.target.value)}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Enter rate"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Market Risk Premium (%)
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.marketRiskPremium}
-                      onChange={(e) => handleChange('marketRiskPremium', e.target.value)}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Enter premium"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Beta Coefficient
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.betaCoefficient}
-                      onChange={(e) => handleChange('betaCoefficient', e.target.value)}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Enter beta"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-[#334155] mb-2 flex items-center gap-1">
+              Volatility Around Holding Period (Yrs): <span className="text-gray-400 cursor-help">ⓘ</span>
+            </label>
+            <input
+              type="number"
+              value={formData.volatilityHoldingPeriod}
+              onChange={(e) => handleChange('volatilityHoldingPeriod', e.target.value)}
+              className="w-full bg-[#f1f5f9] border-none rounded-lg py-3 px-4 text-gray-700 focus:ring-2 focus:ring-blue-500"
+            />
+            <span className="text-[10px] text-gray-400 mt-1 block">Helper</span>
           </div>
         </div>
 
-        {/* Button Row */}
-        <div className="flex justify-between items-center mt-12 pt-6 border-t border-gray-200">
+        {/* Advanced Options Section */}
+        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
           <button 
-            type="button"
-            onClick={() => {
-              // Clear form and go back to previous step or home
-              setFormData({
-                expectedTimeToExit: 0,
-                volatility: 0,
-                subjectivePostMoneyValuation: '',
-                riskFreeRate: '',
-                marketRiskPremium: '',
-                betaCoefficient: ''
-              });
-              onStepBack();
-            }}
-            className="rounded-full border border-gray-300 bg-white px-8 py-3 font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className="flex items-center gap-2 text-[#475569] font-medium text-sm mb-6"
           >
-            Cancel
+            Advanced Options <span className={`transition-transform ${showAdvanced ? '' : '-rotate-90'}`}>▼</span>
           </button>
-          
-          <div className="flex gap-4">
-            <button 
-              type="button"
-              onClick={onStepBack}
-              className="rounded-full border border-gray-300 bg-white px-8 py-3 font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              Step back
-            </button>
-            
-            <button 
-              type="button"
-              onClick={handleContinue}
-              className="rounded-full bg-[#2d63ff] px-8 py-3 font-medium text-white hover:bg-blue-700 transition-colors"
-            >
-              Continue
-            </button>
-          </div>
+
+          {showAdvanced && (
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-[#334155] mb-2 flex items-center gap-1">
+                  Subjective Post Money Valuation ($M) After All Funding <span className="text-gray-400 cursor-help">ⓘ</span>
+                </label>
+                <input
+                  type="number"
+                  value={formData.subjectivePostMoneyValuation}
+                  onChange={(e) => handleChange('subjectivePostMoneyValuation', e.target.value)}
+                  className="w-full bg-[#f1f5f9] border-none rounded-lg py-3 px-4 text-gray-700 focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-12">
+                <div>
+                  <label className="block text-sm font-medium text-[#334155] mb-2 flex items-center gap-1">
+                    Volatility (%): <span className="text-gray-400 cursor-help">ⓘ</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.volatility}
+                    onChange={(e) => handleChange('volatility', e.target.value)}
+                    className="w-full bg-[#f1f5f9] border-none rounded-lg py-3 px-4 text-gray-700 focus:ring-2 focus:ring-blue-500"
+                  />
+                  <span className="text-[10px] text-gray-400 mt-1 block">Helper</span>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#334155] mb-2 flex items-center gap-1">
+                    Risk Free Rate (%): <span className="text-gray-400 cursor-help">ⓘ</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.riskFreeRate}
+                    onChange={(e) => handleChange('riskFreeRate', e.target.value)}
+                    className="w-full bg-[#f1f5f9] border-none rounded-lg py-3 px-4 text-gray-700 focus:ring-2 focus:ring-blue-500"
+                  />
+                  <span className="text-[10px] text-gray-400 mt-1 block">Helper</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Footer Buttons */}
+      <div className="flex justify-between items-center mt-12">
+        <button 
+          onClick={onStepBack}
+          className="px-8 py-2.5 border border-blue-200 text-blue-500 rounded-full hover:bg-blue-50 transition-all font-medium"
+        >
+          Cancel
+        </button>
+        
+        <div className="flex gap-4">
+          <button 
+            onClick={onStepBack}
+            className="px-8 py-2.5 border border-blue-200 text-blue-500 rounded-full hover:bg-blue-50 transition-all font-medium"
+          >
+            Step back
+          </button>
+          <button 
+            onClick={() => onContinue(formData)}
+            className="px-8 py-2.5 bg-[#3b66ff] text-white rounded-full hover:bg-blue-700 transition-all font-medium flex items-center gap-2"
+          >
+            Continue 
+          </button>
         </div>
       </div>
     </div>

@@ -135,7 +135,7 @@ const Simulator = () => {
               );
             })}
           </div>
-          <div className="mt-3 text-sm text-gray-600">
+          <div className="mt-3 text-sm text-blue-600">
             {currentStep === 'step1' && 'Step 1: Prior Investment Information'}
             {currentStep === 'step2' && 'Step 2: Cap Table Summary'}
             {currentStep === 'step3a' && 'Step 3: Seniority Selection'}

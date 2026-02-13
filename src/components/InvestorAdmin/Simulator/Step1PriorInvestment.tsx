@@ -13,7 +13,6 @@ interface Step1Props {
 const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBack }) => {
   const [formData, setFormData] = useState({
     ...data,
-    // Ensure default values if not provided
     foundersShares: data.foundersShares || 100000,
     allocatedOptions: data.allocatedOptions || 20000,
     unallocatedOptions: data.unallocatedOptions || 20000,
@@ -22,14 +21,20 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
     equityRounds: data.equityRounds || [],
     pricedRounds: data.pricedRounds || [{
       id: Date.now(),
-      roundName: 'Series A',
+      roundName: 'Round A',
       investmentDate: '2025-07-08',
       investmentAmount: 1000000,
       liquidationPreference: 1.2,
       ownership: 500000,
-      participation: 'Participating / Converting',
-      qpoThreshold: 0,
-      dividends: 'Simulate',
+      participation: 'Participating',
+      converting: false,
+      qpoThreshold: false,
+      qpoThresholdValue: 0,
+      cap: false,
+      capValue: 0,
+      dividends: 'Simple',
+      dividendsSelect: 'Select',
+      dividendRate: 4,
       antidilution: 'None',
       comments: 'A 162 Lead Investor',
       allocatedOptionsPrior: 5000,
@@ -40,7 +45,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
   });
   
   const [activeTab, setActiveTab] = useState<'latest' | 'roundbyround'>('latest');
-  const [expandedRounds, setExpandedRounds] = useState<number[]>([0]); // Start with first round expanded
+  const [expandedRounds, setExpandedRounds] = useState<number[]>([0]);
   const [editingEquityId, setEditingEquityId] = useState<number | null>(null);
   const [editingSafeNoteId, setEditingSafeNoteId] = useState<number | null>(null);
   const [editingDebtId, setEditingDebtId] = useState<number | null>(null);
@@ -99,14 +104,20 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
   const handleAddPricedRound = () => {
     const newRound = {
       id: Date.now(),
-      roundName: `Series ${String.fromCharCode(66 + formData.pricedRounds.length)}`,
+      roundName: `Round ${String.fromCharCode(65 + formData.pricedRounds.length)}`,
       investmentDate: '',
       investmentAmount: 0,
       liquidationPreference: 1.0,
       ownership: 0,
-      participation: 'Non-participating',
-      qpoThreshold: 0,
-      dividends: 'Non-cumulative',
+      participation: 'Participating',
+      converting: false,
+      qpoThreshold: false,
+      qpoThresholdValue: 0,
+      cap: false,
+      capValue: 0,
+      dividends: 'Simple',
+      dividendsSelect: 'Select',
+      dividendRate: 0,
       antidilution: 'None',
       comments: '',
       allocatedOptionsPrior: 0,
@@ -192,7 +203,6 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
     );
   };
 
-  // Helper function to safely format numbers with toLocaleString
   const formatNumber = (value: any) => {
     const num = Number(value);
     return isNaN(num) ? '0' : num.toLocaleString();
@@ -200,7 +210,6 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
 
   const saveProgress = () => {
     console.log('Saving progress:', formData);
-    // Here you would typically make an API call to save the data
     alert('Progress saved successfully!');
   };
 
@@ -229,41 +238,41 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
   };
 
   return (
-    <div className=" mx-auto px-4 py-8">
+    <div className="mx-auto px-4 py-1 ">
       {/* Header */}
       <div className="mb-8">
-        <div className="text-sm text-gray-500 mb-1">Step 1 of 3</div>
+        {/* <div className="text-sm  text-blue-600 mb-1">Step 1 of 3</div> */}
         <h1 className="text-3xl font-bold text-gray-900 mb-2">{formData.name || 'Portfolio Company Investment Information'}</h1>
         <p className="text-gray-600">{formData.description || 'Enter all current funding for this company'}</p>
       </div>
 
       {/* Tab Navigation */}
-    <div className="inline-flex p-1 bg-[#ebf0f7] rounded-full mb-8 w-full">
-  <button
-    className={`px-12 py-2.5 w-full font-bold text-sm transition-all duration-200 rounded-full ${
-      activeTab === 'latest' 
-        ? 'bg-white text-blue-600 shadow-sm' 
-        : 'text-slate-500 hover:text-slate-700'
-    }`}
-    onClick={() => setActiveTab('latest')}
-  >
-    Latest Cap Table
-  </button>
-  <button
-    className={`px-12 py-2.5 font-bold w-full text-sm transition-all duration-200 rounded-full ${
-      activeTab === 'roundbyround' 
-        ? 'bg-white text-blue-600 shadow-sm' 
-        : 'text-slate-500 hover:text-slate-700'
-    }`}
-    onClick={() => setActiveTab('roundbyround')}
-  >
-    Round by Round
-  </button>
-</div>
+      <div className="inline-flex p-1 bg-[#ebf0f7] rounded-full mb-8 w-full">
+        <button
+          className={`px-12 py-2.5 w-full font-bold text-sm transition-all duration-200 rounded-full ${
+            activeTab === 'latest' 
+              ? 'bg-white text-blue-600 shadow-sm' 
+              : 'text-slate-500 hover:text-slate-700'
+          }`}
+          onClick={() => setActiveTab('latest')}
+        >
+          Latest Cap Table
+        </button>
+        <button
+          className={`px-12 py-2.5 font-bold w-full text-sm transition-all duration-200 rounded-full ${
+            activeTab === 'roundbyround' 
+              ? 'bg-white text-blue-600 shadow-sm' 
+              : 'text-slate-500 hover:text-slate-700'
+          }`}
+          onClick={() => setActiveTab('roundbyround')}
+        >
+          Round by Round
+        </button>
+      </div>
 
       {/* About This Section */}
       <div className="border bg-white border-gray-200 rounded-lg p-4 mb-8 shadow-sm">
-        <p className="text-sm ">
+        <p className="text-sm text-gray-700">
           <strong>About this:</strong> {activeTab === 'latest' ? (
             'The Latest Cap Table entry method is easiest when the current shares outstanding of each share class are known and when the current number of allocated and unallocated options is. The Round by Round entry method is practical when the terms of each round are known and the number of allocated and unallocated options immediately prior to a round can be estimated, but the current dilutive effects are not known.'
           ) : (
@@ -274,884 +283,970 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
 
       {activeTab === 'latest' ? (
         /* LATEST CAP TABLE VIEW */
-        <div className="space-y-8">
+        <div className="space-y-5">
           {/* Current Cap Table Section */}
-          <div className="bg-white rounded-xl border border-gray-300 shadow-sm">
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Current Cap Table (Existing Equity)</h3>
-              
+          <div className="bg-white rounded-lg border border-[#e5e7eb]">
+            <div className="px-5 py-4 border-b border-[#e5e7eb]">
+              <h3 className="text-[15px] font-semibold text-[#1f2937]">Current Cap Table (Existing Equity)</h3>
+            </div>
+            
+            <div className="p-5">
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="bg-gray-50">
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Round Name</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Investment Date</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Investment Amount</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Common Shares</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Preferred Shares</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Liquidation Preferences</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Participation Type</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Dividend Timing</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Dividend Rate</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Anti-dilution Provisions</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Actions</th>
+                    <tr className="bg-[#f9fafb]">
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Round Name</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Investment Date</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Investment Amount</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Common Shares</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Preferred Shares</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Liquidation Preferences</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Participation</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Dividend Type</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Dividend Timing</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Dividend Rate</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Anti-dilution Provisions</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {formData.equityRounds.map((equity: any, index: number) => (
-                      <tr key={equity.id} className="hover:bg-gray-50">
-                        <td className="p-3 border border-gray-300">
+                    {formData.equityRounds.map((equity: any) => (
+                      <tr key={equity.id} className="hover:bg-[#f9fafb] border-b border-[#f3f4f6]">
+                        <td className="py-3 px-4">
                           <input
                             type="text"
                             value={equity.roundName}
                             onChange={(e) => updateEquity(equity.id, 'roundName', e.target.value)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           />
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <input
                             type="date"
                             value={equity.investmentDate}
                             onChange={(e) => updateEquity(equity.id, 'investmentDate', e.target.value)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           />
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <div className="relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">$</span>
                             <input
-                              type="number"
-                              value={equity.investmentAmount}
-                              onChange={(e) => updateEquity(equity.id, 'investmentAmount', parseInt(e.target.value) || 0)}
-                              className="w-full rounded border border-gray-300 pl-7 pr-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                              type="text"
+                              value={(equity.investmentAmount || 0).toLocaleString()}
+                              onChange={(e) => {
+                                const value = e.target.value.replace(/,/g, '');
+                                updateEquity(equity.id, 'investmentAmount', parseInt(value) || 0);
+                              }}
+                              className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] pl-7 pr-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                             />
                           </div>
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <input
-                            type="number"
-                            value={equity.commonShares}
-                            onChange={(e) => updateEquity(equity.id, 'commonShares', parseInt(e.target.value) || 0)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            type="text"
+                            value={(equity.commonShares || 0).toLocaleString()}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/,/g, '');
+                              updateEquity(equity.id, 'commonShares', parseInt(value) || 0);
+                            }}
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           />
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <input
-                            type="number"
-                            value={equity.preferredShares}
-                            onChange={(e) => updateEquity(equity.id, 'preferredShares', parseInt(e.target.value) || 0)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            type="text"
+                            value={(equity.preferredShares || 0).toLocaleString()}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/,/g, '');
+                              updateEquity(equity.id, 'preferredShares', parseInt(value) || 0);
+                            }}
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           />
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <input
                             type="text"
                             value={equity.liquidationPreferences}
                             onChange={(e) => updateEquity(equity.id, 'liquidationPreferences', e.target.value)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           />
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <select
                             value={equity.participationType}
                             onChange={(e) => updateEquity(equity.id, 'participationType', e.target.value)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           >
                             <option>Non-participating</option>
                             <option>Participating</option>
                             <option>Capped</option>
                           </select>
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <select
                             value={equity.dividendTiming}
                             onChange={(e) => updateEquity(equity.id, 'dividendTiming', e.target.value)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           >
                             <option>Non-cumulative</option>
                             <option>Cumulative</option>
                             <option>Accruing</option>
                           </select>
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
+                          <input
+                            type="text"
+                            placeholder="Select..."
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                          />
+                        </td>
+                        <td className="py-3 px-4">
                           <div className="relative">
                             <input
                               type="number"
                               value={equity.dividendRate}
                               onChange={(e) => updateEquity(equity.id, 'dividendRate', parseInt(e.target.value) || 0)}
-                              className="w-full rounded border border-gray-300 px-3 py-2 pr-7 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                              className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 pr-7 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                             />
-                            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">%</span>
                           </div>
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <select
                             value={equity.antiDilutionProvisions}
                             onChange={(e) => updateEquity(equity.id, 'antiDilutionProvisions', e.target.value)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           >
                             <option>None</option>
                             <option>Full ratchet</option>
                             <option>Weighted average</option>
                           </select>
                         </td>
-                        <td className="p-3 border border-gray-300">
-                          <div className="flex items-center gap-2">
-                            {editingEquityId === equity.id ? (
-                              <button
-                                onClick={() => saveEquity(equity.id)}
-                                className="text-green-600 hover:text-green-800 p-1 rounded hover:bg-green-50"
-                                title="Save"
-                              >
-                                <Save size={16} />
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => startEditEquity(equity.id)}
-                                className="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50"
-                                title="Edit"
-                              >
-                                <Edit2 size={16} />
-                              </button>
-                            )}
-                            <button
-                              onClick={() => handleRemoveEquity(equity.id)}
-                              className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50"
-                              title="Delete"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
+                        <td className="py-3 px-4">
+                          <button
+                            onClick={() => handleRemoveEquity(equity.id)}
+                            className="text-[#ef4444] hover:text-[#dc2626] p-1 rounded hover:bg-[#fef2f2]"
+                            title="Delete"
+                          >
+                            <Trash2 size={16} />
+                          </button>
                         </td>
                       </tr>
                     ))}
-                    <tr>
-                      <td colSpan={11} className="p-4 border border-gray-300">
-                        <button 
-                          onClick={handleAddEquity}
-                          className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
-                        >
-                          <Plus size={16} />
-                          <span> Add Equity</span>
-                        </button>
-                      </td>
-                    </tr>
                   </tbody>
                 </table>
               </div>
-            </div>
-          </div>
-
-          {/* Founders Shares and Options Section */}
-          <div className="bg-white rounded-xl border border-gray-300 shadow-sm">
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Founders Shares and Outstanding Options</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Founders Outstanding Shares</label>
-                  <input
-                    type="number"
-                    value={formData.foundersShares}
-                    onChange={(e) => setFormData({...formData, foundersShares: parseInt(e.target.value) || 0})}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Total Allocated Options</label>
-                  <input
-                    type="number"
-                    value={formData.allocatedOptions}
-                    onChange={(e) => setFormData({...formData, allocatedOptions: parseInt(e.target.value) || 0})}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Total Unallocated Options</label>
-                  <input
-                    type="number"
-                    value={formData.unallocatedOptions}
-                    onChange={(e) => setFormData({...formData, unallocatedOptions: parseInt(e.target.value) || 0})}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
+              
+              <button 
+                onClick={handleAddEquity}
+                className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-[#3b82f6] hover:text-[#2563eb] transition-colors"
+              >
+                <Plus size={16} />
+                <span>Add Equity</span>
+              </button>
             </div>
           </div>
 
           {/* SAFEs and Convertible Notes Section */}
-          <div className="bg-white rounded-xl border border-gray-300 shadow-sm">
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">SAFEs and Convertible Notes</h3>
-              
+          <div className="bg-white rounded-lg border border-[#e5e7eb]">
+            <div className="px-5 py-4 border-b border-[#e5e7eb]">
+              <h3 className="text-[15px] font-semibold text-[#1f2937]">SAFEs and Convertible Notes</h3>
+            </div>
+            
+            <div className="p-5">
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="bg-gray-50">
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Round Name</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Type</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Investment Date</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Amount</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">PMV Cap</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Discount</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Interest Rate</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">MFN</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Pro Rata Rights</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Actions</th>
+                    <tr className="bg-[#f9fafb]">
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Round Name</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Type</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Investment Date</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Amount</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">PMV Cap</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Discount</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Interest Rate</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">MFN</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Pro Rata Rights</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {formData.safeNotes.map((note: any) => (
-                      <tr key={note.id} className="hover:bg-gray-50">
-                        <td className="p-3 border border-gray-300">
+                      <tr key={note.id} className="hover:bg-[#f9fafb] border-b border-[#f3f4f6]">
+                        <td className="py-3 px-4">
                           <input
                             type="text"
                             value={note.roundName}
                             onChange={(e) => updateSafeNote(note.id, 'roundName', e.target.value)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           />
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <select
                             value={note.type}
                             onChange={(e) => updateSafeNote(note.id, 'type', e.target.value)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           >
-                            <option value="Pre-Money">Pre-Money</option>
+                            <option value="Pre-Money">Pre-Money SAFE</option>
                             <option value="Post-Money">Post-Money</option>
                           </select>
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <input
                             type="date"
                             value={note.investmentDate}
                             onChange={(e) => updateSafeNote(note.id, 'investmentDate', e.target.value)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            placeholder="mm/dd/yyyy"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           />
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <div className="relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">$</span>
                             <input
-                              type="number"
-                              value={note.investmentAmount}
-                              onChange={(e) => updateSafeNote(note.id, 'investmentAmount', parseInt(e.target.value) || 0)}
-                              className="w-full rounded border border-gray-300 pl-7 pr-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                              type="text"
+                              value={(note.investmentAmount || 0).toLocaleString()}
+                              onChange={(e) => {
+                                const value = e.target.value.replace(/,/g, '');
+                                updateSafeNote(note.id, 'investmentAmount', parseInt(value) || 0);
+                              }}
+                              className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] pl-7 pr-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                             />
                           </div>
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <div className="relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">$</span>
                             <input
-                              type="number"
-                              value={note.pmvCap}
-                              onChange={(e) => updateSafeNote(note.id, 'pmvCap', parseInt(e.target.value) || 0)}
-                              className="w-full rounded border border-gray-300 pl-7 pr-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                              type="text"
+                              value={(note.pmvCap || 0).toLocaleString()}
+                              onChange={(e) => {
+                                const value = e.target.value.replace(/,/g, '');
+                                updateSafeNote(note.id, 'pmvCap', parseInt(value) || 0);
+                              }}
+                              className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] pl-7 pr-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                             />
                           </div>
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <div className="relative">
                             <input
                               type="number"
                               value={note.discount}
                               onChange={(e) => updateSafeNote(note.id, 'discount', parseInt(e.target.value) || 0)}
-                              className="w-full rounded border border-gray-300 px-3 py-2 pr-7 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                              className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 pr-7 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                             />
-                            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">%</span>
                           </div>
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <div className="relative">
                             <input
                               type="number"
                               value={note.interestRate}
                               onChange={(e) => updateSafeNote(note.id, 'interestRate', parseInt(e.target.value) || 0)}
-                              className="w-full rounded border border-gray-300 px-3 py-2 pr-7 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                              className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 pr-7 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                             />
-                            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">%</span>
                           </div>
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <div className="flex items-center justify-center">
                             <input
                               type="checkbox"
                               checked={note.mfn || false}
                               onChange={(e) => updateSafeNote(note.id, 'mfn', e.target.checked)}
-                              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                              className="w-4 h-4 rounded border-[#d1d5db] text-[#3b82f6] focus:ring-1 focus:ring-[#3b82f6]"
                             />
                           </div>
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <div className="flex items-center justify-center">
                             <input
                               type="checkbox"
                               checked={note.proRata || false}
                               onChange={(e) => updateSafeNote(note.id, 'proRata', e.target.checked)}
-                              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                              className="w-4 h-4 rounded border-[#d1d5db] text-[#3b82f6] focus:ring-1 focus:ring-[#3b82f6]"
                             />
                           </div>
                         </td>
-                        <td className="p-3 border border-gray-300">
-                          <div className="flex items-center gap-2">
-                            {editingSafeNoteId === note.id ? (
-                              <button
-                                onClick={() => saveSafeNote(note.id)}
-                                className="text-green-600 hover:text-green-800 p-1 rounded hover:bg-green-50"
-                                title="Save"
-                              >
-                                <Save size={16} />
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => startEditSafeNote(note.id)}
-                                className="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50"
-                                title="Edit"
-                              >
-                                <Edit2 size={16} />
-                              </button>
-                            )}
-                            <button
-                              onClick={() => handleRemoveSafeNote(note.id)}
-                              className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50"
-                              title="Delete"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
+                        <td className="py-3 px-4">
+                          <button
+                            onClick={() => handleRemoveSafeNote(note.id)}
+                            className="text-[#ef4444] hover:text-[#dc2626] p-1 rounded hover:bg-[#fef2f2]"
+                            title="Delete"
+                          >
+                            <Trash2 size={16} />
+                          </button>
                         </td>
                       </tr>
                     ))}
-                    <tr>
-                      <td colSpan={10} className="p-4 border border-gray-300">
-                        <button 
-                          onClick={handleAddSafeNote}
-                          className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
-                        >
-                          <Plus size={16} />
-                          <span> Add SAFE/Note</span>
-                        </button>
-                      </td>
-                    </tr>
                   </tbody>
                 </table>
               </div>
+              
+              <button 
+                onClick={handleAddSafeNote}
+                className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-[#3b82f6] hover:text-[#2563eb] transition-colors"
+              >
+                <Plus size={16} />
+                <span>Add SAFE/Convertible Note</span>
+              </button>
             </div>
           </div>
 
           {/* Debt Section */}
-          <div className="bg-white rounded-xl border border-gray-300 shadow-sm">
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Debt</h3>
-              
+          <div className="bg-white rounded-lg border border-[#e5e7eb]">
+            <div className="px-5 py-4 border-b border-[#e5e7eb]">
+              <h3 className="text-[15px] font-semibold text-[#1f2937]">Debt</h3>
+            </div>
+            
+            <div className="p-5">
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="bg-gray-50">
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Round Name</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Payment Nature</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Issuance Date</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Principal Amount</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Interest Type</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Interest Frequency</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Annual Interest Rate</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Expiration Date</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Actions</th>
+                    <tr className="bg-[#f9fafb]">
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Round Name</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Payment Nature</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Issuance Date</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Principal Amount</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Interest Type</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Interest Frequency</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Annual Interest Rate</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Expiration Date</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {formData.debtRounds.map((debt: any) => (
-                      <tr key={debt.id} className="hover:bg-gray-50">
-                        <td className="p-3 border border-gray-300">
+                      <tr key={debt.id} className="hover:bg-[#f9fafb] border-b border-[#f3f4f6]">
+                        <td className="py-3 px-4">
                           <input
                             type="text"
                             value={debt.roundName}
                             onChange={(e) => updateDebt(debt.id, 'roundName', e.target.value)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           />
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <select
                             value={debt.paymentNature}
                             onChange={(e) => updateDebt(debt.id, 'paymentNature', e.target.value)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           >
                             <option value="Lump Sum">Lump Sum</option>
                             <option value="Installment">Installment</option>
                           </select>
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <input
                             type="date"
                             value={debt.issuanceDate}
                             onChange={(e) => updateDebt(debt.id, 'issuanceDate', e.target.value)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            placeholder="mm/dd/yyyy"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           />
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <div className="relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">$</span>
                             <input
-                              type="number"
-                              value={debt.principalAmount}
-                              onChange={(e) => updateDebt(debt.id, 'principalAmount', parseInt(e.target.value) || 0)}
-                              className="w-full rounded border border-gray-300 pl-7 pr-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                              type="text"
+                              value={(debt.principalAmount || 0).toLocaleString()}
+                              onChange={(e) => {
+                                const value = e.target.value.replace(/,/g, '');
+                                updateDebt(debt.id, 'principalAmount', parseInt(value) || 0);
+                              }}
+                              className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] pl-7 pr-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                             />
                           </div>
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <select
                             value={debt.interestType}
                             onChange={(e) => updateDebt(debt.id, 'interestType', e.target.value)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           >
+                            <option value="Simple">Simple</option>
                             <option value="Fixed">Fixed</option>
                             <option value="Variable">Variable</option>
                           </select>
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <select
                             value={debt.interestFrequency}
                             onChange={(e) => updateDebt(debt.id, 'interestFrequency', e.target.value)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           >
                             <option value="Annual">Annual</option>
                             <option value="Quarterly">Quarterly</option>
                             <option value="Monthly">Monthly</option>
                           </select>
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <div className="relative">
                             <input
                               type="number"
                               value={debt.interestRate}
                               onChange={(e) => updateDebt(debt.id, 'interestRate', parseInt(e.target.value) || 0)}
-                              className="w-full rounded border border-gray-300 px-3 py-2 pr-7 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                              className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 pr-7 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                             />
-                            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">%</span>
                           </div>
                         </td>
-                        <td className="p-3 border border-gray-300">
+                        <td className="py-3 px-4">
                           <input
                             type="date"
                             value={debt.expirationDate}
                             onChange={(e) => updateDebt(debt.id, 'expirationDate', e.target.value)}
-                            className="w-full rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            placeholder="mm/dd/yyyy"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
                           />
                         </td>
-                        <td className="p-3 border border-gray-300">
-                          <div className="flex items-center gap-2">
-                            {editingDebtId === debt.id ? (
-                              <button
-                                onClick={() => saveDebt(debt.id)}
-                                className="text-green-600 hover:text-green-800 p-1 rounded hover:bg-green-50"
-                                title="Save"
-                              >
-                                <Save size={16} />
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => startEditDebt(debt.id)}
-                                className="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50"
-                                title="Edit"
-                              >
-                                <Edit2 size={16} />
-                              </button>
-                            )}
-                            <button
-                              onClick={() => handleRemoveDebt(debt.id)}
-                              className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50"
-                              title="Delete"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
+                        <td className="py-3 px-4">
+                          <button
+                            onClick={() => handleRemoveDebt(debt.id)}
+                            className="text-[#ef4444] hover:text-[#dc2626] p-1 rounded hover:bg-[#fef2f2]"
+                            title="Delete"
+                          >
+                            <Trash2 size={16} />
+                          </button>
                         </td>
                       </tr>
                     ))}
-                    <tr>
-                      <td colSpan={9} className="p-4 border border-gray-300">
-                        <button 
-                          onClick={handleAddDebt}
-                          className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
-                        >
-                          <Plus size={16} />
-                          <span> Add Debt</span>
-                        </button>
-                      </td>
-                    </tr>
                   </tbody>
                 </table>
               </div>
+              
+              <button 
+                onClick={handleAddDebt}
+                className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-[#3b82f6] hover:text-[#2563eb] transition-colors"
+              >
+                <Plus size={16} />
+                <span>Add Debt</span>
+              </button>
             </div>
           </div>
         </div>
       ) : (
-        /* ROUND BY ROUND VIEW */
-        <div className="space-y-8">
-          {/* Priced Rounds Section */}
-          <div className="bg-white rounded-xl border border-gray-300 shadow-sm">
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">Priced Rounds</h3>
-              
-              {formData.pricedRounds.map((round: any, index: number) => (
-                <div key={round.id} className="mb-6">
-                  <div 
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer hover:bg-gray-100"
-                    onClick={() => toggleRoundExpansion(index)}
-                  >
-                    <div className="flex items-center gap-4">
-                      <h4 className="text-lg font-semibold text-gray-900">{round.roundName}</h4>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRemovePricedRound(round.id);
-                        }}
-                        className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50"
-                        title="Delete Round"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">${formatNumber(round.investmentAmount)} • {formatNumber(round.ownership)} shares</span>
-                      {expandedRounds.includes(index) ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                    </div>
-                  </div>
-                  
-                  {expandedRounds.includes(index) && (
-                    <div className="mt-4 p-6 border border-gray-300 rounded-lg">
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Investment Date</label>
-                          <input
-                            type="date"
-                            value={round.investmentDate}
-                            onChange={(e) => updatePricedRound(round.id, 'investmentDate', e.target.value)}
-                            className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Investment Amount</label>
-                          <div className="relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
-                            <input
-                              type="number"
-                              value={round.investmentAmount}
-                              onChange={(e) => updatePricedRound(round.id, 'investmentAmount', parseInt(e.target.value) || 0)}
-                              className="w-full rounded-lg border border-gray-300 pl-7 pr-3 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                            />
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Liquidation Preference</label>
-                          <div className="relative">
-                            <input
-                              type="number"
-                              step="0.1"
-                              value={round.liquidationPreference}
-                              onChange={(e) => updatePricedRound(round.id, 'liquidationPreference', parseFloat(e.target.value) || 0)}
-                              className="w-full rounded-lg border border-gray-300 px-4 py-3 pr-7 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                            />
-                            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">x</span>
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Ownership</label>
-                          <input
-                            type="number"
-                            value={round.ownership}
-                            onChange={(e) => updatePricedRound(round.id, 'ownership', parseInt(e.target.value) || 0)}
-                            className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Common Stock Participation</label>
-                          <select
-                            value={round.participation}
-                            onChange={(e) => updatePricedRound(round.id, 'participation', e.target.value)}
-                            className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                          >
-                            <option>Participating / Converting</option>
-                            <option>Non-participating</option>
-                            <option>Capped</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">QPO Threshold</label>
-                          <div className="relative">
-                            <input
-                              type="number"
-                              value={round.qpoThreshold}
-                              onChange={(e) => updatePricedRound(round.id, 'qpoThreshold', parseInt(e.target.value) || 0)}
-                              className="w-full rounded-lg border border-gray-300 px-4 py-3 pr-7 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                            />
-                            <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Additional Round A Fields */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Dividends</label>
-                          <select
-                            value={round.dividends}
-                            onChange={(e) => updatePricedRound(round.id, 'dividends', e.target.value)}
-                            className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                          >
-                            <option>Simulate</option>
-                            <option>Non-cumulative</option>
-                            <option>Cumulative</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Antidilution Provision</label>
-                          <select
-                            value={round.antidilution}
-                            onChange={(e) => updatePricedRound(round.id, 'antidilution', e.target.value)}
-                            className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                          >
-                            <option>None</option>
-                            <option>Full ratchet</option>
-                            <option>Weighted average</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Comments</label>
-                          <input
-                            type="text"
-                            value={round.comments}
-                            onChange={(e) => updatePricedRound(round.id, 'comments', e.target.value)}
-                            className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Option Pool Section */}
-                      <div className="mt-8 pt-6 border-t border-gray-300">
-                        <h5 className="text-md font-semibold text-gray-900 mb-4">Option Pools {round.roundName}</h5>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Allocated Options Immediately prior to round</label>
-                            <input
-                              type="number"
-                              value={round.allocatedOptionsPrior}
-                              onChange={(e) => updatePricedRound(round.id, 'allocatedOptionsPrior', parseInt(e.target.value) || 0)}
-                              className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Unallocated Options Immediately prior to round</label>
-                            <input
-                              type="number"
-                              value={round.unallocatedOptionsPrior}
-                              onChange={(e) => updatePricedRound(round.id, 'unallocatedOptionsPrior', parseInt(e.target.value) || 0)}
-                              className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Requested Available Option Pool Post-Round</label>
-                            <div className="relative">
-                              <input
-                                type="number"
-                                value={round.requestedOptionPool}
-                                onChange={(e) => updatePricedRound(round.id, 'requestedOptionPool', parseInt(e.target.value) || 0)}
-                                className="w-full rounded-lg border border-gray-300 px-4 py-3 pr-7 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                              />
-                              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
-                            </div>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">My Funds Investment in This Round</label>
-                            <div className="relative">
-                              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
-                              <input
-                                type="number"
-                                value={round.myInvestment}
-                                onChange={(e) => updatePricedRound(round.id, 'myInvestment', parseInt(e.target.value) || 0)}
-                                className="w-full rounded-lg border border-gray-300 pl-7 pr-3 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-
-              {/* Add New Round Button */}
-              <div className="mt-4">
-                <button 
-                  onClick={handleAddPricedRound}
-                  className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
-                >
-                  <Plus size={16} />
-                  <span> Add Priced Round</span>
-                </button>
-              </div>
+        /* ROUND BY ROUND VIEW - MATCHING PROTOTYPE */
+        <div className="space-y-5">
+          {/* Founders Shares and Outstanding Options - FIRST */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb]">
+            <div className="px-5 py-4 border-b border-[#e5e7eb]">
+              <h3 className="text-[15px] font-semibold text-[#111827]">
+                Founders Shares and Outstanding Options
+              </h3>
             </div>
-          </div>
+            
+            <div className="p-5">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between py-2.5 px-4 bg-[#f9fafb] rounded-md border border-[#e5e7eb]">
+                  <label className="text-[13px] font-normal text-[#374151]">Founders Outstanding Shares</label>
+                  <input
+                    type="text"
+                    value={(formData.foundersShares || 0).toLocaleString()}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/,/g, '');
+                      setFormData({...formData, foundersShares: parseInt(value) || 0});
+                    }}
+                    className="w-28 h-9 rounded-md bg-white border border-[#d1d5db] px-3 text-right text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] transition-all"
+                  />
+                </div>
 
-          {/* Founders Shares and Outstanding Options Section */}
-          <div className="bg-white rounded-xl border border-gray-300 shadow-sm">
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Founders Shares and Outstanding Options</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Founders Outstanding Shares</label>
+                <div className="flex items-center justify-between py-2.5 px-4 bg-[#f9fafb] rounded-md border border-[#e5e7eb]">
+                  <label className="text-[13px] font-normal text-[#374151]">Total Allocated Options</label>
                   <input
-                    type="number"
-                    value={formData.foundersShares}
-                    onChange={(e) => setFormData({...formData, foundersShares: parseInt(e.target.value) || 0})}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    type="text"
+                    value={(formData.allocatedOptions || 0).toLocaleString()}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/,/g, '');
+                      setFormData({...formData, allocatedOptions: parseInt(value) || 0});
+                    }}
+                    className="w-28 h-9 rounded-md bg-white border border-[#d1d5db] px-3 text-right text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] transition-all"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Total Allocated Options</label>
+
+                <div className="flex items-center justify-between py-2.5 px-4 bg-[#f9fafb] rounded-md border border-[#e5e7eb]">
+                  <label className="text-[13px] font-normal text-[#374151]">Total Unallocated Options</label>
                   <input
-                    type="number"
-                    value={formData.allocatedOptions}
-                    onChange={(e) => setFormData({...formData, allocatedOptions: parseInt(e.target.value) || 0})}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Total Unallocated Options</label>
-                  <input
-                    type="number"
-                    value={formData.unallocatedOptions}
-                    onChange={(e) => setFormData({...formData, unallocatedOptions: parseInt(e.target.value) || 0})}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    type="text"
+                    value={(formData.unallocatedOptions || 0).toLocaleString()}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/,/g, '');
+                      setFormData({...formData, unallocatedOptions: parseInt(value) || 0});
+                    }}
+                    className="w-28 h-9 rounded-md bg-white border border-[#d1d5db] px-3 text-right text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] transition-all"
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Outstanding Debt Section */}
-          <div className="bg-white rounded-xl border border-gray-300 shadow-sm">
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Outstanding Debt</h3>
-              
+          {/* Outstanding Debt - SECOND */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb]">
+            <div className="px-5 py-4 border-b border-[#e5e7eb]">
+              <h3 className="text-[15px] font-semibold text-[#111827]">Outstanding Debt</h3>
+            </div>
+            
+            <div className="p-5">
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="bg-gray-50">
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Round Name</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Payment Nature</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Issuance Date</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Principal Amount</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Interest Type</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Interest Frequency</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Interest Rate</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Expiration Date</th>
+                    <tr className="bg-[#f9fafb]">
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Round Name</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Payment Nature</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Issuance Date</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Principal Amount</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Interest Type</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Interest Frequency</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Interest Rate</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Expiration Date</th>
                     </tr>
                   </thead>
                   <tbody>
                     {formData.debtRounds.map((debt: any) => (
-                      <tr key={debt.id} className="hover:bg-gray-50">
-                        <td className="p-3 border border-gray-300">{debt.roundName || 'N/A'}</td>
-                        <td className="p-3 border border-gray-300">{debt.paymentNature || 'N/A'}</td>
-                        <td className="p-3 border border-gray-300">{debt.issuanceDate || 'N/A'}</td>
-                        <td className="p-3 border border-gray-300">${formatNumber(debt.principalAmount)}</td>
-                        <td className="p-3 border border-gray-300">{debt.interestType || 'N/A'}</td>
-                        <td className="p-3 border border-gray-300">{debt.interestFrequency || 'N/A'}</td>
-                        <td className="p-3 border border-gray-300">{debt.interestRate || 0}%</td>
-                        <td className="p-3 border border-gray-300">{debt.expirationDate || 'N/A'}</td>
+                      <tr key={debt.id} className="hover:bg-[#f9fafb] border-b border-[#f3f4f6]">
+                        <td className="py-3 px-4">
+                          <input
+                            type="text"
+                            value={debt.roundName}
+                            onChange={(e) => updateDebt(debt.id, 'roundName', e.target.value)}
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                          />
+                        </td>
+                        <td className="py-3 px-4">
+                          <select
+                            value={debt.paymentNature}
+                            onChange={(e) => updateDebt(debt.id, 'paymentNature', e.target.value)}
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                          >
+                            <option value="Lump Sum">Lump Sum</option>
+                            <option value="Installment">Installment</option>
+                          </select>
+                        </td>
+                        <td className="py-3 px-4">
+                          <input
+                            type="date"
+                            value={debt.issuanceDate}
+                            onChange={(e) => updateDebt(debt.id, 'issuanceDate', e.target.value)}
+                            placeholder="mm/dd/yyyy"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                          />
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">$</span>
+                            <input
+                              type="text"
+                              value={(debt.principalAmount || 0).toLocaleString()}
+                              onChange={(e) => {
+                                const value = e.target.value.replace(/,/g, '');
+                                updateDebt(debt.id, 'principalAmount', parseInt(value) || 0);
+                              }}
+                              className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] pl-7 pr-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                            />
+                          </div>
+                        </td>
+                        <td className="py-3 px-4">
+                          <select
+                            value={debt.interestType}
+                            onChange={(e) => updateDebt(debt.id, 'interestType', e.target.value)}
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                          >
+                            <option value="Simple">Simple</option>
+                            <option value="Fixed">Fixed</option>
+                            <option value="Variable">Variable</option>
+                          </select>
+                        </td>
+                        <td className="py-3 px-4">
+                          <select
+                            value={debt.interestFrequency}
+                            onChange={(e) => updateDebt(debt.id, 'interestFrequency', e.target.value)}
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                          >
+                            <option value="Annual">Annual</option>
+                            <option value="Quarterly">Quarterly</option>
+                            <option value="Monthly">Monthly</option>
+                          </select>
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="relative">
+                            <input
+                              type="number"
+                              value={debt.interestRate}
+                              onChange={(e) => updateDebt(debt.id, 'interestRate', parseInt(e.target.value) || 0)}
+                              className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 pr-7 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                            />
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">%</span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-4">
+                          <input
+                            type="date"
+                            value={debt.expirationDate}
+                            onChange={(e) => updateDebt(debt.id, 'expirationDate', e.target.value)}
+                            placeholder="mm/dd/yyyy"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                          />
+                        </td>
                       </tr>
                     ))}
-                    <tr>
-                      <td colSpan={8} className="p-4 border border-gray-300">
-                        <button 
-                          onClick={handleAddDebt}
-                          className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
-                        >
-                          <Plus size={16} />
-                          <span> Add Debt</span>
-                        </button>
-                      </td>
-                    </tr>
                   </tbody>
                 </table>
               </div>
+              
+              <button 
+                onClick={handleAddDebt}
+                className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-[#3b82f6] hover:text-[#2563eb] transition-colors"
+              >
+                <Plus size={16} />
+                <span>Add Debt</span>
+              </button>
             </div>
           </div>
 
-          {/* Unpriced Rounds Section */}
-          <div className="bg-white rounded-xl border border-gray-300 shadow-sm">
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Unpriced Rounds (SAFEs and Convertible Notes)</h3>
-              
+          {/* Unpriced Rounds (SAFEs and Convertible Notes) - THIRD */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb]">
+            <div className="px-5 py-4 border-b border-[#e5e7eb]">
+              <h3 className="text-[15px] font-semibold text-[#111827]">
+                Unpriced Rounds (SAFEs and Convertible Notes)
+              </h3>
+            </div>
+            
+            <div className="p-5">
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="bg-gray-50">
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Round Name</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Type</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Investment Date</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Investment Amount</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">PMV Cap</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Discount</th>
-                      <th className="text-left p-3 text-sm font-medium text-gray-700 border border-gray-300">Interest Rate</th>
+                    <tr className="bg-[#f9fafb]">
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Round Name</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Type</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Investment Date</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Investment Amount</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">PMV Cap</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Discount</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Interest Rate</th>
                     </tr>
                   </thead>
                   <tbody>
                     {formData.safeNotes.map((note: any) => (
-                      <tr key={note.id} className="hover:bg-gray-50">
-                        <td className="p-3 border border-gray-300">{note.roundName || 'N/A'}</td>
-                        <td className="p-3 border border-gray-300">{note.type || 'N/A'}</td>
-                        <td className="p-3 border border-gray-300">{note.investmentDate || 'N/A'}</td>
-                        <td className="p-3 border border-gray-300">${formatNumber(note.investmentAmount)}</td>
-                        <td className="p-3 border border-gray-300">${formatNumber(note.pmvCap)}</td>
-                        <td className="p-3 border border-gray-300">{note.discount || 0}%</td>
-                        <td className="p-3 border border-gray-300">{note.interestRate || 0}%</td>
+                      <tr key={note.id} className="hover:bg-[#f9fafb] border-b border-[#f3f4f6]">
+                        <td className="py-3 px-4">
+                          <input
+                            type="text"
+                            value={note.roundName}
+                            onChange={(e) => updateSafeNote(note.id, 'roundName', e.target.value)}
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                          />
+                        </td>
+                        <td className="py-3 px-4">
+                          <select
+                            value={note.type}
+                            onChange={(e) => updateSafeNote(note.id, 'type', e.target.value)}
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                          >
+                            <option value="Pre-Money">Pre-Money SAFE</option>
+                            <option value="Post-Money">Post-Money</option>
+                          </select>
+                        </td>
+                        <td className="py-3 px-4">
+                          <input
+                            type="date"
+                            value={note.investmentDate}
+                            onChange={(e) => updateSafeNote(note.id, 'investmentDate', e.target.value)}
+                            placeholder="mm/dd/yyyy"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                          />
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">$</span>
+                            <input
+                              type="text"
+                              value={(note.investmentAmount || 0).toLocaleString()}
+                              onChange={(e) => {
+                                const value = e.target.value.replace(/,/g, '');
+                                updateSafeNote(note.id, 'investmentAmount', parseInt(value) || 0);
+                              }}
+                              className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] pl-7 pr-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                            />
+                          </div>
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">$</span>
+                            <input
+                              type="text"
+                              value={(note.pmvCap || 0).toLocaleString()}
+                              onChange={(e) => {
+                                const value = e.target.value.replace(/,/g, '');
+                                updateSafeNote(note.id, 'pmvCap', parseInt(value) || 0);
+                              }}
+                              className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] pl-7 pr-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                            />
+                          </div>
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="relative">
+                            <input
+                              type="number"
+                              value={note.discount}
+                              onChange={(e) => updateSafeNote(note.id, 'discount', parseInt(e.target.value) || 0)}
+                              className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 pr-7 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                            />
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">%</span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="relative">
+                            <input
+                              type="number"
+                              value={note.interestRate}
+                              onChange={(e) => updateSafeNote(note.id, 'interestRate', parseInt(e.target.value) || 0)}
+                              className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 pr-7 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                            />
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">%</span>
+                          </div>
+                        </td>
                       </tr>
                     ))}
-                    <tr>
-                      <td colSpan={7} className="p-4 border border-gray-300">
-                        <button 
-                          onClick={handleAddSafeNote}
-                          className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
-                        >
-                          <Plus size={16} />
-                          <span> Add SAFE/Convertible Note</span>
-                        </button>
-                      </td>
-                    </tr>
                   </tbody>
                 </table>
               </div>
+              
+              <button 
+                onClick={handleAddSafeNote}
+                className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-[#3b82f6] hover:text-[#2563eb] transition-colors"
+              >
+                <Plus size={16} />
+                <span>Add SAFE/Convertible Note</span>
+              </button>
             </div>
           </div>
+
+{/* Priced Rounds Section */}
+<div className="mt-8">
+  <h3 className="text-[16px] font-semibold text-[#111827] mb-6">Priced Rounds</h3>
+  
+  <div className="flex flex-nowrap gap-6 overflow-x-auto pb-6">
+    {formData.pricedRounds.map((round, index) => (
+      <div key={round.id} className="flex flex-col gap-4 min-w-[310px] max-w-[310px]">
+        
+        {/* Main Investment Card */}
+        <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm overflow-hidden">
+          <div className="px-5 py-4 border-b border-[#f3f4f6]">
+            <h4 className="text-[15px] font-semibold text-[#111827] text-center">{round.roundName}</h4>
+          </div>
+
+          <div className="p-5 space-y-4">
+            {/* Investment Date */}
+            <div>
+              <label className="block text-[12px] font-medium text-[#4b5563] mb-1.5">Investment Date</label>
+              <input
+                type="date"
+                value={round.investmentDate}
+                onChange={(e) => updatePricedRound(round.id, 'investmentDate', e.target.value)}
+                className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#e5e7eb] px-3 text-[13px] text-[#111827] focus:bg-white focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+              />
+            </div>
+
+            {/* Investment Amount */}
+            <div>
+              <label className="block text-[12px] font-medium text-[#4b5563] mb-1.5">Investment Amount</label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">$</span>
+                <input
+                  type="text"
+                  value={(round.investmentAmount || 0).toLocaleString()}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/,/g, '');
+                    updatePricedRound(round.id, 'investmentAmount', parseInt(value) || 0);
+                  }}
+                  className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#e5e7eb] pl-7 pr-3 text-[13px] text-[#111827] focus:bg-white focus:ring-1 focus:ring-blue-500 outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Liquidation Preference */}
+            <div>
+              <label className="block text-[12px] font-medium text-[#4b5563] mb-1.5">Liquidation Preference</label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={round.liquidationPreference}
+                  onChange={(e) => updatePricedRound(round.id, 'liquidationPreference', e.target.value)}
+                  className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#e5e7eb] px-3 text-[13px] text-[#111827] focus:bg-white focus:ring-1 focus:ring-blue-500 outline-none"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">x</span>
+              </div>
+            </div>
+
+            {/* Ownership */}
+            <div>
+              <label className="block text-[12px] font-medium text-[#4b5563] mb-1.5">Ownership</label>
+              <div className="flex gap-0">
+                <div className="w-10 h-9 rounded-l-md bg-[#f9fafb] border border-r-0 border-[#e5e7eb] flex items-center justify-center text-[#9ca3af] text-[13px]">#</div>
+                <input
+                  type="text"
+                  value={(round.ownership || 0).toLocaleString()}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/,/g, '');
+                    updatePricedRound(round.id, 'ownership', parseInt(value) || 0);
+                  }}
+                  className="flex-1 h-9 rounded-r-md bg-[#f9fafb] border border-[#e5e7eb] px-3 text-[13px] text-[#111827] focus:bg-white focus:ring-1 focus:ring-blue-500 outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Participation */}
+            <div>
+              <label className="block text-[12px] font-medium text-[#4b5563] mb-2">Common Stock Participation</label>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    checked={round.participation === 'Participating'}
+                    onChange={() => updatePricedRound(round.id, 'participation', 'Participating')}
+                    className="w-4 h-4 text-blue-600 border-[#d1d5db]"
+                  />
+                  <span className="text-[13px] text-[#111827]">Participating</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    checked={round.participation === 'Converting'}
+                    onChange={() => updatePricedRound(round.id, 'participation', 'Converting')}
+                    className="w-4 h-4 text-blue-600 border-[#d1d5db]"
+                  />
+                  <span className="text-[13px] text-[#111827]">Converting</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Checkboxes */}
+            <div className="space-y-3 pt-1">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" className="w-4 h-4 rounded border-[#d1d5db] text-blue-600" />
+                <span className="text-[13px] text-[#111827]">QPO Threshold</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" className="w-4 h-4 rounded border-[#d1d5db] text-blue-600" />
+                <span className="text-[13px] text-[#111827]">Cap</span>
+              </label>
+            </div>
+
+            {/* Dividends */}
+            <div>
+              <label className="block text-[12px] font-medium text-[#4b5563] mb-2">Dividends</label>
+              <div className="flex gap-2 mb-2">
+                <div className="h-8 px-4 bg-[#f9fafb] border border-[#e5e7eb] rounded flex items-center text-[12px] text-[#111827]">Simple</div>
+                <select className="flex-1 h-8 bg-[#f9fafb] border border-[#e5e7eb] rounded px-2 text-[12px] outline-none">
+                  <option>Select</option>
+                </select>
+                <div className="w-12 h-8 bg-[#f9fafb] border border-[#e5e7eb] rounded flex items-center justify-center text-[12px] text-[#111827]">4%</div>
+              </div>
+            </div>
+
+            {/* Antidilution */}
+            <div>
+              <label className="block text-[12px] font-medium text-[#4b5563] mb-1.5">Antidilution Provision</label>
+              <select className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#e5e7eb] px-3 text-[13px] outline-none">
+                <option>None</option>
+              </select>
+            </div>
+
+            {/* Comments */}
+            <div>
+              <label className="block text-[12px] font-medium text-[#4b5563] mb-1.5">Comments</label>
+              <input
+                type="text"
+                placeholder="A 16Z Lead Investor"
+                className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#e5e7eb] px-3 text-[13px] outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Option Pools Card */}
+        <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm p-5 space-y-4">
+          <h5 className="text-[15px] font-semibold text-[#111827] text-center mb-2">Option Pools {round.roundName}</h5>
+          
+          <div>
+            <label className="block text-[12px] font-medium text-[#4b5563] mb-1.5 leading-tight">
+              Allocated Options Immediately prior to round
+            </label>
+            <input type="text" className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#e5e7eb] px-3 text-[13px]" defaultValue="5,000" />
+          </div>
+
+          <div>
+            <label className="block text-[12px] font-medium text-[#4b5563] mb-1.5 leading-tight">
+              Unallocated Options Immediately prior to round
+            </label>
+            <input type="text" className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#e5e7eb] px-3 text-[13px]" defaultValue="7,500" />
+          </div>
+
+          <div>
+            <label className="block text-[12px] font-medium text-[#4b5563] mb-1.5 leading-tight">
+              Requested Available Option Pool Post-Round
+            </label>
+            <div className="relative">
+              <input type="text" className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#e5e7eb] px-3 text-[13px]" defaultValue="10" />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">%</span>
+            </div>
+          </div>
+        </div>
+
+        {/* My Fund Investment Card */}
+        <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm p-5">
+          <label className="block text-[12px] font-medium text-[#4b5563] mb-2">
+            My Fund's Investment in This Round
+          </label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">$</span>
+            <input type="text" className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#e5e7eb] pl-7 pr-3 text-[13px]" defaultValue="500,000" />
+          </div>
+        </div>
+
+      </div>
+    ))}
+
+    {/* Add Round Placeholder (Gray Card with Plus) */}
+    <button
+      onClick={handleAddPricedRound}
+      className="min-w-[250px] bg-[#e5e7eb]/40 border border-transparent rounded-xl flex flex-col items-center justify-center hover:bg-[#e5e7eb]/60 transition-all"
+    >
+      <Plus size={40} className="text-[#374151]" />
+    </button>
+  </div>
+</div>
         </div>
       )}
 
       {/* Action Buttons */}
-      <div className="flex justify-between items-center pt-8 mt-8 border-t border-gray-300">
+      <div className="flex justify-between items-center pt-6 mt-6 border-t border-gray-200">
         <button 
           onClick={onStepBack}
-          className="rounded-full border border-gray-300 bg-white px-8 py-3 font-medium text-gray-700 hover:bg-gray-50"
+          className="px-5 py-2.5 text-[13px] font-medium text-[#6b7280] bg-white hover:bg-gray-50 rounded-md border border-[#e5e7eb] transition-colors"
         >
           Cancel
         </button>
-        <div className="flex gap-4">
-          <button 
-            onClick={saveProgress}
-            className="rounded-full border border-gray-300 bg-white px-8 py-3 font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Save progress
-          </button>
+        <div className="flex gap-3">
           <button 
             onClick={onStepBack}
-            className="rounded-full border border-gray-300 bg-white px-8 py-3 font-medium text-gray-700 hover:bg-gray-50"
+            className="px-5 py-2.5 text-[13px] font-medium text-[#6b7280] bg-white hover:bg-gray-50 rounded-md border border-[#e5e7eb] transition-colors"
           >
             Step back
           </button>
           <button 
+            onClick={saveProgress}
+            className="px-5 py-2.5 text-[13px] font-medium text-[#3b82f6] bg-white border border-[#3b82f6] rounded-md hover:bg-[#eff6ff] transition-colors"
+          >
+            Save progress
+          </button>
+          <button 
             onClick={() => onContinue(formData)}
-            className="rounded-full bg-[#2d63ff] px-8 py-3 font-medium text-white hover:bg-blue-700"
+            className="px-5 py-2.5 text-[13px] font-medium text-white bg-[#3b82f6] rounded-md hover:bg-[#2563eb] transition-colors shadow-sm"
           >
             Continue
           </button>
