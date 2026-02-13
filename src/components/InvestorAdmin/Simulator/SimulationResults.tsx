@@ -917,9 +917,9 @@ const SimulationResults: React.FC<SimulationResultsProps> = ({ data, onStepBack 
     <div className="min-h-screen bg-[#f8fafc] p-8 font-sans text-[#1e293b] animate-in fade-in duration-500">
       
       {/* Top Header Section */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+      <div className="flex flex-col  items-start  mb-10 gap-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-[#0f172a] mb-2">Simulation Results</h1>
+          <h1 className="text-2xl font-semibold text-[#0f172a] mb-2">Simulation Results</h1>
           <p className="text-[14px] text-gray-500 max-w-2xl leading-relaxed">
             Visualize simulation exit waterfall, cap table, contract values and the difference 
             between nominal and effective contract valuation.
