@@ -53,7 +53,7 @@ const NewSimulationModal: React.FC<ModalProps> = ({ isOpen, onSubmit, onClose })
       onClick={handleClose} // Clicking the backdrop also closes the modal
     >
       <div 
-        className={`relative w-full max-w-2xl rounded-3xl bg-white p-10 shadow-2xl transition-all duration-300 ease-out ${
+        className={`relative w-full max-w-xl rounded-3xl bg-white p-10 shadow-2xl transition-all duration-300 ease-out ${
           isOpen && isVisible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-4 scale-95 opacity-0'
         }`}
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
@@ -66,7 +66,7 @@ const NewSimulationModal: React.FC<ModalProps> = ({ isOpen, onSubmit, onClose })
           <X size={20} />
         </button>
 
-        <h1 className="mb-2 text-3xl font-bold text-gray-900">Create New Simulation</h1>
+        <h1 className="mb-2 text-2xl font-bold text-gray-900">Create New Simulation</h1>
         <p className="mb-8 text-gray-600">Enter a name and description for your simulation</p>
 
         <form onSubmit={handleSubmit} className="space-y-8">
