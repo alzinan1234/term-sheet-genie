@@ -869,10 +869,8 @@
 // };
 
 // export default SimulationResults;
-
 import React, { useState } from 'react';
 import { Save } from 'lucide-react';
-// import { useNavigate } from 'react-router-dom'; // Uncomment if using React Router
 import Sidebar from './Sidebar';
 import SectionCard from './SectionCard';
 import PreSimCapTable from './PreSimCapTable';
@@ -883,25 +881,20 @@ import ValuationAnalysis from './ValuationAnalysis';
 import BreakevenAnalysis from './BreakevenAnalysis';
 import CapTable from './CapTable';
 
-const SimulationResults: React.FC = () => {
+// 1. Define the interface to match what Simulator.tsx is passing
+interface SimulationResultsProps {
+  data: any; // You can use SimulationData type if exported, or 'any' to fix the error quickly
+  onStepBack: () => void;
+}
+
+// 2. Apply the interface to the Functional Component
+const SimulationResults: React.FC<SimulationResultsProps> = ({ data, onStepBack }) => {
   const [activeScenario, setActiveScenario] = useState<number>(1);
-  // const navigate = useNavigate(); // Uncomment if using React Router
 
   const handleSaveAndExit = async () => {
     try {
-      // 1. Logic to gather data (example: activeScenario)
       console.log("Saving scenario:", activeScenario);
-
-      // 2. Simulate an API call
-      // await api.saveSimulation({ scenario: activeScenario }); 
-      
       alert("Simulation saved successfully!");
-
-      // 3. Exit Logic
-      // If using React Router:
-      // navigate('/dashboard'); 
-      
-      // Standard browser fallback:
       window.location.href = '/'; 
     } catch (error) {
       console.error("Failed to save:", error);
@@ -921,6 +914,13 @@ const SimulationResults: React.FC = () => {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          {/* Added a Back button to utilize onStepBack if needed */}
+          <button 
+            onClick={onStepBack}
+            className="px-4 py-2 border border-gray-300 rounded-full text-[13px] font-semibold hover:bg-gray-100 transition-all"
+          >
+            Back
+          </button>
           <button className="px-4 py-2 bg-[#eef2ff] text-[#4f46e5] rounded-full text-[13px] font-semibold hover:bg-[#e0e7ff] transition-all">
             Generate Term Sheet
           </button>
@@ -928,7 +928,6 @@ const SimulationResults: React.FC = () => {
             Compare Scenarios
           </button>
           
-          {/* Updated Save and Exit Button */}
           <button 
             onClick={handleSaveAndExit}
             className="px-6 py-2 bg-[#2563eb] text-white rounded-full text-[13px] font-bold hover:bg-[#1d4ed8] shadow-sm flex items-center gap-2 active:scale-95 transition-transform"

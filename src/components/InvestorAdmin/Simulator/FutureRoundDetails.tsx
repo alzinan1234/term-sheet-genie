@@ -48,10 +48,10 @@ const SimulatedFutureRounds: React.FC = () => {
   return (
     <div className="w-full bg-white rounded-xl border border-gray-200 shadow-sm font-sans text-[#64748b]">
       {/* Header */}
-      <div className="p-4 border-b border-gray-100 flex justify-between items-center">
+      {/* <div className="p-4 border-b border-gray-100 flex justify-between items-center">
         <h2 className="text-[14px] font-medium text-[#1e293b]">Simulated Future Round Details</h2>
         <ChevronUp size={18} className="text-gray-400" />
-      </div>
+      </div> */}
 
       <div className="p-6 overflow-x-auto">
         <div className="flex gap-6 min-w-max pb-4">
