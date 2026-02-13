@@ -18,7 +18,7 @@ interface Startup {
 export default function Startups() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  // --- New Functional States ---
+  // --- Functional States ---
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('All');
 
@@ -34,7 +34,7 @@ export default function Startups() {
   const filteredStartups = useMemo(() => {
     return startups.filter((startup) => {
       const matchesSearch = startup.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                           startup.description.toLowerCase().includes(searchTerm.toLowerCase());
+                            startup.description.toLowerCase().includes(searchTerm.toLowerCase());
       
       const matchesTab = activeTab === 'All' || startup.status === activeTab;
 
@@ -72,7 +72,7 @@ export default function Startups() {
             </div>
           </div>
 
-          {/* Status Tabs - Functional */}
+          {/* Status Tabs */}
           <div className="flex bg-[#F2F4F7] p-1 rounded-lg border border-[#EAECF0]">
             {['All', 'Active', 'Closed'].map((tab) => (
               <button
@@ -89,7 +89,7 @@ export default function Startups() {
             ))}
           </div>
 
-          {/* Search Bar - Functional */}
+          {/* Search Bar */}
           <div className="relative flex-1 max-w-[320px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#667085]" size={18} />
             <input 
@@ -178,38 +178,68 @@ export default function Startups() {
         </table>
       </div>
 
-      {/* Modal - Remains the same as previous design */}
+      {/* Modern Modal Section */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-[#0c111d]/30 backdrop-blur-[4px]" onClick={() => setIsModalOpen(false)} />
-          <div className="relative bg-white w-full max-w-[560px] rounded-[20px] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div className="flex justify-between items-center px-8 py-6 border-b border-[#F2F4F7]">
-              <h2 className="text-[20px] font-bold text-[#101828]">Add New Startup</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-[#98A2B3] hover:text-[#667085] transition-colors"><X size={22} /></button>
+          {/* Backdrop with slight blur */}
+          <div 
+            className="absolute inset-0 bg-black/20 backdrop-blur-[2px] transition-opacity duration-300" 
+            onClick={() => setIsModalOpen(false)} 
+          />
+          
+          {/* Modal Container */}
+          <div className="relative bg-white w-full max-w-[520px] rounded-xl shadow-xl overflow-hidden animate-in fade-in zoom-in duration-200">
+            
+            {/* Modal Header */}
+            <div className="px-8 pt-8 pb-4">
+              <h2 className="text-[22px] font-bold text-[#1e293b] mb-1">Add New Startup</h2>
+              <p className="text-[15px] text-[#64748b]">Enter the details below to register a new portfolio company.</p>
             </div>
-            <form className="p-8 space-y-5" onSubmit={(e) => e.preventDefault()}>
-              {[
-                { label: 'Startup Name', placeholder: 'e.g. Acme Corp', required: true },
-                { label: 'Website URL', placeholder: 'https://acme.com', required: true },
-                { label: 'Investment Amount', placeholder: '$0,000,000', required: true },
-                { label: 'Description', placeholder: 'Brief description of the startup', required: false },
-              ].map((field, idx) => (
-                <div key={idx} className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-[#344054] uppercase tracking-wider">
-                    {field.label} {field.required && <span className="text-[#D92D20]">*</span>}
-                  </label>
-                  <input 
-                    type="text"
-                    placeholder={field.placeholder}
-                    className="w-full px-4 py-3 bg-[#F9FAFB] border border-[#EAECF0] rounded-xl outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-[#2D5BFF] transition-all text-[#101828] placeholder:text-[#98A2B3]"
-                  />
-                </div>
-              ))}
-              <div className="flex gap-3 pt-4">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-3 border border-[#D0D5DD] rounded-xl font-bold text-[#344054] hover:bg-gray-50 transition-all">
+
+            {/* Modal Form */}
+            <form className="px-8 pb-8 space-y-5" onSubmit={(e) => e.preventDefault()}>
+              <div className="space-y-4">
+                {[
+                  { id: 'name', label: 'Startup Name', placeholder: 'e.g. Acme Corp', required: true },
+                  { id: 'url', label: 'Website URL', placeholder: 'https://acme.com', required: true },
+                  { id: 'amount', label: 'Investment Amount', placeholder: '$0,000,000', required: true },
+                  { id: 'desc', label: 'Description', placeholder: 'Brief description of the startup', required: false, isTextArea: true },
+                ].map((field) => (
+                  <div key={field.id} className="space-y-1.5">
+                    <label className="text-[14px] font-semibold text-[#1e293b]">
+                      {field.label} {field.required && <span className="text-red-500">*</span>}
+                    </label>
+                    
+                    {field.isTextArea ? (
+                      <textarea
+                        rows={3}
+                        placeholder={field.placeholder}
+                        className="w-full px-4 py-[10px] bg-white border border-[#e2e8f0] rounded-lg text-[15px] text-gray-800 placeholder:text-[#cbd5e1] outline-none focus:border-[#94a3b8] focus:ring-4 focus:ring-blue-500/5 transition-all resize-none"
+                      />
+                    ) : (
+                      <input 
+                        type="text"
+                        placeholder={field.placeholder}
+                        className="w-full px-4 py-[10px] bg-white border border-[#e2e8f0] rounded-lg text-[15px] text-gray-800 placeholder:text-[#cbd5e1] outline-none focus:border-[#94a3b8] focus:ring-4 focus:ring-blue-500/5 transition-all"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Modal Footer Actions */}
+              <div className="flex justify-end items-center gap-6 pt-4">
+                <button 
+                  type="button" 
+                  onClick={() => setIsModalOpen(false)} 
+                  className="text-[15px] font-medium text-[#64748b] hover:text-[#1e293b] transition-colors"
+                >
                   Cancel
                 </button>
-                <button type="submit" className="flex-1 py-3 bg-[#2D5BFF] hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-500/10 transition-all">
+                <button 
+                  type="submit" 
+                  className="bg-[#2D5BFF] hover:bg-blue-700 text-white px-8 py-[10px] rounded-lg text-[15px] font-bold shadow-sm transition-all active:scale-[0.98]"
+                >
                   Create Startup
                 </button>
               </div>
