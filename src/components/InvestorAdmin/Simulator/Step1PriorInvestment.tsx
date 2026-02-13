@@ -4,6 +4,69 @@
 import React, { useState } from 'react';
 import { Plus, Trash2, Edit2, ChevronDown, ChevronUp, Save } from 'lucide-react';
 
+interface PricedRound {
+  id: number;
+  roundName: string;
+  investmentDate: string;
+  investmentAmount: number;
+  liquidationPreference: number;
+  ownership: number;
+  participation: string;
+  converting: boolean;
+  qpoThreshold: boolean;
+  qpoThresholdValue: number;
+  cap: boolean;
+  capValue: number;
+  dividends: string;
+  dividendsSelect: string;
+  dividendRate: number;
+  antidilution: string;
+  comments: string;
+  allocatedOptionsPrior: number;
+  unallocatedOptionsPrior: number;
+  requestedOptionPool: number;
+  myInvestment: number;
+}
+
+interface EquityRound {
+  id: number;
+  roundName: string;
+  investmentDate: string;
+  investmentAmount: number;
+  commonShares: number;
+  preferredShares: number;
+  liquidationPreferences: string;
+  participationType: string;
+  dividendTiming: string;
+  dividendRate: number;
+  antiDilutionProvisions: string;
+}
+
+interface SafeNote {
+  id: number;
+  roundName: string;
+  type: string;
+  investmentDate: string;
+  investmentAmount: number;
+  pmvCap: number;
+  discount: number;
+  interestRate: number;
+  mfn: boolean;
+  proRata: boolean;
+}
+
+interface DebtRound {
+  id: number;
+  roundName: string;
+  paymentNature: string;
+  issuanceDate: string;
+  principalAmount: number;
+  interestType: string;
+  interestFrequency: string;
+  interestRate: number;
+  expirationDate: string;
+}
+
 interface Step1Props {
   data: any;
   onContinue: (data: any) => void;
@@ -51,7 +114,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
   const [editingDebtId, setEditingDebtId] = useState<number | null>(null);
 
   const handleAddEquity = () => {
-    const newEquity = {
+    const newEquity: EquityRound = {
       id: Date.now(),
       roundName: `Round ${String.fromCharCode(65 + formData.equityRounds.length)}`,
       investmentDate: '',
@@ -69,7 +132,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
   };
 
   const handleAddSafeNote = () => {
-    const newSafeNote = {
+    const newSafeNote: SafeNote = {
       id: Date.now(),
       roundName: `Safe ${String.fromCharCode(65 + formData.safeNotes.length)}`,
       type: 'Pre-Money',
@@ -86,7 +149,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
   };
 
   const handleAddDebt = () => {
-    const newDebt = {
+    const newDebt: DebtRound = {
       id: Date.now(),
       roundName: `Debt Round ${formData.debtRounds.length + 1}`,
       paymentNature: 'Lump Sum',
@@ -102,7 +165,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
   };
 
   const handleAddPricedRound = () => {
-    const newRound = {
+    const newRound: PricedRound = {
       id: Date.now(),
       roundName: `Round ${String.fromCharCode(65 + formData.pricedRounds.length)}`,
       investmentDate: '',
@@ -132,29 +195,29 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
   const handleRemoveEquity = (id: number) => {
     setFormData({
       ...formData,
-      equityRounds: formData.equityRounds.filter((equity: any) => equity.id !== id)
+      equityRounds: formData.equityRounds.filter((equity: EquityRound) => equity.id !== id)
     });
   };
 
   const handleRemoveSafeNote = (id: number) => {
     setFormData({
       ...formData,
-      safeNotes: formData.safeNotes.filter((note: any) => note.id !== id)
+      safeNotes: formData.safeNotes.filter((note: SafeNote) => note.id !== id)
     });
   };
 
   const handleRemoveDebt = (id: number) => {
     setFormData({
       ...formData,
-      debtRounds: formData.debtRounds.filter((debt: any) => debt.id !== id)
+      debtRounds: formData.debtRounds.filter((debt: DebtRound) => debt.id !== id)
     });
   };
 
   const handleRemovePricedRound = (id: number) => {
-    const index = formData.pricedRounds.findIndex((round: any) => round.id === id);
+    const index = formData.pricedRounds.findIndex((round: PricedRound) => round.id === id);
     setFormData({
       ...formData,
-      pricedRounds: formData.pricedRounds.filter((round: any) => round.id !== id)
+      pricedRounds: formData.pricedRounds.filter((round: PricedRound) => round.id !== id)
     });
     setExpandedRounds(expandedRounds.filter(i => i !== index));
   };
@@ -162,7 +225,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
   const updateEquity = (id: number, field: string, value: any) => {
     setFormData({
       ...formData,
-      equityRounds: formData.equityRounds.map((equity: any) => 
+      equityRounds: formData.equityRounds.map((equity: EquityRound) => 
         equity.id === id ? { ...equity, [field]: value } : equity
       )
     });
@@ -171,7 +234,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
   const updateSafeNote = (id: number, field: string, value: any) => {
     setFormData({
       ...formData,
-      safeNotes: formData.safeNotes.map((note: any) => 
+      safeNotes: formData.safeNotes.map((note: SafeNote) => 
         note.id === id ? { ...note, [field]: value } : note
       )
     });
@@ -180,7 +243,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
   const updateDebt = (id: number, field: string, value: any) => {
     setFormData({
       ...formData,
-      debtRounds: formData.debtRounds.map((debt: any) => 
+      debtRounds: formData.debtRounds.map((debt: DebtRound) => 
         debt.id === id ? { ...debt, [field]: value } : debt
       )
     });
@@ -189,7 +252,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
   const updatePricedRound = (id: number, field: string, value: any) => {
     setFormData({
       ...formData,
-      pricedRounds: formData.pricedRounds.map((round: any) => 
+      pricedRounds: formData.pricedRounds.map((round: PricedRound) => 
         round.id === id ? { ...round, [field]: value } : round
       )
     });
@@ -310,7 +373,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
                     </tr>
                   </thead>
                   <tbody>
-                    {formData.equityRounds.map((equity: any) => (
+                    {formData.equityRounds.map((equity: EquityRound) => (
                       <tr key={equity.id} className="hover:bg-[#f9fafb] border-b border-[#f3f4f6]">
                         <td className="py-3 px-4">
                           <input
@@ -472,7 +535,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
                     </tr>
                   </thead>
                   <tbody>
-                    {formData.safeNotes.map((note: any) => (
+                    {formData.safeNotes.map((note: SafeNote) => (
                       <tr key={note.id} className="hover:bg-[#f9fafb] border-b border-[#f3f4f6]">
                         <td className="py-3 px-4">
                           <input
@@ -619,7 +682,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
                     </tr>
                   </thead>
                   <tbody>
-                    {formData.debtRounds.map((debt: any) => (
+                    {formData.debtRounds.map((debt: DebtRound) => (
                       <tr key={debt.id} className="hover:bg-[#f9fafb] border-b border-[#f3f4f6]">
                         <td className="py-3 px-4">
                           <input
@@ -806,7 +869,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
                     </tr>
                   </thead>
                   <tbody>
-                    {formData.debtRounds.map((debt: any) => (
+                    {formData.debtRounds.map((debt: DebtRound) => (
                       <tr key={debt.id} className="hover:bg-[#f9fafb] border-b border-[#f3f4f6]">
                         <td className="py-3 px-4">
                           <input
@@ -930,7 +993,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
                     </tr>
                   </thead>
                   <tbody>
-                    {formData.safeNotes.map((note: any) => (
+                    {formData.safeNotes.map((note: SafeNote) => (
                       <tr key={note.id} className="hover:bg-[#f9fafb] border-b border-[#f3f4f6]">
                         <td className="py-3 px-4">
                           <input
@@ -1030,7 +1093,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
   <h3 className="text-[16px] font-semibold text-[#111827] mb-6">Priced Rounds</h3>
   
   <div className="flex flex-nowrap gap-6 overflow-x-auto pb-6">
-    {formData.pricedRounds.map((round, index) => (
+    {formData.pricedRounds.map((round: PricedRound, index: number) => (
       <div key={round.id} className="flex flex-col gap-4 min-w-[310px] max-w-[310px]">
         
         {/* Main Investment Card */}
