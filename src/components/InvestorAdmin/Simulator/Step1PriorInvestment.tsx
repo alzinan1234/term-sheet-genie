@@ -40,6 +40,9 @@ interface EquityRound {
   dividendTiming: string;
   dividendRate: number;
   antiDilutionProvisions: string;
+  qpoSharePriceMultiple?: number;
+  qpoMinimumProceeds?: number;
+  forcedConversionSharePriceMultipleCap?: number;
 }
 
 interface SafeNote {
@@ -125,7 +128,10 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
       participationType: 'Non-participating',
       dividendTiming: 'Non-cumulative',
       dividendRate: 0,
-      antiDilutionProvisions: 'None'
+      antiDilutionProvisions: 'None',
+      qpoSharePriceMultiple: 0,
+      qpoMinimumProceeds: 0,
+      forcedConversionSharePriceMultipleCap: 0
     };
     setFormData({ ...formData, equityRounds: [...formData.equityRounds, newEquity] });
     setEditingEquityId(newEquity.id);
@@ -369,6 +375,9 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
                       <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Dividend Timing</th>
                       <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Dividend Rate</th>
                       <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Anti-dilution Provisions</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">QPO Share Price Multiple</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">QPO Minimum Proceeds</th>
+                      <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Forced Conversion Share Price Multiple Cap</th>
                       <th className="text-left py-3 px-4 text-[12px] font-medium text-[#6b7280] border-b border-[#e5e7eb]">Actions</th>
                     </tr>
                   </thead>
@@ -485,6 +494,45 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
                             <option>Full ratchet</option>
                             <option>Weighted average</option>
                           </select>
+                        </td>
+                        <td className="py-3 px-4">
+                          <input
+                            type="text"
+                            value={(equity.qpoSharePriceMultiple || 0).toLocaleString()}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/,/g, '');
+                              updateEquity(equity.id, 'qpoSharePriceMultiple', parseFloat(value) || 0);
+                            }}
+                            placeholder="0"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                          />
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9ca3af] text-[13px]">$</span>
+                            <input
+                              type="text"
+                              value={(equity.qpoMinimumProceeds || 0).toLocaleString()}
+                              onChange={(e) => {
+                                const value = e.target.value.replace(/,/g, '');
+                                updateEquity(equity.id, 'qpoMinimumProceeds', parseInt(value) || 0);
+                              }}
+                              placeholder="0"
+                              className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] pl-7 pr-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                            />
+                          </div>
+                        </td>
+                        <td className="py-3 px-4">
+                          <input
+                            type="text"
+                            value={(equity.forcedConversionSharePriceMultipleCap || 0).toLocaleString()}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/,/g, '');
+                              updateEquity(equity.id, 'forcedConversionSharePriceMultipleCap', parseFloat(value) || 0);
+                            }}
+                            placeholder="0"
+                            className="w-full h-9 rounded-md bg-[#f9fafb] border border-[#d1d5db] px-3 text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] focus:bg-white"
+                          />
                         </td>
                         <td className="py-3 px-4">
                           <button

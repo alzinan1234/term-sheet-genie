@@ -869,8 +869,10 @@
 // };
 
 // export default SimulationResults;
+"use client";
+
 import React, { useState } from 'react';
-import { Save } from 'lucide-react';
+import { Save, FileText, BarChart2, ArrowLeft } from 'lucide-react';
 import Sidebar from './Sidebar';
 import SectionCard from './SectionCard';
 import PreSimCapTable from './PreSimCapTable';
@@ -880,17 +882,21 @@ import CalculateExit from './CalculateExit';
 import ValuationAnalysis from './ValuationAnalysis';
 import BreakevenAnalysis from './BreakevenAnalysis';
 import CapTable from './CapTable';
+import SimulationComparison from './SimulationComparison/SimulationComparison';
 
-// 1. Define the interface to match what Simulator.tsx is passing
+// নতুন কম্পোনেন্ট ইম্পোর্ট
+
+
 interface SimulationResultsProps {
-  data: any; // You can use SimulationData type if exported, or 'any' to fix the error quickly
+  data: any;
   onStepBack: () => void;
 }
 
-// 2. Apply the interface to the Functional Component
 const SimulationResults: React.FC<SimulationResultsProps> = ({ data, onStepBack }) => {
   const [activeScenario, setActiveScenario] = useState<number>(1);
+  const [showComparison, setShowComparison] = useState<boolean>(false);
 
+  // সেভ এবং এক্সিট লজিক
   const handleSaveAndExit = async () => {
     try {
       console.log("Saving scenario:", activeScenario);
@@ -902,71 +908,108 @@ const SimulationResults: React.FC<SimulationResultsProps> = ({ data, onStepBack 
     }
   };
 
+  // যদি ইউজার 'Compare Scenarios' এ ক্লিক করে
+  if (showComparison) {
+    return <SimulationComparison onBack={() => setShowComparison(false)} />;
+  }
+
   return (
-    <div className="min-h-screen bg-[#f8fafc] p-8 font-sans text-[#1e293b]">
+    <div className="min-h-screen bg-[#f8fafc] p-8 font-sans text-[#1e293b] animate-in fade-in duration-500">
+      
       {/* Top Header Section */}
-      <div className="flex flex-col gap-10 items-start mb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
         <div>
-          <h1 className="text-2xl font-bold mb-1">Simulation Results</h1>
-          <p className="text-[13px] text-gray-500 max-w-2xl">
+          <h1 className="text-3xl font-extrabold text-[#0f172a] mb-2">Simulation Results</h1>
+          <p className="text-[14px] text-gray-500 max-w-2xl leading-relaxed">
             Visualize simulation exit waterfall, cap table, contract values and the difference 
             between nominal and effective contract valuation.
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          {/* Added a Back button to utilize onStepBack if needed */}
+
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Back Button */}
           <button 
             onClick={onStepBack}
-            className="px-4 py-2 border border-gray-300 rounded-full text-[13px] font-semibold hover:bg-gray-100 transition-all"
+            className="group flex items-center gap-2 px-5 py-2.5 border border-gray-200 bg-white rounded-full text-[13px] font-bold text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm"
           >
+            <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             Back
           </button>
-          <button className="px-4 py-2 bg-[#eef2ff] text-[#4f46e5] rounded-full text-[13px] font-semibold hover:bg-[#e0e7ff] transition-all">
-            Generate Term Sheet
+
+          {/* Action Buttons */}
+          <button className="flex items-center gap-2 px-5 py-2.5 bg-[#eef2ff] text-[#4f46e5] rounded-full text-[13px] font-bold hover:bg-[#e0e7ff] transition-all border border-indigo-100">
+            <FileText size={16} /> Generate Term Sheet
           </button>
-          <button className="px-4 py-2 bg-[#eef2ff] text-[#4f46e5] rounded-full text-[13px] font-semibold hover:bg-[#e0e7ff] transition-all">
-            Compare Scenarios
+
+          <button 
+            onClick={() => setShowComparison(true)}
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#eef2ff] text-[#4f46e5] rounded-full text-[13px] font-bold hover:bg-[#e0e7ff] transition-all border border-indigo-100"
+          >
+            <BarChart2 size={16} /> Compare Scenarios
           </button>
           
           <button 
             onClick={handleSaveAndExit}
-            className="px-6 py-2 bg-[#2563eb] text-white rounded-full text-[13px] font-bold hover:bg-[#1d4ed8] shadow-sm flex items-center gap-2 active:scale-95 transition-transform"
+            className="px-8 py-2.5 bg-[#2563eb] text-white rounded-full text-[14px] font-bold hover:bg-[#1d4ed8] shadow-lg shadow-blue-200 flex items-center gap-2 active:scale-95 transition-all"
           >
-            <Save size={16} /> Save and Exit
+            <Save size={18} /> Save and Exit
           </button>
         </div>
       </div>
 
-      <div className="flex gap-8">
-        <Sidebar activeScenario={activeScenario} setActiveScenario={setActiveScenario} />
+      <div className="flex flex-col lg:flex-row gap-8">
+        {/* Sidebar Section */}
+        <aside className="lg:w-72 flex-shrink-0">
+          <div className="sticky top-8">
+            <Sidebar activeScenario={activeScenario} setActiveScenario={setActiveScenario} />
+          </div>
+        </aside>
 
-        <div className="flex-1 space-y-6">
+        {/* Main Content Sections */}
+        <div className="flex-1 space-y-8">
+          
           <SectionCard title="Pre Simulation Cap Table">
-            <PreSimCapTable />
+            <div className="p-2 overflow-x-auto">
+                <PreSimCapTable />
+            </div>
           </SectionCard>
 
           <SectionCard title="Simulated Future Round Details">
-            <FutureRoundDetails />
+            <div className="p-2">
+                <FutureRoundDetails />
+            </div>
           </SectionCard>
 
           <SectionCard title="Exit Waterfall Distribution">
-            <ExitWaterfall />
+            <div className="p-2">
+                <ExitWaterfall />
+            </div>
           </SectionCard>
 
           <SectionCard title="Calculate Exit Breakdown">
-            <CalculateExit />
+            <div className="p-2">
+                <CalculateExit />
+            </div>
           </SectionCard>
 
           <SectionCard title="Breakeven Analysis">
-            <BreakevenAnalysis />
+            <div className="p-2">
+                <BreakevenAnalysis />
+            </div>
           </SectionCard>
 
           <SectionCard title="Round by Round Nominal vs. Contract Based Value">
-            <ValuationAnalysis />
+            <div className="p-2">
+                <ValuationAnalysis />
+            </div>
           </SectionCard>
-          <SectionCard title="Cap Table">
-            <CapTable />
+
+          <SectionCard title="Cap Table Summary">
+            <div className="p-2 overflow-x-auto">
+              <CapTable />
+            </div>
           </SectionCard>
+
         </div>
       </div>
     </div>
