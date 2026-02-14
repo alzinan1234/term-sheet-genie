@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./investor.css";
 import InvestorTopbar from "@/components/InvestorAdmin/InvestorTopbar";
 import InvestorSidebar from "@/components/InvestorAdmin/InvestorSidebar";
+import NewSimulationModal from "@/components/InvestorAdmin/Simulator/NewSimulationModal";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,9 +24,18 @@ interface RootLayoutProps {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
+  const [isSimulatorModalOpen, setIsSimulatorModalOpen] = useState<boolean>(false);
+
+  const handleSimulatorSubmit = (data: { name: string; description: string }) => {
+    // Store the simulation data in sessionStorage or pass via URL params
+    sessionStorage.setItem('simulationData', JSON.stringify(data));
+    setIsSimulatorModalOpen(false);
+    router.push('/investor-admin/simulator');
+  };
 
   return (
     <html lang="en">
@@ -35,6 +47,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             setIsOpen={setIsOpen} 
             isCollapsed={isCollapsed}
             setIsCollapsed={setIsCollapsed}
+            onSimulatorClick={() => setIsSimulatorModalOpen(true)}
           />
 
           <main
@@ -68,6 +81,15 @@ export default function RootLayout({ children }: RootLayoutProps) {
               )}
             </div>
           </main>
+
+          {/* New Simulation Modal - Opens on any page, redirects to simulator on submit */}
+          {isSimulatorModalOpen && (
+            <NewSimulationModal 
+              isOpen={isSimulatorModalOpen}
+              onClose={() => setIsSimulatorModalOpen(false)}
+              onSubmit={handleSimulatorSubmit}
+            />
+          )}
         </div>
       </body>
     </html>

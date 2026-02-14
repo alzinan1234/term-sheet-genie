@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NewSimulationModal from './NewSimulationModal';
 import Step1PriorInvestment from './Step1PriorInvestment';
 import Step2CapTable from './Step2CapTable';
@@ -32,7 +32,7 @@ interface SimulationData {
 }
 
 const Simulator = () => {
-  const [currentStep, setCurrentStep] = useState<Step>('modal');
+  const [currentStep, setCurrentStep] = useState<Step>('step1'); // Start from step1 instead of modal
   const [simulationData, setSimulationData] = useState<SimulationData>({
     name: '',
     description: '',
@@ -65,6 +65,16 @@ const Simulator = () => {
       volatility: 0
     }
   });
+
+  // Load data from sessionStorage on mount
+  useEffect(() => {
+    const storedData = sessionStorage.getItem('simulationData');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      setSimulationData(prev => ({ ...prev, ...parsedData }));
+      sessionStorage.removeItem('simulationData'); // Clear after loading
+    }
+  }, []);
 
   const handleModalSubmit = (data: { name: string; description: string }) => {
     setSimulationData(prev => ({ ...prev, ...data }));

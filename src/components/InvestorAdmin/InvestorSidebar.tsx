@@ -25,6 +25,7 @@ interface NavItem {
   icon: React.ElementType;
   hasDropdown?: boolean;
   subItems?: SubNavItem[];
+  isModal?: boolean; // New property to identify modal items
 }
 
 interface SubNavItem {
@@ -38,6 +39,7 @@ interface SidebarProps {
   setIsOpen: (isOpen: boolean) => void;
   isCollapsed: boolean;   // Desktop width state
   setIsCollapsed: (isCollapsed: boolean) => void;
+  onSimulatorClick?: () => void; // Optional prop for simulator modal
 }
 
 const navItems: NavItem[] = [
@@ -46,7 +48,7 @@ const navItems: NavItem[] = [
   { name: "Limited Partners", href: "/investor-admin/limited-partners", icon: Users },
   { name: "Startups", href: "/investor-admin/startups", icon: Lightbulb },
   { name: "Investment Pipeline", href: "/investor-admin/investment-pipeline", icon: Target },
-  { name: "Simulator", href: "/investor-admin/simulator", icon: Calculator },
+  { name: "Simulator", href: "#", icon: Calculator, isModal: true }, // Changed to modal
   { name: "Documents", href: "/investor-admin/documents", icon: FileText },
   {
     name: "Settings",
@@ -60,7 +62,8 @@ const InvestorSidebar: React.FC<SidebarProps> = ({
   isOpen, 
   setIsOpen, 
   isCollapsed, 
-  setIsCollapsed 
+  setIsCollapsed,
+  onSimulatorClick 
 }) => {
   const pathname = usePathname();
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
@@ -77,6 +80,13 @@ const InvestorSidebar: React.FC<SidebarProps> = ({
       setTimeout(() => setIsSettingsOpen(true), 150);
     } else {
       setIsSettingsOpen(!isSettingsOpen);
+    }
+  };
+
+  const handleSimulatorClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (onSimulatorClick) {
+      onSimulatorClick();
     }
   };
 
@@ -177,6 +187,32 @@ const InvestorSidebar: React.FC<SidebarProps> = ({
                       </div>
                     )}
                   </div>
+                );
+              }
+
+              // Handle Simulator modal item
+              if (item.isModal && item.name === "Simulator") {
+                return (
+                  <Link
+                    key={item.name}
+                    href="#"
+                    onClick={handleSimulatorClick}
+                    className={`
+                      flex items-center min-h-[50px] transition-all relative group
+                      ${isCollapsed ? "justify-center px-0" : "gap-3 px-6"}
+                      text-gray-500 hover:text-gray-900
+                    `}
+                  >
+                    <Icon 
+                      className="w-5 h-5 transition-colors text-gray-400 group-hover:text-gray-600" 
+                      strokeWidth={1.5} 
+                    />
+                    {!isCollapsed && (
+                      <span className="text-sm font-medium">
+                        {item.name}
+                      </span>
+                    )}
+                  </Link>
                 );
               }
 
