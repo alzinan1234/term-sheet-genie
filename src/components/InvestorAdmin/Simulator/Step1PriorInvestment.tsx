@@ -115,7 +115,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
   // Update formData when props.data changes (especially name and description)
   useEffect(() => {
     if (data.name || data.description) {
-      setFormData(prev => ({
+      setFormData((prev: typeof formData) => ({
         ...prev,
         name: data.name || prev.name,
         description: data.description || prev.description

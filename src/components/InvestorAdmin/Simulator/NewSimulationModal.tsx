@@ -25,7 +25,7 @@ const NewSimulationModal: React.FC<ModalProps> = ({ isOpen, onSubmit, onClose })
     }
   }, [isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {  
     e.preventDefault();
     if (formData.name.trim()) {
       onSubmit(formData);
