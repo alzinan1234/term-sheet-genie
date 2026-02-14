@@ -79,6 +79,8 @@ interface Step1Props {
 const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBack }) => {
   const [formData, setFormData] = useState({
     ...data,
+    name: data.name || '', // Explicitly include name
+    description: data.description || '', // Explicitly include description
     foundersShares: data.foundersShares || 100000,
     allocatedOptions: data.allocatedOptions || 20000,
     unallocatedOptions: data.unallocatedOptions || 20000,
@@ -311,7 +313,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
       {/* Header */}
       <div className="mb-8">
         {/* <div className="text-sm  text-blue-600 mb-1">Step 1 of 3</div> */}
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">{formData.name || 'Portfolio Company Investment Information'}</h1>
+        <h1 className="text-xl font-bold text-gray-900 mb-2">{formData.name || 'Portfolio Company Investment Information'}</h1>
         <p className="text-gray-600">{formData.description || 'Enter all current funding for this company'}</p>
       </div>
 

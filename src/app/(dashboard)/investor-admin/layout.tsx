@@ -8,7 +8,6 @@ import InvestorTopbar from "@/components/InvestorAdmin/InvestorTopbar";
 import InvestorSidebar from "@/components/InvestorAdmin/InvestorSidebar";
 import NewSimulationModal from "@/components/InvestorAdmin/Simulator/NewSimulationModal";
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,10 +30,17 @@ export default function RootLayout({ children }: RootLayoutProps) {
   const [isSimulatorModalOpen, setIsSimulatorModalOpen] = useState<boolean>(false);
 
   const handleSimulatorSubmit = (data: { name: string; description: string }) => {
-    // Store the simulation data in sessionStorage or pass via URL params
-    sessionStorage.setItem('simulationData', JSON.stringify(data));
+    // Store the simulation data in sessionStorage
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.setItem('simulationData', JSON.stringify(data));
+      } catch (error) {
+        console.error('Error saving simulation data:', error);
+      }
+    }
     setIsSimulatorModalOpen(false);
-    router.push('/investor-admin/simulator');
+    // Add timestamp to force navigation
+    router.push(`/investor-admin/simulator?t=${Date.now()}`);
   };
 
   return (

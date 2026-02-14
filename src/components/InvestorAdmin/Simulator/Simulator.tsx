@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import NewSimulationModal from './NewSimulationModal';
 import Step1PriorInvestment from './Step1PriorInvestment';
 import Step2CapTable from './Step2CapTable';
@@ -32,6 +33,7 @@ interface SimulationData {
 }
 
 const Simulator = () => {
+  const searchParams = useSearchParams();
   const [currentStep, setCurrentStep] = useState<Step>('step1'); // Start from step1 instead of modal
   const [simulationData, setSimulationData] = useState<SimulationData>({
     name: '',
@@ -66,15 +68,25 @@ const Simulator = () => {
     }
   });
 
-  // Load data from sessionStorage on mount
+  // Load data from sessionStorage on mount or when navigating from modal
   useEffect(() => {
-    const storedData = sessionStorage.getItem('simulationData');
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      setSimulationData(prev => ({ ...prev, ...parsedData }));
-      sessionStorage.removeItem('simulationData'); // Clear after loading
+    if (typeof window !== 'undefined') {
+      const storedData = sessionStorage.getItem('simulationData');
+      if (storedData) {
+        try {
+          const parsedData = JSON.parse(storedData);
+          setSimulationData(prev => ({ 
+            ...prev, 
+            name: parsedData.name || prev.name,
+            description: parsedData.description || prev.description
+          }));
+          sessionStorage.removeItem('simulationData'); // Clear after loading
+        } catch (error) {
+          console.error('Error loading simulation data:', error);
+        }
+      }
     }
-  }, []);
+  }, [searchParams]); // React to URL changes
 
   const handleModalSubmit = (data: { name: string; description: string }) => {
     setSimulationData(prev => ({ ...prev, ...data }));
