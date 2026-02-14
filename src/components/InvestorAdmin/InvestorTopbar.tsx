@@ -13,7 +13,7 @@ export default function InvestorTopbar({ onBellClick, isCollapsed }: InvestorTop
   const router = useRouter();
 
   const handleUserImageClick = () => {
-    router.push("/investor-admin/profile");
+    router.push("/investor-admin/settings");
   };
 
   return (
