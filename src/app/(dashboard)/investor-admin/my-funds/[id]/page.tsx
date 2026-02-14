@@ -317,11 +317,11 @@ const SectionTable = ({ title, description, buttonText, columns, initialData, on
           </div>
           <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wider">{description}</p>
         </div>
-       <Link href="/investor-admin/simulator">
+       
         <button  className="bg-[#2D60FF] hover:bg-blue-700 text-white px-5 py-2.5 rounded-[12px] text-xs font-bold flex items-center gap-2 transition-all active:scale-95">
           <Plus size={14} /> {buttonText}
         </button>
-       </Link>
+      
       </div>
       {isOpen && (
         <div className="overflow-x-auto">
