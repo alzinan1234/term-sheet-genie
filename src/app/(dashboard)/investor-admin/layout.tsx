@@ -33,7 +33,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
     // Store the simulation data in sessionStorage
     if (typeof window !== 'undefined') {
       try {
+        console.log('Storing simulation data:', data); // Debug log
         sessionStorage.setItem('simulationData', JSON.stringify(data));
+        const stored = sessionStorage.getItem('simulationData');
+        console.log('Verification - stored data:', stored); // Verify storage
       } catch (error) {
         console.error('Error saving simulation data:', error);
       }

@@ -1,7 +1,7 @@
 // app/simulator/components/Step1PriorInvestment.tsx
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit2, ChevronDown, ChevronUp, Save } from 'lucide-react';
 
 interface PricedRound {
@@ -111,6 +111,17 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
       myInvestment: 500000
     }],
   });
+  
+  // Update formData when props.data changes (especially name and description)
+  useEffect(() => {
+    if (data.name || data.description) {
+      setFormData(prev => ({
+        ...prev,
+        name: data.name || prev.name,
+        description: data.description || prev.description
+      }));
+    }
+  }, [data.name, data.description]);
   
   const [activeTab, setActiveTab] = useState<'latest' | 'roundbyround'>('latest');
   const [expandedRounds, setExpandedRounds] = useState<number[]>([0]);
@@ -313,7 +324,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
       {/* Header */}
       <div className="mb-8">
         {/* <div className="text-sm  text-blue-600 mb-1">Step 1 of 3</div> */}
-        <h1 className="text-xl font-bold text-gray-900 mb-2">{formData.name || 'Portfolio Company Investment Information'}</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{formData.name || 'Portfolio Company Investment Information'}</h1>
         <p className="text-gray-600">{formData.description || 'Enter all current funding for this company'}</p>
       </div>
 

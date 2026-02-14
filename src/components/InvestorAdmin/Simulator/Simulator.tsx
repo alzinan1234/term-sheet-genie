@@ -70,16 +70,23 @@ const Simulator = () => {
 
   // Load data from sessionStorage on mount or when navigating from modal
   useEffect(() => {
+    console.log('Simulator useEffect triggered'); // Debug log
     if (typeof window !== 'undefined') {
       const storedData = sessionStorage.getItem('simulationData');
+      console.log('Retrieved from sessionStorage:', storedData); // Debug log
       if (storedData) {
         try {
           const parsedData = JSON.parse(storedData);
-          setSimulationData(prev => ({ 
-            ...prev, 
-            name: parsedData.name || prev.name,
-            description: parsedData.description || prev.description
-          }));
+          console.log('Parsed data:', parsedData); // Debug log
+          setSimulationData(prev => {
+            const updated = { 
+              ...prev, 
+              name: parsedData.name || prev.name,
+              description: parsedData.description || prev.description
+            };
+            console.log('Updated simulationData:', updated); // Debug log
+            return updated;
+          });
           sessionStorage.removeItem('simulationData'); // Clear after loading
         } catch (error) {
           console.error('Error loading simulation data:', error);
