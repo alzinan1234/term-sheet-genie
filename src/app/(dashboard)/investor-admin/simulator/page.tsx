@@ -1,14 +1,9 @@
+// Disable static generation for this page
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
-import Simulator from '@/components/InvestorAdmin/Simulator/Simulator'
-import React from 'react'
+import Simulator from '@/components/InvestorAdmin/Simulator/Simulator';
 
-const page = () => {
-  return (
-    <div>
-       <Simulator />
-       
-    </div>
-  )
+export default function SimulatorPage() {
+  return <Simulator />;
 }
-
-export default page
