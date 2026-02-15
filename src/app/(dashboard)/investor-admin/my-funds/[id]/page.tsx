@@ -306,6 +306,7 @@ const Modal = ({ title, children, onClose }: any) => (
 );
 
 const SectionTable = ({ title, description, buttonText, columns, initialData, onAdd }: any) => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
   return (
     <div className="bg-white rounded-[24px] border border-gray-100 shadow-sm overflow-hidden">
@@ -318,7 +319,7 @@ const SectionTable = ({ title, description, buttonText, columns, initialData, on
           <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wider">{description}</p>
         </div>
        
-        <button  className="bg-[#2D60FF] hover:bg-blue-700 text-white px-5 py-2.5 rounded-[12px] text-xs font-bold flex items-center gap-2 transition-all active:scale-95">
+        <button onClick={onAdd} className="bg-[#2D60FF] hover:bg-blue-700 text-white px-5 py-2.5 rounded-[12px] text-xs font-bold flex items-center gap-2 transition-all active:scale-95">
           <Plus size={14} /> {buttonText}
         </button>
       
@@ -336,7 +337,11 @@ const SectionTable = ({ title, description, buttonText, columns, initialData, on
             </thead>
             <tbody className="divide-y divide-gray-50">
               {initialData.map((row: any, i: number) => (
-                <tr key={i} className="hover:bg-blue-50/10 transition-colors">
+                <tr 
+                  key={i} 
+                  className="hover:bg-blue-50/10 transition-colors cursor-pointer"
+                  onClick={() => title === "Investments" && row.id && router.push(`/investor-admin/startups/${row.id}`)}
+                >
                   {columns.map((col: any) => (
                     <td key={col.key} className="px-8 py-5">
                       {col.key === 'name' ? (
@@ -356,7 +361,14 @@ const SectionTable = ({ title, description, buttonText, columns, initialData, on
                       )}
                     </td>
                   ))}
-                  <td className="px-8 py-5 text-right"><button className="text-gray-300 hover:text-gray-600"><Edit2 size={14}/></button></td>
+                  <td className="px-8 py-5 text-right">
+                    <button 
+                      onClick={(e) => e.stopPropagation()} 
+                      className="text-gray-300 hover:text-gray-600"
+                    >
+                      <Edit2 size={14}/>
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -426,8 +438,8 @@ const EditableInfoItem = ({ label, defaultValue, isEditing }: any) => (
 
 // --- Mock Data ---
 const investmentData = [
-  { name: "Catalog", url: "catalogapp.io", status: "Active", desc: "Content curating app", amount: "$1,800" },
-  { name: "Circooles", url: "getcircooles.com", status: "Active", desc: "Design software", amount: "$1,800" },
+  { id: "catalog", name: "Catalog", url: "catalogapp.io", status: "Active", desc: "Content curating app", amount: "$1,800" },
+  { id: "circooles", name: "Circooles", url: "getcircooles.com", status: "Active", desc: "Design software", amount: "$1,800" },
 ];
 const pipelineData = [
   { name: "Starlight", desc: "AI Platform", companyStatus: "Raising", decisionStatus: "Under Review" },
