@@ -1153,7 +1153,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
               onBlur={(e) => updatePricedRound(round.id, 'roundName', e.currentTarget.textContent || '')}
               className="text-[15px] font-semibold text-[#111827] text-center flex-1 focus:outline-none cursor-text"
             >
-              {round.roundName || `Round ${index + 1}`}
+              {round.roundName || `Round A`}
             
             </h2>
             <button
