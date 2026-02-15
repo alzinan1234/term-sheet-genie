@@ -17,11 +17,20 @@ const Step3ContractValuation: React.FC<Step3Props> = ({ data, onContinue, onStep
     riskFreeRate: data?.riskFreeRate || 4.3,
   });
 
-  const [showAdvanced, setShowAdvanced] = useState(true); // ছবির মতো ডিফল্ট ওপেন রাখা হয়েছে
+  const [showAdvanced, setShowAdvanced] = useState(true);
 
   const handleChange = (field: string, value: any) => {
     setFormData({ ...formData, [field]: value });
   };
+
+  // Reusable Tooltip Component to maintain design consistency
+  const Tooltip = ({ text }: { text: string }) => (
+    <div className="absolute bottom-full mb-2 hidden group-hover:block w-48 p-2 bg-[#2D2D2D] text-white text-[11px] rounded shadow-lg z-50">
+      {text}
+      {/* Tooltip Arrow */}
+      <div className="absolute top-full left-2 -mt-1 border-4 border-transparent border-t-[#2D2D2D]"></div>
+    </div>
+  );
 
   return (
     <div className="w-full min-h-screen bg-[#f8fafc] p-8 font-sans">
@@ -44,7 +53,11 @@ const Step3ContractValuation: React.FC<Step3Props> = ({ data, onContinue, onStep
         <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100 flex items-center justify-between relative">
           <div className="flex-1">
             <label className="block text-sm font-medium text-[#334155] mb-2 flex items-center gap-1">
-              Expected Time to Exit (Yrs): <span className="text-gray-400 cursor-help">ⓘ</span>
+              Expected Time to Exit (Yrs): 
+              <div className="relative group inline-block">
+                <span className="text-gray-400 cursor-help">ⓘ</span>
+                <Tooltip text="Estimated number of years until a liquidity event or exit occurs." />
+              </div>
             </label>
             <input
               type="number"
@@ -52,14 +65,17 @@ const Step3ContractValuation: React.FC<Step3Props> = ({ data, onContinue, onStep
               onChange={(e) => handleChange('expectedTimeToExit', e.target.value)}
               className="w-full bg-[#f1f5f9] border-none rounded-lg py-3 px-4 text-gray-700 focus:ring-2 focus:ring-blue-500"
             />
-            <span className="text-[10px] text-gray-400 mt-1 block">Helper</span>
           </div>
 
           <div className="px-6 text-2xl font-light text-gray-400 mt-4">+/-</div>
 
           <div className="flex-1">
             <label className="block text-sm font-medium text-[#334155] mb-2 flex items-center gap-1">
-              Volatility Around Holding Period (Yrs): <span className="text-gray-400 cursor-help">ⓘ</span>
+              Volatility Around Holding Period (Yrs): 
+              <div className="relative group inline-block">
+                <span className="text-gray-400 cursor-help">ⓘ</span>
+                <Tooltip text="Variation in the expected timing of the exit event." />
+              </div>
             </label>
             <input
               type="number"
@@ -67,7 +83,6 @@ const Step3ContractValuation: React.FC<Step3Props> = ({ data, onContinue, onStep
               onChange={(e) => handleChange('volatilityHoldingPeriod', e.target.value)}
               className="w-full bg-[#f1f5f9] border-none rounded-lg py-3 px-4 text-gray-700 focus:ring-2 focus:ring-blue-500"
             />
-            <span className="text-[10px] text-gray-400 mt-1 block">Helper</span>
           </div>
         </div>
 
@@ -84,7 +99,11 @@ const Step3ContractValuation: React.FC<Step3Props> = ({ data, onContinue, onStep
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-[#334155] mb-2 flex items-center gap-1">
-                  Subjective Post Money Valuation ($M) After All Funding <span className="text-gray-400 cursor-help">ⓘ</span>
+                  Subjective Post Money Valuation ($M) After All Funding 
+                  <div className="relative group inline-block">
+                    <span className="text-gray-400 cursor-help">ⓘ</span>
+                    <Tooltip text="Number of shares held by the founder (in millions) after the deal" />
+                  </div>
                 </label>
                 <input
                   type="number"
@@ -97,7 +116,11 @@ const Step3ContractValuation: React.FC<Step3Props> = ({ data, onContinue, onStep
               <div className="grid grid-cols-2 gap-12">
                 <div>
                   <label className="block text-sm font-medium text-[#334155] mb-2 flex items-center gap-1">
-                    Volatility (%): <span className="text-gray-400 cursor-help">ⓘ</span>
+                    Volatility (%): 
+                    <div className="relative group inline-block">
+                      <span className="text-gray-400 cursor-help">ⓘ</span>
+                      <Tooltip text="The standard deviation of the company's value returns." />
+                    </div>
                   </label>
                   <input
                     type="text"
@@ -105,11 +128,14 @@ const Step3ContractValuation: React.FC<Step3Props> = ({ data, onContinue, onStep
                     onChange={(e) => handleChange('volatility', e.target.value)}
                     className="w-full bg-[#f1f5f9] border-none rounded-lg py-3 px-4 text-gray-700 focus:ring-2 focus:ring-blue-500"
                   />
-                  <span className="text-[10px] text-gray-400 mt-1 block">Helper</span>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[#334155] mb-2 flex items-center gap-1">
-                    Risk Free Rate (%): <span className="text-gray-400 cursor-help">ⓘ</span>
+                    Risk Free Rate (%): 
+                    <div className="relative group inline-block">
+                      <span className="text-gray-400 cursor-help">ⓘ</span>
+                      <Tooltip text="The theoretical rate of return of an investment with zero risk." />
+                    </div>
                   </label>
                   <input
                     type="number"
@@ -117,7 +143,6 @@ const Step3ContractValuation: React.FC<Step3Props> = ({ data, onContinue, onStep
                     onChange={(e) => handleChange('riskFreeRate', e.target.value)}
                     className="w-full bg-[#f1f5f9] border-none rounded-lg py-3 px-4 text-gray-700 focus:ring-2 focus:ring-blue-500"
                   />
-                  <span className="text-[10px] text-gray-400 mt-1 block">Helper</span>
                 </div>
               </div>
             </div>
