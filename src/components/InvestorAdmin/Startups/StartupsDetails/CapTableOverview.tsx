@@ -64,8 +64,8 @@ const capTableData = [
 ];
 
 export default function CapTable() {
-  const [expandedRows, setExpandedRows] = useState<string[]>(['founders']); // ডিফল্টভাবে একটা রো ওপেন রাখা হয়েছে
-  const [isTableVisible, setIsTableVisible] = useState(true); // মেইন টেবিল টগল করার জন্য স্টেট
+  const [expandedRows, setExpandedRows] = useState<string[]>(['founders']); 
+  const [isTableVisible, setIsTableVisible] = useState(true);
 
   const toggleRow = (id: string) => {
     setExpandedRows(prev => 
@@ -74,7 +74,7 @@ export default function CapTable() {
   };
 
   return (
-    <div className="w-full  bg-[#F9FAFB] font-sans">
+    <div className="w-full bg-[#F9FAFB] font-sans">
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         
         {/* Header Section with Toggle Functionality */}
@@ -114,7 +114,7 @@ export default function CapTable() {
                           {row.subRows ? (
                             <button 
                               onClick={(e) => {
-                                e.stopPropagation(); // মেইন টেবিল টগল বন্ধ করার জন্য
+                                e.stopPropagation(); 
                                 toggleRow(row.id);
                               }} 
                               className="focus:outline-none"
@@ -138,8 +138,8 @@ export default function CapTable() {
                       <td className="pr-6 pl-4 py-4 text-[#667085] text-right">{row.price}</td>
                     </tr>
 
-                    {/* Sub-rows */}
-                    {row.subRows && expandedRows.includes(row.id) && row.subRows.map((sub, idx) => (
+                    {/* Sub-rows fixed with 'any' type to solve property errors */}
+                    {row.subRows && expandedRows.includes(row.id) && row.subRows.map((sub: any, idx) => (
                       <tr key={idx} className="bg-[#F9FAFB] border-b border-gray-100">
                         <td className="pl-12 pr-4 py-3 text-[#475467]">{sub.name}</td>
                         <td className="px-4 py-3 text-[#98A2B3]">-</td>

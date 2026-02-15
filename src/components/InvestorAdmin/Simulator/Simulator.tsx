@@ -132,7 +132,7 @@ const Simulator = () => {
       <div className="px-8 py-4">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold text-gray-900">Portfolio Company Investor Seniority</h1>
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <span className="text-sm text-gray-500">
               Status: {['idle', 'modal'].includes(currentStep) ? 'Not Started' : 'In Progress'}
             </span>
@@ -142,7 +142,7 @@ const Simulator = () => {
             >
               {['idle', 'modal'].includes(currentStep) ? 'Open Form' : 'New Simulation'}
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
 

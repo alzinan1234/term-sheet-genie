@@ -1,7 +1,7 @@
-// app/simulator/components/Step2CapTable.tsx
 "use client";
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Router import kora hoyeche
 
 interface Step2Props {
   data: any;
@@ -10,6 +10,7 @@ interface Step2Props {
 }
 
 const Step2CapTable: React.FC<Step2Props> = ({ data, onContinue, onStepBack }) => {
+  const router = useRouter(); // Router initialize kora hoyeche
   const [capTable, setCapTable] = useState(data.capTable || [
     {
       id: 1,
@@ -80,7 +81,6 @@ const Step2CapTable: React.FC<Step2Props> = ({ data, onContinue, onStepBack }) =
       row.id === id ? { ...row, [field]: value } : row
     );
 
-    // Recalculate totals if not updating total row
     if (field !== 'name' && id !== 5) {
       recalculateTotals(newCapTable);
     } else {
@@ -102,7 +102,6 @@ const Step2CapTable: React.FC<Step2Props> = ({ data, onContinue, onStepBack }) =
       pricePerShare: 0
     };
 
-    // Sum all rows except Total
     table.forEach(row => {
       if (row.name !== 'Total') {
         totals.commonStock += Number(row.commonStock) || 0;
@@ -115,7 +114,6 @@ const Step2CapTable: React.FC<Step2Props> = ({ data, onContinue, onStepBack }) =
       }
     });
 
-    // Update total row
     const updatedTable = table.map(row => {
       if (row.name === 'Total') {
         return {
@@ -138,18 +136,8 @@ const Step2CapTable: React.FC<Step2Props> = ({ data, onContinue, onStepBack }) =
   const handleActionChange = (action: string) => {
     setSelectedAction(action);
     if (action === 'simulate-future') {
-      // Navigate to future round simulation
       console.log('Navigate to future round simulation');
     } else if (action === 'save-as-is') {
-      onContinue({ capTable });
-    }
-  };
-
-  const handleSimulateAndSave = () => {
-    if (selectedAction === 'simulate-future') {
-      console.log('Simulating future rounds...');
-      // Add future round simulation logic here
-    } else {
       onContinue({ capTable });
     }
   };
@@ -198,7 +186,12 @@ const Step2CapTable: React.FC<Step2Props> = ({ data, onContinue, onStepBack }) =
                       <div className="text-sm text-gray-900">
                         Activest III, Sequoia
                         <br />
-                        <span className="text-blue-600 cursor-pointer hover:underline">Specify Investors</span>
+                        <span 
+                          onClick={() => router.push(`/investor-admin/simulator/${row.name.toLowerCase().replace(/\s+/g, '-')}`)}
+                          className="text-blue-600 cursor-pointer hover:underline"
+                        >
+                          Specify Investors
+                        </span>
                       </div>
                     )}
                   </td>
