@@ -1,7 +1,7 @@
 // app/simulator/components/Step1PriorInvestment.tsx
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Plus, Trash2, Edit2, ChevronDown, ChevronUp, Save } from 'lucide-react';
 
 interface PricedRound {
@@ -79,8 +79,6 @@ interface Step1Props {
 const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBack }) => {
   const [formData, setFormData] = useState({
     ...data,
-    name: data.name || '', // Explicitly include name
-    description: data.description || '', // Explicitly include description
     foundersShares: data.foundersShares || 100000,
     allocatedOptions: data.allocatedOptions || 20000,
     unallocatedOptions: data.unallocatedOptions || 20000,
@@ -111,17 +109,6 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
       myInvestment: 500000
     }],
   });
-  
-  // Update formData when props.data changes (especially name and description)
-  useEffect(() => {
-    if (data.name || data.description) {
-      setFormData((prev: typeof formData) => ({
-        ...prev,
-        name: data.name || prev.name,
-        description: data.description || prev.description
-      }));
-    }
-  }, [data.name, data.description]);
   
   const [activeTab, setActiveTab] = useState<'latest' | 'roundbyround'>('latest');
   const [expandedRounds, setExpandedRounds] = useState<number[]>([0]);
@@ -1159,8 +1146,23 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
         
         {/* Main Investment Card */}
         <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm overflow-hidden">
-          <div className="px-5 py-4 border-b border-[#f3f4f6]">
-            <h4 className="text-[15px] font-semibold text-[#111827] text-center">{round.roundName}</h4>
+          <div className="px-5 py-4 border-b border-[#f3f4f6] flex items-center justify-between">
+            <h2 
+              contentEditable
+              suppressContentEditableWarning
+              onBlur={(e) => updatePricedRound(round.id, 'roundName', e.currentTarget.textContent || '')}
+              className="text-[15px] font-semibold text-[#111827] text-center flex-1 focus:outline-none cursor-text"
+            >
+              {round.roundName || `Round ${index + 1}`}
+            
+            </h2>
+            <button
+              onClick={() => handleRemovePricedRound(round.id)}
+              className="text-[#ef4444] hover:text-[#dc2626] p-1 rounded hover:bg-[#fef2f2] flex-shrink-0"
+              title="Delete Round"
+            >
+              <Trash2 size={16} />
+            </button>
           </div>
 
           <div className="p-5 space-y-4">
@@ -1294,7 +1296,7 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
 
         {/* Option Pools Card */}
         <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm p-5 space-y-4">
-          <h5 className="text-[15px] font-semibold text-[#111827] text-center mb-2">Option Pools {round.roundName}</h5>
+          <h5 className="text-[15px] font-semibold text-[#111827] text-center mb-2">Option Pools</h5>
           
           <div>
             <label className="block text-[12px] font-medium text-[#4b5563] mb-1.5 leading-tight">
