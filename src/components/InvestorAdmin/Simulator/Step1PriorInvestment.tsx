@@ -353,6 +353,56 @@ const Step1PriorInvestment: React.FC<Step1Props> = ({ data, onContinue, onStepBa
       {activeTab === 'latest' ? (
         /* LATEST CAP TABLE VIEW */
         <div className="space-y-5">
+          {/* Founders Shares and Outstanding Options Summary - COPIED FROM ROUND BY ROUND */}
+          <div className="bg-white rounded-lg border border-[#e5e7eb]">
+            <div className="px-5 py-4 border-b border-[#e5e7eb]">
+              <h3 className="text-[15px] font-semibold text-[#1f2937]">Founders Shares and Outstanding Options</h3>
+            </div>
+            
+            <div className="p-5">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between py-2.5 px-4 bg-[#f9fafb] rounded-md border border-[#e5e7eb]">
+                  <label className="text-[13px] font-normal text-[#374151]">Founders Outstanding Shares</label>
+                  <input
+                    type="text"
+                    value={(formData.foundersShares || 0).toLocaleString()}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/,/g, '');
+                      setFormData({...formData, foundersShares: parseInt(value) || 0});
+                    }}
+                    className="w-28 h-9 rounded-md bg-white border border-[#d1d5db] px-3 text-right text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] transition-all"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between py-2.5 px-4 bg-[#f9fafb] rounded-md border border-[#e5e7eb]">
+                  <label className="text-[13px] font-normal text-[#374151]">Total Allocated Options</label>
+                  <input
+                    type="text"
+                    value={(formData.allocatedOptions || 0).toLocaleString()}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/,/g, '');
+                      setFormData({...formData, allocatedOptions: parseInt(value) || 0});
+                    }}
+                    className="w-28 h-9 rounded-md bg-white border border-[#d1d5db] px-3 text-right text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] transition-all"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between py-2.5 px-4 bg-[#f9fafb] rounded-md border border-[#e5e7eb]">
+                  <label className="text-[13px] font-normal text-[#374151]">Total Unallocated Options</label>
+                  <input
+                    type="text"
+                    value={(formData.unallocatedOptions || 0).toLocaleString()}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/,/g, '');
+                      setFormData({...formData, unallocatedOptions: parseInt(value) || 0});
+                    }}
+                    className="w-28 h-9 rounded-md bg-white border border-[#d1d5db] px-3 text-right text-[13px] text-[#111827] focus:ring-1 focus:ring-[#3b82f6] focus:border-[#3b82f6] transition-all"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Current Cap Table Section */}
           <div className="bg-white rounded-lg border border-[#e5e7eb]">
             <div className="px-5 py-4 border-b border-[#e5e7eb]">
