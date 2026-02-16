@@ -3,6 +3,10 @@ import React, { useState } from "react";
 import { Plus, MoreHorizontal, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import SimulationResults from "../Simulator/SimulationResults";
+import SimulationResultsWrapper from "./Simulationresultswrapper";
+
+
 
 interface Simulation {
   id: string;
@@ -120,9 +124,16 @@ const NewSimulationModal: React.FC<ModalProps> = ({ isOpen, onSubmit, onClose })
   );
 };
 
-export default function SimulationSection() {
+interface SimulationSectionProps {
+  onSimulationOpen?: () => void;
+  onSimulationClose?: () => void;
+}
+
+export default function SimulationSection({ onSimulationOpen, onSimulationClose }: SimulationSectionProps) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSimulation, setSelectedSimulation] = useState<Simulation | null>(null);
+  const [showResults, setShowResults] = useState(false);
 
   const simulations: Simulation[] = [
     { id: "1", companyName: "Real-Time Data Analysis", description: "Generate Report", scenarios: 4, badgeColor: "bg-purple-50 text-purple-600 border-purple-100" },
@@ -132,6 +143,13 @@ export default function SimulationSection() {
     { id: "5", companyName: "Cosmic Solutions", description: "Projecting the necessary investment and its valuation in 5 years", scenarios: 4, badgeColor: "bg-purple-50 text-purple-600 border-purple-100" },
     { id: "6", companyName: "Galactic Enterprises", description: "Projecting the necessary investment and its valuation in 5 years", scenarios: 4, badgeColor: "bg-purple-50 text-purple-600 border-purple-100" },
   ];
+
+  const handleCardClick = (simulation: Simulation) => {
+    setSelectedSimulation(simulation);
+    setShowResults(true);
+    // Notify parent যে SimulationResults open হচ্ছে
+    onSimulationOpen?.();
+  };
 
   const handleModalSubmit = (data: { name: string; description: string }) => {
     // Store the simulation data in sessionStorage
@@ -147,42 +165,71 @@ export default function SimulationSection() {
     router.push(`/investor-admin/simulator?t=${Date.now()}`);
   };
 
+  const handleStepBack = () => {
+    setShowResults(false);
+    setSelectedSimulation(null);
+    // Notify parent যে SimulationResults close হচ্ছে
+    onSimulationClose?.();
+  };
+
+  // যদি SimulationResults দেখানোর প্রয়োজন হয় - FULL SCREEN overlay দিয়ে দেখাবে
+  if (showResults && selectedSimulation) {
+    return (
+      <SimulationResultsWrapper
+        data={selectedSimulation}
+        onStepBack={handleStepBack}
+      >
+        <SimulationResults 
+          data={selectedSimulation}
+          onStepBack={handleStepBack}
+        />
+      </SimulationResultsWrapper>
+    );
+  }
+
+  // সিমুলেশন লিস্ট পেজ
   return (
-    <div className="mt-10 relative">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-gray-900">Individual Investment Simulations</h2>
-        <button 
-          onClick={() => setIsModalOpen(true)}
-          className="bg-[#2D60FF] hover:bg-[#1a4bd6] text-white px-5 py-2.5 rounded-2xl flex items-center gap-2 font-bold text-sm shadow-lg shadow-blue-100 transition-all active:scale-95"
-        >
-          <Plus size={18} /> Create New Simulation
-        </button>
-      </div>
+    <div className="relative">
+      <div className="mt-10">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-bold text-gray-900">Individual Investment Simulations</h2>
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="bg-[#2D60FF] hover:bg-[#1a4bd6] text-white px-5 py-2.5 rounded-2xl flex items-center gap-2 font-bold text-sm shadow-lg shadow-blue-100 transition-all active:scale-95"
+          >
+            <Plus size={18} /> Create New Simulation
+          </button>
+        </div>
 
-      {/* Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {simulations.map((item) => (
-          <div key={item.id} className="bg-white p-6 rounded-[24px] border border-gray-100 shadow-sm">
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="font-bold text-[#1A2B49]">{item.companyName}</h3>
-              <MoreHorizontal size={20} className="text-gray-400 cursor-pointer" />
+        {/* Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {simulations.map((item) => (
+            <div 
+              key={item.id} 
+              onClick={() => handleCardClick(item)}
+              className="bg-white p-6 rounded-[24px] border border-gray-100 shadow-sm cursor-pointer hover:shadow-md hover:border-gray-200 transition-all duration-200 group"
+            >
+              <div className="flex justify-between items-start mb-2">
+                <h3 className="font-bold text-[#1A2B49] group-hover:text-[#2D60FF] transition-colors">{item.companyName}</h3>
+                <MoreHorizontal size={20} className="text-gray-400 cursor-pointer hover:text-gray-600 transition-colors" onClick={(e) => e.stopPropagation()} />
+              </div>
+              <p className="text-xs text-gray-400 leading-relaxed mb-6">{item.description}</p>
+              <div className="flex justify-end">
+                <span className={`px-4 py-1 rounded-full text-[10px] font-bold border ${item.badgeColor}`}>
+                  {item.scenarios} scenarios
+                </span>
+              </div>
             </div>
-            <p className="text-xs text-gray-400 leading-relaxed mb-6">{item.description}</p>
-            <div className="flex justify-end">
-              <span className={`px-4 py-1 rounded-full text-[10px] font-bold border ${item.badgeColor}`}>
-                {item.scenarios} scenarios
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      {/* Modal */}
-      <NewSimulationModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleModalSubmit}
-      />
+        {/* Modal */}
+        <NewSimulationModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleModalSubmit}
+        />
+      </div>
     </div>
   );
 }

@@ -1,9 +1,18 @@
 "use client";
 import React, { useState } from 'react';
+import { X } from 'lucide-react';
+
+interface InviteFormData {
+  email: string;
+  role: string;
+  type: string;
+  permissions: string;
+}
 
 // --- Main Component ---
 const MySettings: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'User' | 'Team'>('User');
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen  p-6 md:p-12 font-sans text-[#1A1C21]">
@@ -34,8 +43,16 @@ const MySettings: React.FC = () => {
           </button>
         </div>
 
-        {activeTab === 'User' ? <UserSettingsView /> : <TeamSettingsView />}
+        {activeTab === 'User' ? <UserSettingsView /> : <TeamSettingsView onOpenInvite={() => setIsInviteModalOpen(true)} />}
       </div>
+
+      {/* Invite New User Modal */}
+      {isInviteModalOpen && (
+        <InviteUserModal 
+          isOpen={isInviteModalOpen} 
+          onClose={() => setIsInviteModalOpen(false)} 
+        />
+      )}
     </div>
   );
 };
@@ -181,7 +198,7 @@ const UserSettingsView = () => {
 };
 
 // --- Team Settings Tab Content ---
-const TeamSettingsView = () => {
+const TeamSettingsView = ({ onOpenInvite }: { onOpenInvite: () => void }) => {
   const [companyData, setCompanyData] = useState({
     name: "Acme Fund Group",
     type: "Venture Capital",
@@ -247,7 +264,7 @@ const TeamSettingsView = () => {
       <section className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
         <div className="p-8 flex justify-between items-center">
           <h2 className="text-lg font-bold">Users & Permissions</h2>
-          <button onClick={() => alert('Invite User')} className="bg-[#2D60FF] text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm hover:opacity-90">Invite New User</button>
+          <button onClick={onOpenInvite} className="bg-[#2D60FF] text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm hover:opacity-90">Invite New User</button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
@@ -294,6 +311,128 @@ const TeamSettingsView = () => {
           </div>
         </div>
       </section>
+    </div>
+  );
+};
+
+// --- Invite New User Modal ---
+const InviteUserModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const [formData, setFormData] = useState<InviteFormData>({
+    email: '',
+    role: '',
+    type: 'Internal',
+    permissions: 'Edit'
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.email || !formData.role) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    console.log('Invite data:', formData);
+    alert(`Invitation sent to ${formData.email}`);
+    setFormData({ email: '', role: '', type: 'Internal', permissions: 'Edit' });
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-white w-full max-w-[440px] rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in duration-200">
+        {/* Header */}
+        <div className="p-8 pb-6 flex justify-between items-start border-b border-gray-100">
+          <div>
+            <h2 className="text-2xl font-bold text-[#1A1C21] leading-tight">Invite New User</h2>
+            <p className="text-sm text-gray-400 mt-2">Add a new team member to your organization</p>
+          </div>
+          <button 
+            onClick={onClose} 
+            className="p-1.5 border border-gray-200 rounded-full text-gray-400 hover:bg-gray-50 transition-colors"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Form Content */}
+        <form onSubmit={handleSubmit} className="p-8 space-y-5">
+          {/* Email */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Email Address *</label>
+            <input 
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              placeholder="user@example.com"
+              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 text-sm outline-none focus:ring-2 focus:ring-[#2D60FF]/20 focus:border-[#2D60FF] font-medium"
+            />
+          </div>
+
+          {/* Role */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Role/Title *</label>
+            <input 
+              type="text"
+              value={formData.role}
+              onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+              placeholder="e.g. Investment Manager"
+              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 text-sm outline-none focus:ring-2 focus:ring-[#2D60FF]/20 focus:border-[#2D60FF] font-medium"
+            />
+          </div>
+
+          {/* User Type */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">User Type</label>
+            <div className="relative">
+              <select 
+                value={formData.type}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 text-sm outline-none focus:ring-2 focus:ring-[#2D60FF]/20 focus:border-[#2D60FF] appearance-none font-medium"
+              >
+                <option value="Internal">Internal</option>
+                <option value="External">External</option>
+              </select>
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] pointer-events-none">▼</span>
+            </div>
+          </div>
+
+          {/* Permissions */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Permissions</label>
+            <div className="relative">
+              <select 
+                value={formData.permissions}
+                onChange={(e) => setFormData({ ...formData, permissions: e.target.value })}
+                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-800 text-sm outline-none focus:ring-2 focus:ring-[#2D60FF]/20 focus:border-[#2D60FF] appearance-none font-medium"
+              >
+                <option value="Admin">Admin</option>
+                <option value="Edit">Edit</option>
+                <option value="View Only">View Only</option>
+              </select>
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] pointer-events-none">▼</span>
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex gap-3 pt-6">
+            <button 
+              type="button"
+              onClick={onClose}
+              className="flex-1 py-3 text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-lg font-bold text-sm transition-colors"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit"
+              className="flex-1 py-3 text-white bg-[#2D60FF] hover:bg-blue-700 rounded-lg font-bold text-sm shadow-lg shadow-blue-100 transition-all active:scale-[0.98]"
+            >
+              Send Invitation
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

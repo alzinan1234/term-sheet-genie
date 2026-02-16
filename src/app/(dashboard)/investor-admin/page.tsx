@@ -7,11 +7,12 @@ import React, { useState } from "react";
 
 export default function InvestorDashboard() {
   const [view, setView] = useState<"table" | "create" | "lp">("table");
+  const [isSimulationResultsOpen, setIsSimulationResultsOpen] = useState(false);
 
   return (
     <div>
-      {/* Table View */}
-      {view === "table" && (
+      {/* Table View - শুধুমাত্র যখন SimulationResults open নয় */}
+      {view === "table" && !isSimulationResultsOpen && (
         <MyFundsTable onAddNew={() => setView("create")} />
       )}
       
@@ -28,10 +29,13 @@ export default function InvestorDashboard() {
         <LimitedPartnersView onBack={() => setView("create")} />
       )}
 
-      {/* LOGIC: Show SimulationSection ONLY when not in 'create' view.
-          This ensures it hides when "Creating a New Fund" is open.
-      */}
-      {view !== "create" && <SimulationSection />}
+      {/* SimulationSection - শুধুমাত্র table view এ দেখাবে */}
+      {view === "table" && (
+        <SimulationSection 
+          onSimulationOpen={() => setIsSimulationResultsOpen(true)}
+          onSimulationClose={() => setIsSimulationResultsOpen(false)}
+        />
+      )}
     </div>
   );
 }

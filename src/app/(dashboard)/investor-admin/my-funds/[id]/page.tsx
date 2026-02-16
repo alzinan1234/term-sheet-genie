@@ -4,7 +4,6 @@ import { Plus, Edit2, ChevronDown, ChevronUp, FileText, ArrowLeft, Save, X, Uplo
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import NewSimulationModal from "@/components/InvestorAdmin/Simulator/NewSimulationModal";
-// Import the modal
 
 // --- Types ---
 interface PageProps {
@@ -12,6 +11,16 @@ interface PageProps {
 }
 
 type ModalType = 'portfolio' | 'potential' | 'partner' | 'team';
+
+interface PartnerFormData {
+  name: string;
+  capital: string;
+  fees: string;
+  carry: string;
+  contactName: string;
+  contactEmail: string;
+  lpAgreement: File | null;
+}
 
 export default function FundDetailsPage({ params }: PageProps) {
   const router = useRouter();
@@ -22,11 +31,46 @@ export default function FundDetailsPage({ params }: PageProps) {
   const [isEditingBasic, setIsEditingBasic] = useState(false);
   const [activeModal, setActiveModal] = useState<{ type: ModalType; data?: any } | null>(null);
   
+  // Partner Modal States
+  const [partnerStep, setPartnerStep] = useState<1 | 2>(1);
+  const [partnerForm, setPartnerForm] = useState<PartnerFormData>({
+    name: '',
+    capital: '',
+    fees: '',
+    carry: '',
+    contactName: '',
+    contactEmail: '',
+    lpAgreement: null,
+  });
+  
   // State for NewSimulationModal
   const [isSimulationModalOpen, setIsSimulationModalOpen] = useState(false);
 
   const closeModal = () => {
     setActiveModal(null);
+    setPartnerStep(1);
+    setPartnerForm({
+      name: '',
+      capital: '',
+      fees: '',
+      carry: '',
+      contactName: '',
+      contactEmail: '',
+      lpAgreement: null,
+    });
+  };
+
+  const handlePartnerNext = () => {
+    if (partnerForm.name.trim()) {
+      setPartnerStep(2);
+    }
+  };
+
+  const handlePartnerSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Partner data:", partnerForm);
+    // Here you would send the data to your backend
+    closeModal();
   };
 
   // Handle submission from NewSimulationModal
@@ -97,7 +141,7 @@ export default function FundDetailsPage({ params }: PageProps) {
           title="Investments" 
           description="Companies that this fund has invested in"
           buttonText="New Portfolio Company"
-          onAdd={() => setIsSimulationModalOpen(true)} // Open NewSimulationModal
+          onAdd={() => setIsSimulationModalOpen(true)}
           columns={[
             { key: 'name', label: "Company" },
             { key: 'status', label: "Status" },
@@ -164,94 +208,188 @@ export default function FundDetailsPage({ params }: PageProps) {
         <Modal 
           title={
             activeModal.type === 'potential' ? "Add new Potential Investment" :
-            activeModal.type === 'partner' ? "Add new Partner" : "New member"
+            activeModal.type === 'partner' ? (partnerStep === 1 ? "Add new Partner" : "Partner Details") : "New member"
           }
           onClose={closeModal}
         >
-          <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); closeModal(); }}>
-            
-            {/* POTENTIAL INVESTMENT MODAL */}
-            {activeModal.type === 'potential' && (
-              <>
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-gray-500">Name of the company</label>
-                  <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20 text-sm font-medium" placeholder="Starlight Tech" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-gray-500">Description</label>
-                  <textarea className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl h-24 outline-none focus:ring-2 focus:ring-blue-500/20 text-sm font-medium resize-none" placeholder="Brief description..." />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-gray-500">Company Status</label>
-                  <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium" placeholder="Raising" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-gray-500">Decision Status</label>
-                  <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium" placeholder="Investment Committee" />
-                </div>
-              </>
-            )}
-
-            {/* NEW PARTNER MODAL (LP) */}
-            {activeModal.type === 'partner' && (
-              <>
+          {/* PARTNER MODAL - TWO STEP */}
+          {activeModal.type === 'partner' && (
+            <form onSubmit={handlePartnerSubmit} className="space-y-5">
+              {partnerStep === 1 ? (
+                // STEP 1: Partner Name Only
                 <div className="space-y-2">
                   <label className="text-[13px] font-semibold text-gray-500">Partner Name</label>
-                  <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium" placeholder="Full name" />
+                  <input 
+                    type="text"
+                    value={partnerForm.name}
+                    onChange={(e) => setPartnerForm({ ...partnerForm, name: e.target.value })}
+                    className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20 text-sm font-medium" 
+                    placeholder="Full name" 
+                  />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-gray-500">Committed Capital</label>
-                  <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium" placeholder="$0,000,000" />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
+              ) : (
+                // STEP 2: Financial & Contact Details
+                <>
                   <div className="space-y-2">
-                    <label className="text-[13px] font-semibold text-gray-500">Annual Fees</label>
-                    <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium" placeholder="0%" />
+                    <label className="text-[13px] font-semibold text-gray-500">Committed Capital</label>
+                    <input 
+                      type="text"
+                      value={partnerForm.capital}
+                      onChange={(e) => setPartnerForm({ ...partnerForm, capital: e.target.value })}
+                      className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500/20" 
+                      placeholder="$0,000,000" 
+                    />
                   </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-[13px] font-semibold text-gray-500">Annual Fees</label>
+                      <input 
+                        type="text"
+                        value={partnerForm.fees}
+                        onChange={(e) => setPartnerForm({ ...partnerForm, fees: e.target.value })}
+                        className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500/20" 
+                        placeholder="0%" 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[13px] font-semibold text-gray-500">Carried Interest</label>
+                      <input 
+                        type="text"
+                        value={partnerForm.carry}
+                        onChange={(e) => setPartnerForm({ ...partnerForm, carry: e.target.value })}
+                        className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500/20" 
+                        placeholder="0%" 
+                      />
+                    </div>
+                  </div>
+
                   <div className="space-y-2">
-                    <label className="text-[13px] font-semibold text-gray-500">Carried Interest</label>
-                    <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium" placeholder="0%" />
+                    <label className="text-[13px] font-semibold text-gray-500">Contact Name</label>
+                    <input 
+                      type="text"
+                      value={partnerForm.contactName}
+                      onChange={(e) => setPartnerForm({ ...partnerForm, contactName: e.target.value })}
+                      className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500/20" 
+                      placeholder="Contact person name" 
+                    />
                   </div>
-                </div>
-              </>
-            )}
 
-            {/* NEW TEAM MEMBER MODAL */}
-            {activeModal.type === 'team' && (
-              <>
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-gray-500">Name</label>
-                  <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium outline-none" placeholder="Add the name" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-gray-500">Email</label>
-                  <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium outline-none" placeholder="example@gmail.com" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-gray-500">Role/Title</label>
-                  <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium outline-none" placeholder="e.g. Lead Partner" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-gray-500">Permissions</label>
-                  <div className="relative">
-                    <select className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium outline-none appearance-none cursor-pointer">
-                      <option value="">Select a group</option>
-                      <option value="admin">Admin</option>
-                      <option value="editor">Editor</option>
-                      <option value="viewer">Viewer</option>
-                    </select>
-                    <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                  <div className="space-y-2">
+                    <label className="text-[13px] font-semibold text-gray-500">Contact Email</label>
+                    <input 
+                      type="email"
+                      value={partnerForm.contactEmail}
+                      onChange={(e) => setPartnerForm({ ...partnerForm, contactEmail: e.target.value })}
+                      className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500/20" 
+                      placeholder="contact@example.com" 
+                    />
                   </div>
-                </div>
-              </>
-            )}
 
-            {/* BUTTONS */}
-            <button type="submit" className="w-full py-4 mt-4 text-white bg-[#2D60FF] hover:bg-blue-700 rounded-full font-bold text-sm shadow-lg shadow-blue-100 transition-all active:scale-[0.98]">
-              {activeModal.type === 'team' ? 'Send invitation' : 
-               activeModal.type === 'partner' ? 'Add Partner' : 'Add company'}
-            </button>
-          </form>
+                  <div className="space-y-2">
+                    <label className="text-[13px] font-semibold text-gray-500">LP Agreement Document</label>
+                    <label className="w-full p-3.5 bg-[#F2F4F7] border border-dashed border-gray-300 rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer flex items-center justify-center gap-2 hover:bg-blue-50 transition-colors">
+                      <UploadCloud size={16} className="text-gray-400" />
+                      <span className="text-gray-500">{partnerForm.lpAgreement ? partnerForm.lpAgreement.name : "Upload PDF"}</span>
+                      <input 
+                        type="file"
+                        accept=".pdf,.doc,.docx"
+                        onChange={(e) => {
+                          if (e.target.files?.[0]) {
+                            setPartnerForm({ ...partnerForm, lpAgreement: e.target.files[0] });
+                          }
+                        }}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                </>
+              )}
+
+              {/* BUTTONS */}
+              <div className="flex gap-3">
+                {partnerStep === 2 && (
+                  <button 
+                    type="button"
+                    onClick={() => setPartnerStep(1)}
+                    className="w-full py-4 mt-4 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-full font-bold text-sm border border-blue-200 transition-all active:scale-[0.98]"
+                  >
+                    Back
+                  </button>
+                )}
+                <button 
+                  type={partnerStep === 1 ? "button" : "submit"}
+                  onClick={(e) => {
+                    if (partnerStep === 1) {
+                      e.preventDefault();
+                      handlePartnerNext();
+                    }
+                  }}
+                  className="w-full py-4 mt-4 text-white bg-[#2D60FF] hover:bg-blue-700 rounded-full font-bold text-sm shadow-lg shadow-blue-100 transition-all active:scale-[0.98]"
+                >
+                  {partnerStep === 1 ? "Next" : "Add Partner"}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* POTENTIAL INVESTMENT MODAL */}
+          {activeModal.type === 'potential' && (
+            <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); closeModal(); }}>
+              <div className="space-y-2">
+                <label className="text-[13px] font-semibold text-gray-500">Name of the company</label>
+                <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20 text-sm font-medium" placeholder="Starlight Tech" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[13px] font-semibold text-gray-500">Description</label>
+                <textarea className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl h-24 outline-none focus:ring-2 focus:ring-blue-500/20 text-sm font-medium resize-none" placeholder="Brief description..." />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[13px] font-semibold text-gray-500">Company Status</label>
+                <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium" placeholder="Raising" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[13px] font-semibold text-gray-500">Decision Status</label>
+                <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium" placeholder="Investment Committee" />
+              </div>
+              <button type="submit" className="w-full py-4 mt-4 text-white bg-[#2D60FF] hover:bg-blue-700 rounded-full font-bold text-sm shadow-lg shadow-blue-100 transition-all active:scale-[0.98]">
+                Add company
+              </button>
+            </form>
+          )}
+
+          {/* NEW TEAM MEMBER MODAL */}
+          {activeModal.type === 'team' && (
+            <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); closeModal(); }}>
+              <div className="space-y-2">
+                <label className="text-[13px] font-semibold text-gray-500">Name</label>
+                <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium outline-none" placeholder="Add the name" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[13px] font-semibold text-gray-500">Email</label>
+                <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium outline-none" placeholder="example@gmail.com" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[13px] font-semibold text-gray-500">Role/Title</label>
+                <input className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium outline-none" placeholder="e.g. Lead Partner" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[13px] font-semibold text-gray-500">Permissions</label>
+                <div className="relative">
+                  <select className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl text-sm font-medium outline-none appearance-none cursor-pointer">
+                    <option value="">Select a group</option>
+                    <option value="admin">Admin</option>
+                    <option value="editor">Editor</option>
+                    <option value="viewer">Viewer</option>
+                  </select>
+                  <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
+              <button type="submit" className="w-full py-4 mt-4 text-white bg-[#2D60FF] hover:bg-blue-700 rounded-full font-bold text-sm shadow-lg shadow-blue-100 transition-all active:scale-[0.98]">
+                Send invitation
+              </button>
+            </form>
+          )}
         </Modal>
       )}
     </div>
