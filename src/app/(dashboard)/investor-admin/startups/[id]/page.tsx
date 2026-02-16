@@ -8,6 +8,10 @@ import ReturnsAnalysis from '@/components/InvestorAdmin/Startups/StartupsDetails
 import StatsGrid from '@/components/InvestorAdmin/Startups/StartupsDetails/StatsGrid';
 import CompanyInfoAccordion from '@/components/InvestorAdmin/Startups/StartupsDetails/CompanyInfoAccordion';
 import ValuationTable from '@/components/InvestorAdmin/Startups/StartupsDetails/ValuationTable';
+import ExitWaterfallDiagram from '@/components/InvestorAdmin/Startups/StartupsDetails/ExitWaterfallDiagram';
+import CalculateExitBreakdown from '@/components/InvestorAdmin/Startups/StartupsDetails/CalculateExitBreakdown';
+import TermSheetGenieValuation from '@/components/InvestorAdmin/Startups/StartupsDetails/TermSheetGenieValuation';
+import SimulationSectionCard from '@/components/InvestorAdmin/Startups/StartupsDetails/SimulationSectionCard';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -30,10 +34,16 @@ export default function PortfolioDetails({ params }: PageProps) {
         <CompanyInfoAccordion />
 
         <div className=" rounded-2xl  border-[#EAECF0] ">
-           <ReturnsAnalysis />
+           <ExitWaterfallDiagram />
+        </div>
+        <div className=" rounded-2xl  border-[#EAECF0] ">
+           <CalculateExitBreakdown />
+        </div>
+        <div className=" rounded-2xl  border-[#EAECF0] ">
+           <TermSheetGenieValuation />
         </div>
 
-        <div className="grid grid-cols-1  gap-8 items-start">
+        <div className="">
           
        
           <div className="lg:col-span-8">
@@ -44,7 +54,7 @@ export default function PortfolioDetails({ params }: PageProps) {
           </div>
            
             <div className=" w-full">
-              <ValuationTable />
+              <SimulationSectionCard />
               
              
               {/* <button className="w-full py-4 border-2 border-dashed border-[#EAECF0] rounded-xl text-[#667085] text-sm font-medium hover:border-blue-400 hover:text-blue-500 transition-all">
