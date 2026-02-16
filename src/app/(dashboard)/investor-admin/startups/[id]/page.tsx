@@ -1,13 +1,13 @@
 "use client";
 
 import React, { use } from 'react';
-import ScenarioDetailsCard from '@/components/InvestorAdmin/Simulator/SimulationComparison/ScenarioDetailsCard';
+
 import CapTableOverview from '@/components/InvestorAdmin/Startups/StartupsDetails/CapTableOverview';
 import CompanyHeader from '@/components/InvestorAdmin/Startups/StartupsDetails/CompanyHeader';
-import ReturnsAnalysis from '@/components/InvestorAdmin/Startups/StartupsDetails/ReturnsAnalysis';
+
 import StatsGrid from '@/components/InvestorAdmin/Startups/StartupsDetails/StatsGrid';
 import CompanyInfoAccordion from '@/components/InvestorAdmin/Startups/StartupsDetails/CompanyInfoAccordion';
-import ValuationTable from '@/components/InvestorAdmin/Startups/StartupsDetails/ValuationTable';
+
 import ExitWaterfallDiagram from '@/components/InvestorAdmin/Startups/StartupsDetails/ExitWaterfallDiagram';
 import CalculateExitBreakdown from '@/components/InvestorAdmin/Startups/StartupsDetails/CalculateExitBreakdown';
 import TermSheetGenieValuation from '@/components/InvestorAdmin/Startups/StartupsDetails/TermSheetGenieValuation';
@@ -24,7 +24,7 @@ export default function PortfolioDetails({ params }: PageProps) {
 
   return (
     <div className=" bg-[#F9FAFB] w-ful font-sans">
-      {/* ১. হেডার */}
+      {/* ১. হেডা */}
       <CompanyHeader id={id} />
 
       <div className=" mx-auto p-6 lg:p-10 space-y-10">

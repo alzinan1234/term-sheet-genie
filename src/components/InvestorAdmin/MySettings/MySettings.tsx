@@ -233,7 +233,7 @@ const TeamSettingsView = ({ onOpenInvite }: { onOpenInvite: () => void }) => {
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] pointer-events-none">▼</span>
             </div>
           </div>
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Regulatory Classification</label>
             <div className="relative">
               <select 
@@ -245,7 +245,7 @@ const TeamSettingsView = ({ onOpenInvite }: { onOpenInvite: () => void }) => {
               </select>
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-[10px] pointer-events-none">▼</span>
             </div>
-          </div>
+          </div> */}
           <div className="space-y-2">
             <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Firm ID</label>
             <div className="relative">
