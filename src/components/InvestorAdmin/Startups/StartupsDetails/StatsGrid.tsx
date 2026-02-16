@@ -18,7 +18,7 @@ const StatsGrid = () => {
           className="bg-white px-5 py-8 rounded-lg border border-[#EAECF0] shadow-sm flex flex-col justify-center min-h-[140px]"
         >
           {/* Main Value */}
-          <h3 className="text-[32px] font-bold text-[#003566] leading-tight mb-1">
+          <h3 className="text-[32px] font-bold text-[#030303] leading-tight mb-1">
             {s.value}
           </h3>
           

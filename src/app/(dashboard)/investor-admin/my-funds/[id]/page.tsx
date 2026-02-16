@@ -3,6 +3,8 @@ import React, { use, useState } from "react";
 import { Plus, Edit2, ChevronDown, ChevronUp, FileText, ArrowLeft, Save, X, UploadCloud } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import NewSimulationModal from "@/components/InvestorAdmin/Simulator/NewSimulationModal";
+// Import the modal
 
 // --- Types ---
 interface PageProps {
@@ -20,34 +22,22 @@ export default function FundDetailsPage({ params }: PageProps) {
   const [isEditingBasic, setIsEditingBasic] = useState(false);
   const [activeModal, setActiveModal] = useState<{ type: ModalType; data?: any } | null>(null);
   
-  // State for the new company form in modal
-  const [newCompanyName, setNewCompanyName] = useState("");
-  const [newCompanyDescription, setNewCompanyDescription] = useState("");
+  // State for NewSimulationModal
+  const [isSimulationModalOpen, setIsSimulationModalOpen] = useState(false);
 
   const closeModal = () => {
     setActiveModal(null);
-    setNewCompanyName("");
-    setNewCompanyDescription("");
   };
 
-  // Handle adding a new portfolio company from modal
-  const handleAddCompanyFromModal = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // First, add the company to the list (you can save it to your backend here)
-    console.log("Adding new company:", {
-      name: newCompanyName,
-      description: newCompanyDescription,
-      fundId: fundId
-    });
+  // Handle submission from NewSimulationModal
+  const handleSimulationSubmit = (data: { name: string; description: string }) => {
+    console.log("Simulation data:", data);
     
     // Close the modal
-    closeModal();
+    setIsSimulationModalOpen(false);
     
-    // Then navigate to the 3-step investment information page
-    setTimeout(() => {
-      router.push(`/investor-admin/my-funds/${fundId}/add-company?companyName=${encodeURIComponent(newCompanyName)}&companyDescription=${encodeURIComponent(newCompanyDescription)}`);
-    }, 100);
+    // Navigate to simulator page with the data
+    router.push(`/investor-admin/simulator?name=${encodeURIComponent(data.name)}&description=${encodeURIComponent(data.description)}`);
   };
 
   return (
@@ -107,7 +97,7 @@ export default function FundDetailsPage({ params }: PageProps) {
           title="Investments" 
           description="Companies that this fund has invested in"
           buttonText="New Portfolio Company"
-          onAdd={() => setActiveModal({ type: 'portfolio' })} // Open modal first
+          onAdd={() => setIsSimulationModalOpen(true)} // Open NewSimulationModal
           columns={[
             { key: 'name', label: "Company" },
             { key: 'status', label: "Status" },
@@ -162,44 +152,24 @@ export default function FundDetailsPage({ params }: PageProps) {
         />
       </div>
 
-      {/* --- Dynamic Modals --- */}
+      {/* NewSimulationModal */}
+      <NewSimulationModal
+        isOpen={isSimulationModalOpen}
+        onClose={() => setIsSimulationModalOpen(false)}
+        onSubmit={handleSimulationSubmit}
+      />
+
+      {/* --- Dynamic Modals for other sections --- */}
       {activeModal && (
         <Modal 
           title={
-            activeModal.type === 'portfolio' ? "Add new company" : 
             activeModal.type === 'potential' ? "Add new Potential Investment" :
             activeModal.type === 'partner' ? "Add new Partner" : "New member"
           }
           onClose={closeModal}
         >
-          <form className="space-y-5" onSubmit={activeModal.type === 'portfolio' ? handleAddCompanyFromModal : (e) => { e.preventDefault(); closeModal(); }}>
+          <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); closeModal(); }}>
             
-            {/* PORTFOLIO MODAL */}
-            {activeModal.type === 'portfolio' && (
-              <>
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-gray-500">Name of the company</label>
-                  <input 
-                    value={newCompanyName}
-                    onChange={(e) => setNewCompanyName(e.target.value)}
-                    className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20 text-sm font-medium" 
-                    placeholder="Starlight Tech" 
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[13px] font-semibold text-gray-500">Description</label>
-                  <textarea 
-                    value={newCompanyDescription}
-                    onChange={(e) => setNewCompanyDescription(e.target.value)}
-                    className="w-full p-3.5 bg-[#F2F4F7] border border-transparent rounded-xl h-24 outline-none focus:ring-2 focus:ring-blue-500/20 text-sm font-medium resize-none" 
-                    placeholder="Platform that simulates and evaluate investment contracts"
-                    required
-                  />
-                </div>
-              </>
-            )}
-
             {/* POTENTIAL INVESTMENT MODAL */}
             {activeModal.type === 'potential' && (
               <>

@@ -23,36 +23,47 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
   }, [data]);
 
   // --- Drag and Drop Logic ---
-  const handleDragStart = (e: React.DragEvent, type: 'debt' | 'equity', index: number) => {
+  const handleDragStart = (e: React.DragEvent, type: 'debt' | 'equity', rowIndex: number, itemIndex?: number) => {
     e.dataTransfer.setData('type', type);
-    e.dataTransfer.setData('index', index.toString());
+    e.dataTransfer.setData('sourceRowIndex', rowIndex.toString());
+    if (itemIndex !== undefined) {
+      e.dataTransfer.setData('sourceItemIndex', itemIndex.toString());
+    }
   };
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   };
 
-  const handleDrop = (e: React.DragEvent, targetType: 'debt' | 'equity', targetIndex: number) => {
+  const handleDrop = (e: React.DragEvent, targetType: 'debt' | 'equity', targetRowIndex: number) => {
     e.preventDefault();
     const sourceType = e.dataTransfer.getData('type');
-    const sourceIndex = parseInt(e.dataTransfer.getData('index'));
+    const sourceRowIndex = parseInt(e.dataTransfer.getData('sourceRowIndex'));
+    const sourceItemIndexStr = e.dataTransfer.getData('sourceItemIndex');
 
     if (sourceType !== targetType) return;
 
     if (targetType === 'debt') {
       const newList = [...debtSeniority];
-      const [movedItem] = newList.splice(sourceIndex, 1);
-      newList.splice(targetIndex, 0, movedItem);
+      const [movedItem] = newList.splice(sourceRowIndex, 1);
+      newList.splice(targetRowIndex, 0, movedItem);
       setDebtSeniority(newList);
     } else {
-      const newList = [...equitySeniority];
-      const [movedItem] = newList.splice(sourceIndex, 1);
-      newList.splice(targetIndex, 0, movedItem);
-      setEquitySeniority(newList);
+      const sourceItemIndex = parseInt(sourceItemIndexStr);
+      const newEquity = [...equitySeniority.map(row => [...row])];
+      
+      // Remove item from source
+      const [movedItem] = newEquity[sourceRowIndex].splice(sourceItemIndex, 1);
+      
+      // Add item to target row (pari passu)
+      newEquity[targetRowIndex].push(movedItem);
+
+      // Clean up empty rows (optional, but keeps UI clean)
+      const filteredEquity = newEquity.filter(row => row.length > 0);
+      setEquitySeniority(filteredEquity);
     }
   };
 
-  // --- Add New Level Logic ---
   const addNewLevel = (type: 'debt' | 'equity') => {
     const name = prompt(`Enter name for new ${type} level:`);
     if (!name) return;
@@ -89,15 +100,17 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
                 <div 
                   key={index} 
                   className="flex items-center gap-4"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, 'debt', index)}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDrop(e, 'debt', index)}
                 >
                   <div className="w-7 h-7 rounded-full bg-slate-50 flex items-center justify-center text-[10px] font-bold text-slate-500 border border-slate-100 shrink-0">
                     {index + 1}
                   </div>
-                  <div className="flex-1 bg-[#fcfdfe] border border-slate-100 rounded-lg p-2.5 flex items-center gap-3 cursor-grab active:cursor-grabbing hover:border-blue-200 transition-colors">
+                  <div 
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, 'debt', index)}
+                    className="flex-1 bg-[#fcfdfe] border border-slate-100 rounded-lg p-2.5 flex items-center gap-3 cursor-grab active:cursor-grabbing hover:border-blue-200 transition-colors"
+                  >
                     <div className="flex flex-col gap-0.5 opacity-20">
                       <div className="flex gap-0.5"><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div></div>
                       <div className="flex gap-0.5"><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div></div>
@@ -131,27 +144,30 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
             <div className="text-[10px] uppercase tracking-wider text-slate-400 mb-4 font-bold">Receives First</div>
             
             <div className="space-y-3">
-              {equitySeniority.map((row, index) => (
+              {equitySeniority.map((row, rowIndex) => (
                 <div 
-                  key={index} 
+                  key={rowIndex} 
                   className="flex items-center gap-4"
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, 'equity', index)}
                   onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, 'equity', index)}
+                  onDrop={(e) => handleDrop(e, 'equity', rowIndex)}
                 >
                   <div className="w-7 h-7 rounded-full bg-slate-50 flex items-center justify-center text-[10px] font-bold text-slate-500 border border-slate-100 shrink-0">
-                    {index + 1}
+                    {rowIndex + 1}
                   </div>
-                  <div className="flex-1 bg-[#fcfdfe] border border-slate-100 rounded-lg p-2.5 flex items-center gap-3 cursor-grab active:cursor-grabbing hover:border-blue-200 transition-colors">
+                  <div className="flex-1 bg-[#fcfdfe] border border-slate-100 rounded-lg p-2.5 flex items-center gap-3 transition-colors min-h-[54px]">
                     <div className="flex flex-col gap-0.5 opacity-20">
                       <div className="flex gap-0.5"><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div></div>
                       <div className="flex gap-0.5"><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div></div>
                       <div className="flex gap-0.5"><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div><div className="w-0.5 h-0.5 bg-slate-900 rounded-full"></div></div>
                     </div>
                     <div className="flex gap-3 flex-wrap">
-                      {row.map((item, idx) => (
-                        <span key={idx} className="bg-white border border-slate-200 px-3 py-1.5 rounded-md text-[12px] font-medium shadow-sm text-slate-600">
+                      {row.map((item, itemIdx) => (
+                        <span 
+                          key={itemIdx} 
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, 'equity', rowIndex, itemIdx)}
+                          className="bg-white border border-slate-200 px-3 py-1.5 rounded-md text-[12px] font-medium shadow-sm text-slate-600 cursor-grab active:cursor-grabbing hover:border-blue-400 transition-all"
+                        >
                           {item}
                         </span>
                       ))}
@@ -165,7 +181,7 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
               onClick={() => addNewLevel('equity')}
               className="mt-3 ml-11 border-2 border-dashed border-slate-100 rounded-lg py-3 text-center bg-slate-50/30 cursor-pointer hover:bg-slate-100 transition-all"
             >
-              <span className="text-[10px] text-slate-400 font-medium">Click or Drop here to create new level</span>
+              <span className="text-[10px] text-slate-400 font-medium">Click to create new level</span>
             </div>
             <div className="text-[10px] uppercase tracking-wider text-slate-400 mt-4 font-bold">Receives Last</div>
           </div>

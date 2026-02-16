@@ -39,7 +39,7 @@ export default function ReturnsAnalysis() {
           className="px-6 py-4 border-b border-gray-50 flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors"
           onClick={() => setIsWaterfallOpen(!isWaterfallOpen)}
         >
-          <h3 className="text-[16px] font-semibold text-[#003566]">Exit Waterfall Diagram</h3>
+          <h3 className="text-[16px] font-semibold text-[#000000]">Exit Waterfall Diagram</h3>
           <div className="text-[#667085]">
             {isWaterfallOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
           </div>
@@ -87,7 +87,7 @@ export default function ReturnsAnalysis() {
           className="px-6 py-4 border-b border-gray-50 flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors"
           onClick={() => setIsDistributionOpen(!isDistributionOpen)}
         >
-          <h3 className="text-[16px] font-semibold text-[#003566]">Round-by-Round Distribution</h3>
+          <h3 className="text-[16px] font-semibold text-[#000000]">Round-by-Round Distribution</h3>
           <div className="text-[#667085]">
             {isDistributionOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
           </div>

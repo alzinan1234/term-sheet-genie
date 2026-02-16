@@ -1,10 +1,10 @@
 "use client";
 
 import { ChevronLeft } from 'lucide-react';
-import { useRouter } from 'next/navigation'; // useRouter ইমপোর্ট করুন
+import { useRouter } from 'next/navigation';
 
 const CompanyHeader = ({ id }: { id: string }) => {
-  const router = useRouter(); // রাউটার ইনিশিয়ালাইজ করুন
+  const router = useRouter();
 
   return (
     <div className=" px-8 py-5 sticky top-0 z-30 ">
@@ -12,7 +12,7 @@ const CompanyHeader = ({ id }: { id: string }) => {
         <div className="flex items-center gap-5">
           {/* Back Button */}
           <button 
-            onClick={() => router.back()} // এখানে back ফাংশন কল করা হয়েছে
+            onClick={() => router.back()}
             className="p-2 hover:bg-gray-50 rounded-lg border border-gray-100 transition-all text-[#667085]"
           >
             <ChevronLeft size={20} />
@@ -21,8 +21,8 @@ const CompanyHeader = ({ id }: { id: string }) => {
           <div className="">
             <div>
               <div className="">
-                {/* Uppercase রিমুভ করে ইমেজ অনুযায়ী ক্লিন রাখা হয়েছে */}
-                <h1 className="text-2xl font-bold text-[#101828]">Catalog</h1>
+                {/* Updated: Same font, size, and color as other titles */}
+                <h1 className="text-2xl font-semibold text-[#101828]">Catalog</h1>
               </div>
             </div>
           </div>

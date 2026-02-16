@@ -19,17 +19,18 @@ export default function CompanyInfoAccordion() {
 
   return (
     <div className="bg-white rounded-xl border border-[#EAECF0] shadow-sm overflow-hidden transition-all">
-      {/* Accordion Header */}
+      {/* Accordion Header - Moved to right corner */}
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center gap-2 px-6 py-4 bg-white hover:bg-gray-50 transition-colors border-b border-[#F2F4F7]"
+        className="w-full flex items-center justify-end gap-2 px-6 py-4 bg-white hover:bg-gray-50 transition-colors border-b border-[#F2F4F7]"
       >
+        {/* Updated: Same font, size, and color as Catalog title */}
+        <span className="text-lg font-semibold text-[#101828] mr-auto">Basic Company Information</span>
         {isOpen ? (
           <ChevronUp size={18} className="text-[#667085]" />
         ) : (
           <ChevronDown size={18} className="text-[#667085]" />
         )}
-        <span className="text-sm font-semibold text-[#101828]">Basic Company Information</span>
       </button>
 
       {/* Accordion Content */}
@@ -67,7 +68,7 @@ export default function CompanyInfoAccordion() {
             </div>
             <div>
               <label className="text-[12px] font-medium text-[#667085] block mb-1">Website</label>
-              <a href={`https://${infoData.website}`} target="_blank" className="text-[14px] font-semibold text-blue-600 hover:underline">
+              <a href={`https://${infoData.website}`} target="_blank" className="text-[14px] font-semibold text-black hover:underline">
                 {infoData.website}
               </a>
             </div>

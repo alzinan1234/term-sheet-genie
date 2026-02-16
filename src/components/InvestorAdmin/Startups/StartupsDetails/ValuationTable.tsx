@@ -64,7 +64,7 @@ export default function TermSheetValuations() {
           <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-x-32 gap-y-10">
             {valuationData.map((data, index) => (
               <div key={index} className="space-y-4">
-                <h3 className="text-[#1a4f8b] font-medium mb-6 text-base">{data.round}</h3>
+                <h3 className="text-[#000000] font-medium mb-6 text-base">{data.round}</h3>
                 
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-500">Investment Amount:</span>
