@@ -12,6 +12,7 @@ import ExitWaterfallDiagram from '@/components/InvestorAdmin/Startups/StartupsDe
 import CalculateExitBreakdown from '@/components/InvestorAdmin/Startups/StartupsDetails/CalculateExitBreakdown';
 import TermSheetGenieValuation from '@/components/InvestorAdmin/Startups/StartupsDetails/TermSheetGenieValuation';
 import SimulationSectionCard from '@/components/InvestorAdmin/Startups/StartupsDetails/SimulationSectionCard';
+import RoundByRoundDistribution from '@/components/InvestorAdmin/Startups/StartupsDetails/RoundByRoundDistribution';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -41,6 +42,9 @@ export default function PortfolioDetails({ params }: PageProps) {
         </div>
         <div className=" rounded-2xl  border-[#EAECF0] ">
            <TermSheetGenieValuation />
+        </div>
+        <div className=" rounded-2xl  border-[#EAECF0] ">
+           <RoundByRoundDistribution />
         </div>
 
         <div className="">
