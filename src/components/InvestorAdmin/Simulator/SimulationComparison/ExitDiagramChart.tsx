@@ -12,7 +12,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
-// ছবির ডাটা পয়েন্ট অনুযায়ী স্যাম্পল ডাটা
+// ছবির ডাটা পয়েন্ট অনুযায়ী স্যাম্পল ডাটা
 const data = [
   { name: 0, seriesA: 0, seriesB: 0, seriesC: 0, founders: 0 },
   { name: 10, seriesA: 2, seriesB: 3, seriesC: 5, founders: 8 },
@@ -56,93 +56,102 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const ExitDiagramChart = () => (
-  <div className="w-full h-full bg-white p-4">
-    <ResponsiveContainer width="100%" height="100%">
-      <LineChart data={data} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
-        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-        
-        <XAxis 
-          dataKey="name" 
-          tick={{fontSize: 10, fill: '#64748b'}} 
-          axisLine={false}
-          tickLine={false}
-          dy={10}
-          label={{ 
-            value: 'exit company valuation ($m)', 
-            position: 'insideBottom', 
-            offset: -10, 
-            fontSize: 11, 
-            fill: '#64748b',
-            fontWeight: 500
-          }} 
-        />
-        
-        <YAxis 
-          tick={{fontSize: 10, fill: '#64748b'}} 
-          axisLine={false}
-          tickLine={false}
-          dx={-5}
-          label={{ 
-            value: 'value to all shareholders (mm)', 
-            angle: -90, 
-            position: 'insideLeft', 
-            fontSize: 11, 
-            fill: '#64748b',
-            fontWeight: 500
-          }} 
-        />
+const ExitDiagramChart = ({ selectedShareholders }: { selectedShareholders: string[] }) => {
+  // Define line configurations
+  const lineConfigs = [
+    { 
+      id: 'seriesA', 
+      dataKey: 'seriesA', 
+      name: 'series a', 
+      stroke: '#818cf8' 
+    },
+    { 
+      id: 'seriesB', 
+      dataKey: 'seriesB', 
+      name: 'series b', 
+      stroke: '#fb7185' 
+    },
+    { 
+      id: 'seriesC', 
+      dataKey: 'seriesC', 
+      name: 'series c', 
+      stroke: '#2dd4bf' 
+    },
+    { 
+      id: 'founders', 
+      dataKey: 'founders', 
+      name: 'founders', 
+      stroke: '#fbbf24' 
+    },
+  ];
 
-        <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#cbd5e1', strokeWidth: 1 }} />
-        
-        <Legend 
-          verticalAlign="bottom" 
-          height={36} 
-          iconType="plainline"
-          formatter={(value) => <span className="text-[11px] font-medium text-gray-500">{value}</span>}
-          wrapperStyle={{ paddingTop: '20px' }}
-        />
+  // Filter lines based on selected shareholders
+  const visibleLines = lineConfigs.filter(line => selectedShareholders.includes(line.id));
 
-        {/* Lines matching the image colors */}
-        <Line 
-          name="series a"
-          type="monotone" 
-          dataKey="seriesA" 
-          stroke="#818cf8" 
-          strokeWidth={2} 
-          dot={{ r: 3, fill: '#818cf8', strokeWidth: 0 }} 
-          activeDot={{ r: 5 }} 
-        />
-        <Line 
-          name="series b"
-          type="monotone" 
-          dataKey="seriesB" 
-          stroke="#fb7185" 
-          strokeWidth={2} 
-          dot={{ r: 3, fill: '#fb7185', strokeWidth: 0 }} 
-          activeDot={{ r: 5 }} 
-        />
-        <Line 
-          name="series c"
-          type="monotone" 
-          dataKey="seriesC" 
-          stroke="#2dd4bf" 
-          strokeWidth={2} 
-          dot={{ r: 3, fill: '#2dd4bf', strokeWidth: 0 }} 
-          activeDot={{ r: 5 }} 
-        />
-        <Line 
-          name="founders"
-          type="monotone" 
-          dataKey="founders" 
-          stroke="#fbbf24" 
-          strokeWidth={2} 
-          dot={{ r: 3, fill: '#fbbf24', strokeWidth: 0 }} 
-          activeDot={{ r: 5 }} 
-        />
-      </LineChart>
-    </ResponsiveContainer>
-  </div>
-);
+  return (
+    <div className="w-full h-full bg-white p-4">
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={data} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+          
+          <XAxis 
+            dataKey="name" 
+            tick={{fontSize: 10, fill: '#64748b'}} 
+            axisLine={false}
+            tickLine={false}
+            dy={10}
+            label={{ 
+              value: 'exit company valuation ($m)', 
+              position: 'insideBottom', 
+              offset: -10, 
+              fontSize: 11, 
+              fill: '#64748b',
+              fontWeight: 500
+            }} 
+          />
+          
+          <YAxis 
+            tick={{fontSize: 10, fill: '#64748b'}} 
+            axisLine={false}
+            tickLine={false}
+            dx={-5}
+            label={{ 
+              value: 'value to all shareholders (mm)', 
+              angle: -90, 
+              position: 'insideLeft', 
+              fontSize: 11, 
+              fill: '#64748b',
+              fontWeight: 500
+            }} 
+          />
+
+          <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#cbd5e1', strokeWidth: 1 }} />
+          
+          <Legend 
+            verticalAlign="bottom" 
+            height={36} 
+            iconType="plainline"
+            formatter={(value) => <span className="text-[11px] font-medium text-gray-500">{value}</span>}
+            wrapperStyle={{ paddingTop: '20px' }}
+          />
+
+          {/* Render only visible lines */}
+          {visibleLines.map((line) => (
+            <Line 
+              key={line.id}
+              name={line.name}
+              type="monotone" 
+              dataKey={line.dataKey} 
+              stroke={line.stroke} 
+              strokeWidth={2} 
+              dot={{ r: 3, fill: line.stroke, strokeWidth: 0 }} 
+              activeDot={{ r: 5 }} 
+            />
+          ))}
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+};
 
 export default ExitDiagramChart;

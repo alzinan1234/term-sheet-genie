@@ -10,10 +10,29 @@ const barData = [
   { name: 'Post series C', SeriesA: 25, SeriesB: 20, SeriesC: 25, Founder: 30 },
 ];
 
-const ScenarioCapTable = ({ id }: { id: number }) => {
+const ScenarioCapTable = ({ id, selectedShareholders }: { id: number; selectedShareholders: string[] }) => {
   // ড্রপডাউন স্টেট
   const [isFoundersOpen, setIsFoundersOpen] = useState(false);
   const [isSeriesAOpen, setIsSeriesAOpen] = useState(false);
+
+  // Define bar configurations
+  const barConfigs = [
+    { id: 'seriesA', dataKey: 'SeriesA', fill: '#818cf8' },
+    { id: 'seriesB', dataKey: 'SeriesB', fill: '#fb7185' },
+    { id: 'seriesC', dataKey: 'SeriesC', fill: '#2dd4bf' },
+    { id: 'founders', dataKey: 'Founder', fill: '#fbbf24' },
+  ];
+
+  // Filter bars based on selected shareholders
+  const visibleBars = barConfigs.filter(bar => selectedShareholders.includes(bar.id));
+
+  // Legend items based on selection
+  const legendItems = [
+    { id: 'seriesA', label: 'Series A', color: 'bg-[#818cf8]' },
+    { id: 'seriesB', label: 'Series B', color: 'bg-[#fb7185]' },
+    { id: 'seriesC', label: 'Series C', color: 'bg-[#2dd4bf]' },
+    { id: 'founders', label: 'Founder', color: 'bg-[#fbbf24]' }
+  ].filter(item => selectedShareholders.includes(item.id));
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
@@ -34,21 +53,22 @@ const ScenarioCapTable = ({ id }: { id: number }) => {
                 />
                 <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#94a3b8'}} />
                 <Tooltip cursor={{fill: 'transparent'}} />
-                <Bar dataKey="SeriesA" stackId="a" fill="#818cf8" barSize={45} />
-                <Bar dataKey="SeriesB" stackId="a" fill="#fb7185" />
-                <Bar dataKey="SeriesC" stackId="a" fill="#2dd4bf" />
-                <Bar dataKey="Founder" stackId="a" fill="#fbbf24" radius={[4, 4, 0, 0]} />
+                {visibleBars.map((bar, index) => (
+                  <Bar 
+                    key={bar.id}
+                    dataKey={bar.dataKey} 
+                    stackId="a" 
+                    fill={bar.fill} 
+                    barSize={45}
+                    radius={index === visibleBars.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0]}
+                  />
+                ))}
               </BarChart>
             </ResponsiveContainer>
           </div>
 
           <div className="flex justify-center gap-4 mt-6">
-            {[
-              { label: 'Series A', color: 'bg-[#818cf8]' },
-              { label: 'Series B', color: 'bg-[#fb7185]' },
-              { label: 'Series C', color: 'bg-[#2dd4bf]' },
-              { label: 'Founder', color: 'bg-[#fbbf24]' }
-            ].map((item, idx) => (
+            {legendItems.map((item, idx) => (
                <div key={idx} className="flex items-center gap-1.5">
                   <div className={`w-2 h-2 rounded-sm ${item.color}`} />
                   <span className="text-[11px] font-medium text-gray-500">{item.label}</span>
@@ -237,13 +257,6 @@ const ScenarioCapTable = ({ id }: { id: number }) => {
           </tbody>
         </table>
       </div>
-
-      {/* Footer Scroll Bar */}
-      {/* <div className="px-1 pt-2">
-        <div className="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
-          <div className="bg-gray-300 h-full w-full rounded-full transition-all"></div>
-        </div>
-      </div> */}
     </div>
   );
 };

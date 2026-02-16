@@ -7,7 +7,7 @@ const ScenarioDetailsCard = ({ id }: { id: number }) => {
   // ড্রপডাউন ওপেন বা ক্লোজ রাখার স্টেট
   const [isOpen, setIsOpen] = useState(true);
 
-  // ইমেজের ডেটা অনুযায়ী ভ্যালু সেট করা
+  // ইমেজের ডেটা অনুযায়ী ভ্যালু সেট করা
   const details = id === 1 ? {
     investment: "$10,000,000",
     preMoney: "$40,000,000",
