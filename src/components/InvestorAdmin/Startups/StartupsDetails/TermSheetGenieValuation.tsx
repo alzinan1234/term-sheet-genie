@@ -67,7 +67,7 @@ const TermSheetGenieValuation: React.FC = () => {
           </div>
 
           {/* Main Analysis Section */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+          {/* <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
             <h2 className="text-[14px] font-medium text-black mb-6">Breakeven Analysis</h2>
             
            
@@ -98,7 +98,7 @@ const TermSheetGenieValuation: React.FC = () => {
             </div>
 
           
-            {/* <div className="border border-gray-100 rounded-lg overflow-hidden">
+            <div className="border border-gray-100 rounded-lg overflow-hidden">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="text-[#94a3b8] text-[11px] font-medium border-b border-gray-50">
@@ -140,8 +140,8 @@ const TermSheetGenieValuation: React.FC = () => {
                   )}
                 </tbody>
               </table>
-            </div> */}
-          </div>
+            </div>
+          </div> */}
         </div>
       )}
     </div>
