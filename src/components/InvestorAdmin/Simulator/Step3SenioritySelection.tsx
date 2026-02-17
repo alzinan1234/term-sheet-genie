@@ -11,6 +11,8 @@ interface Step3Props {
 const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onStepBack }) => {
   const [debtSeniority, setDebtSeniority] = useState<string[][]>([]);
   const [equitySeniority, setEquitySeniority] = useState<string[][]>([]);
+  const [debtInstruments, setDebtInstruments] = useState<string[]>([]);
+  const [equityInstruments, setEquityInstruments] = useState<string[]>([]);
 
   useEffect(() => {
     const initialDebt = Array.isArray(data?.debt) && Array.isArray(data?.debt[0])
@@ -20,19 +22,33 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
       ? data.equity 
       : [['Series D'], ['Series B', 'Series C'], ['Series A']];
     
+    // Count total instruments (flatten the arrays)
+    const debtFlat = initialDebt.flat();
+    const equityFlat = initialEquity.flat();
+    
     setDebtSeniority(initialDebt);
     setEquitySeniority(initialEquity);
+    setDebtInstruments(debtFlat);
+    setEquityInstruments(equityFlat);
   }, [data]);
 
   // --- Validation Functions ---
-  const validateSeniority = (items: string[][]): { isValid: boolean; error?: string } => {
-    // Check 1: All rows must have at least one item (no gaps)
-    if (items.length === 0) return { isValid: true };
+  const validateSeniority = (items: string[][], maxLevels: number, type: string): { isValid: boolean; error?: string } => {
+    // Check 1: Minimum 1 level
+    if (items.length === 0) {
+      return { isValid: false, error: `At least one level is required for ${type}.` };
+    }
     
+    // Check 2: All rows must have at least one item (no gaps)
     for (let i = 0; i < items.length; i++) {
       if (items[i].length === 0) {
         return { isValid: false, error: `Gap detected at seniority level ${i + 1}. All levels must have at least one item.` };
       }
+    }
+    
+    // Check 3: Cannot exceed max levels (equal to instrument count)
+    if (items.length > maxLevels) {
+      return { isValid: false, error: `Maximum ${maxLevels} levels allowed for ${type} (number of instruments).` };
     }
     
     return { isValid: true };
@@ -49,7 +65,7 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
     e.preventDefault();
   };
 
-  const handleDrop = (e: React.DragEvent, targetType: 'debt' | 'equity', targetRowIndex: number) => {
+  const handleDropOnRow = (e: React.DragEvent, targetType: 'debt' | 'equity', targetRowIndex: number) => {
     e.preventDefault();
     const sourceType = e.dataTransfer.getData('type');
     const sourceRowIndex = parseInt(e.dataTransfer.getData('sourceRowIndex'));
@@ -63,14 +79,14 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
       // Remove item from source
       const [movedItem] = newDebt[sourceRowIndex].splice(sourceItemIndex, 1);
       
-      // Add item to target row
+      // Add item to target row (pari passu)
       newDebt[targetRowIndex].push(movedItem);
 
       // Remove empty rows (if source becomes empty after move)
       const filteredDebt = newDebt.filter(row => row.length > 0);
 
       // Validate after reordering
-      const validation = validateSeniority(filteredDebt);
+      const validation = validateSeniority(filteredDebt, debtInstruments.length, 'Debt');
       if (validation.isValid) {
         setDebtSeniority(filteredDebt);
       } else {
@@ -82,14 +98,14 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
       // Remove item from source
       const [movedItem] = newEquity[sourceRowIndex].splice(sourceItemIndex, 1);
       
-      // Add item to target row
+      // Add item to target row (pari passu)
       newEquity[targetRowIndex].push(movedItem);
 
       // Remove empty rows (if source becomes empty after move)
       const filteredEquity = newEquity.filter(row => row.length > 0);
 
       // Validate after reordering
-      const validation = validateSeniority(filteredEquity);
+      const validation = validateSeniority(filteredEquity, equityInstruments.length, 'Equity');
       if (validation.isValid) {
         setEquitySeniority(filteredEquity);
       } else {
@@ -98,9 +114,69 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
     }
   };
 
-  const addNewLevel = (type: 'debt' | 'equity') => {
-    alert('Creating new levels is not allowed. Please drag existing items to reorder seniority.');
+  const handleDropOnEmpty = (e: React.DragEvent, targetType: 'debt' | 'equity') => {
+    e.preventDefault();
+    const sourceType = e.dataTransfer.getData('type');
+    const sourceRowIndex = parseInt(e.dataTransfer.getData('sourceRowIndex'));
+    const sourceItemIndex = parseInt(e.dataTransfer.getData('sourceItemIndex'));
+
+    if (sourceType !== targetType) return;
+
+    if (targetType === 'debt') {
+      // Check if we can create a new level (max = instrument count)
+      if (debtSeniority.length >= debtInstruments.length) {
+        alert(`Maximum ${debtInstruments.length} levels allowed for Debt (number of instruments).`);
+        return;
+      }
+
+      const newDebt = debtSeniority.map(row => [...row]);
+      
+      // Remove item from source
+      const [movedItem] = newDebt[sourceRowIndex].splice(sourceItemIndex, 1);
+      
+      // Create new level with the moved item
+      const newLevel = [movedItem];
+      newDebt.push(newLevel);
+
+      // Remove empty rows (if source becomes empty after move)
+      const filteredDebt = newDebt.filter(row => row.length > 0);
+
+      // Validate after reordering
+      const validation = validateSeniority(filteredDebt, debtInstruments.length, 'Debt');
+      if (validation.isValid) {
+        setDebtSeniority(filteredDebt);
+      } else {
+        alert(validation.error);
+      }
+    } else {
+      // Check if we can create a new level (max = instrument count)
+      if (equitySeniority.length >= equityInstruments.length) {
+        alert(`Maximum ${equityInstruments.length} levels allowed for Equity (number of instruments).`);
+        return;
+      }
+
+      const newEquity = equitySeniority.map(row => [...row]);
+      
+      // Remove item from source
+      const [movedItem] = newEquity[sourceRowIndex].splice(sourceItemIndex, 1);
+      
+      // Create new level with the moved item
+      const newLevel = [movedItem];
+      newEquity.push(newLevel);
+
+      // Remove empty rows (if source becomes empty after move)
+      const filteredEquity = newEquity.filter(row => row.length > 0);
+
+      // Validate after reordering
+      const validation = validateSeniority(filteredEquity, equityInstruments.length, 'Equity');
+      if (validation.isValid) {
+        setEquitySeniority(filteredEquity);
+      } else {
+        alert(validation.error);
+      }
+    }
   };
+
 
   return (
     <div className="w-full min-h-screen bg-[#f8fafc] p-8 font-sans text-[#1e293b]">
@@ -128,7 +204,7 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
                   key={rowIndex} 
                   className="flex items-center gap-4"
                   onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, 'debt', rowIndex)}
+                  onDrop={(e) => handleDropOnRow(e, 'debt', rowIndex)}
                 >
                   <div className="w-7 h-7 rounded-full bg-slate-50 flex items-center justify-center text-[10px] font-bold text-slate-500 border border-slate-100 shrink-0">
                     {rowIndex + 1}
@@ -157,10 +233,11 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
             </div>
 
             <div 
-              onClick={() => addNewLevel('debt')}
-              className="mt-3 ml-11 border-2 border-dashed border-slate-100 rounded-lg py-3 text-center bg-slate-50/30 cursor-pointer hover:bg-slate-100 transition-all"
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDropOnEmpty(e, 'debt')}
+              className="mt-3 ml-11 border-2 border-dashed border-slate-100 rounded-lg py-3 text-center bg-slate-50/30 transition-all"
             >
-              <span className="text-[10px] text-slate-400 font-medium">Click to create new level</span>
+              <span className="text-[10px] text-slate-400 font-medium">Drag items here to create new level</span>
             </div>
             <div className="text-[10px] uppercase tracking-wider text-slate-400 mt-4 font-bold">Receives Last</div>
           </div>
@@ -181,7 +258,7 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
                   key={rowIndex} 
                   className="flex items-center gap-4"
                   onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, 'equity', rowIndex)}
+                  onDrop={(e) => handleDropOnRow(e, 'equity', rowIndex)}
                 >
                   <div className="w-7 h-7 rounded-full bg-slate-50 flex items-center justify-center text-[10px] font-bold text-slate-500 border border-slate-100 shrink-0">
                     {rowIndex + 1}
@@ -210,10 +287,11 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
             </div>
 
             <div 
-              onClick={() => addNewLevel('equity')}
-              className="mt-3 ml-11 border-2 border-dashed border-slate-100 rounded-lg py-3 text-center bg-slate-50/30 cursor-pointer hover:bg-slate-100 transition-all"
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDropOnEmpty(e, 'equity')}
+              className="mt-3 ml-11 border-2 border-dashed border-slate-100 rounded-lg py-3 text-center bg-slate-50/30 transition-all"
             >
-              <span className="text-[10px] text-slate-400 font-medium">Click to create new level</span>
+              <span className="text-[10px] text-slate-400 font-medium">Drag items here to create new level</span>
             </div>
             <div className="text-[10px] uppercase tracking-wider text-slate-400 mt-4 font-bold">Receives Last</div>
           </div>
