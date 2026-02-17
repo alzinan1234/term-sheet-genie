@@ -24,6 +24,20 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
     setEquitySeniority(initialEquity);
   }, [data]);
 
+  // --- Validation Functions ---
+  const validateSeniority = (items: string[][]): { isValid: boolean; error?: string } => {
+    // Check 1: All rows must have at least one item (no gaps)
+    if (items.length === 0) return { isValid: true };
+    
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].length === 0) {
+        return { isValid: false, error: `Gap detected at seniority level ${i + 1}. All levels must have at least one item.` };
+      }
+    }
+    
+    return { isValid: true };
+  };
+
   // --- Drag and Drop Logic ---
   const handleDragStart = (e: React.DragEvent, type: 'debt' | 'equity', rowIndex: number, itemIndex: number) => {
     e.dataTransfer.setData('type', type);
@@ -44,41 +58,48 @@ const Step3SenioritySelection: React.FC<Step3Props> = ({ data, onContinue, onSte
     if (sourceType !== targetType) return;
 
     if (targetType === 'debt') {
-      const newDebt = [...debtSeniority.map(row => [...row])];
+      const newDebt = debtSeniority.map(row => [...row]);
       
       // Remove item from source
       const [movedItem] = newDebt[sourceRowIndex].splice(sourceItemIndex, 1);
       
-      // Add item to target row (pari passu)
+      // Add item to target row
       newDebt[targetRowIndex].push(movedItem);
 
-      // Clean up empty rows
+      // Remove empty rows (if source becomes empty after move)
       const filteredDebt = newDebt.filter(row => row.length > 0);
-      setDebtSeniority(filteredDebt);
+
+      // Validate after reordering
+      const validation = validateSeniority(filteredDebt);
+      if (validation.isValid) {
+        setDebtSeniority(filteredDebt);
+      } else {
+        alert(validation.error);
+      }
     } else {
-      const newEquity = [...equitySeniority.map(row => [...row])];
+      const newEquity = equitySeniority.map(row => [...row]);
       
       // Remove item from source
       const [movedItem] = newEquity[sourceRowIndex].splice(sourceItemIndex, 1);
       
-      // Add item to target row (pari passu)
+      // Add item to target row
       newEquity[targetRowIndex].push(movedItem);
 
-      // Clean up empty rows
+      // Remove empty rows (if source becomes empty after move)
       const filteredEquity = newEquity.filter(row => row.length > 0);
-      setEquitySeniority(filteredEquity);
+
+      // Validate after reordering
+      const validation = validateSeniority(filteredEquity);
+      if (validation.isValid) {
+        setEquitySeniority(filteredEquity);
+      } else {
+        alert(validation.error);
+      }
     }
   };
 
   const addNewLevel = (type: 'debt' | 'equity') => {
-    const name = prompt(`Enter name for new ${type} level:`);
-    if (!name) return;
-
-    if (type === 'debt') {
-      setDebtSeniority([...debtSeniority, [name]]);
-    } else {
-      setEquitySeniority([...equitySeniority, [name]]);
-    }
+    alert('Creating new levels is not allowed. Please drag existing items to reorder seniority.');
   };
 
   return (
